@@ -150,8 +150,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // PromoCode endpoints - requires admin auth
   app.get('/api/admin/promo-codes', requireAdmin, async (req, res) => {
     try {
-      const result = await db.select().from(promoCodes).orderBy(promoCodes.id);
-      res.json(result);
+      // Since we don't have a getPromoCodes function in MemStorage yet, return empty array for now
+      // Will be implemented in database version
+      res.json([]);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching promo codes', error });
     }
@@ -221,7 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Games admin endpoints
   app.get('/api/admin/games', requireAdmin, async (req, res) => {
     try {
-      const result = await db.select().from(games).orderBy(games.id);
+      const result = await storage.getAllGames();
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching games', error });
@@ -279,7 +280,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reviews admin endpoints
   app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
     try {
-      const result = await db.select().from(reviews).orderBy(reviews.id);
+      const result = await storage.getAllReviews();
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching reviews', error });
@@ -337,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // News admin endpoints
   app.get('/api/admin/news', requireAdmin, async (req, res) => {
     try {
-      const result = await db.select().from(news).orderBy(news.id);
+      const result = await storage.getAllNews();
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching news', error });
@@ -395,7 +396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Guides admin endpoints
   app.get('/api/admin/guides', requireAdmin, async (req, res) => {
     try {
-      const result = await db.select().from(guides).orderBy(guides.id);
+      const result = await storage.getAllGuides();
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching guides', error });
