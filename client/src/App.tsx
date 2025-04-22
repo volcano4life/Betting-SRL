@@ -9,6 +9,7 @@ import ReviewListingPage from "@/pages/ReviewListingPage";
 import ReviewDetailPage from "@/pages/ReviewDetailPage";
 import AuthPage from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
+import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "./contexts/LanguageContext";
