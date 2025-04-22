@@ -144,15 +144,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(400).json({ message: 'Invalid subscriber data', error });
     }
   });
+  
+  // Promo codes public endpoints
+  app.get('/api/promo-codes/active', async (req, res) => {
+    try {
+      const promoCodes = await storage.getActivePromoCodes();
+      res.json(promoCodes);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching active promo codes', error });
+    }
+  });
+  
+  app.get('/api/promo-codes/featured', async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const promoCodes = await storage.getFeaturedPromoCodes(limit);
+      res.json(promoCodes);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching featured promo codes', error });
+    }
+  });
 
   // ====== ADMIN ROUTES ======
   
   // PromoCode endpoints - requires admin auth
   app.get('/api/admin/promo-codes', requireAdmin, async (req, res) => {
     try {
-      // Since we don't have a getPromoCodes function in MemStorage yet, return empty array for now
-      // Will be implemented in database version
-      res.json([]);
+      const promoCodes = await storage.getAllPromoCodes();
+      res.json(promoCodes);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching promo codes', error });
     }
@@ -161,7 +180,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/admin/promo-codes/:id', requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const [result] = await db.select().from(promoCodes).where(eq(promoCodes.id, id));
+      const result = await storage.getPromoCodeById(id);
       if (!result) {
         return res.status(404).json({ message: 'Promo code not found' });
       }
@@ -174,7 +193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/admin/promo-codes', requireAdmin, async (req, res) => {
     try {
       const parsedData = insertPromoCodeSchema.parse(req.body);
-      const [result] = await db.insert(promoCodes).values(parsedData).returning();
+      const result = await storage.createPromoCode(parsedData);
       res.status(201).json(result);
     } catch (error) {
       res.status(400).json({ message: 'Invalid promo code data', error });
@@ -185,18 +204,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const parsedData = insertPromoCodeSchema.parse(req.body);
-      const [result] = await db
-        .update(promoCodes)
-        .set(parsedData)
-        .where(eq(promoCodes.id, id))
-        .returning();
-      
-      if (!result) {
-        return res.status(404).json({ message: 'Promo code not found' });
-      }
-      
+      const result = await storage.updatePromoCode(id, parsedData);
       res.json(result);
     } catch (error) {
+      if (error.message === "Promo code not found") {
+        return res.status(404).json({ message: 'Promo code not found' });
+      }
       res.status(400).json({ message: 'Invalid promo code data', error });
     }
   });
@@ -204,17 +217,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete('/api/admin/promo-codes/:id', requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const [result] = await db
-        .delete(promoCodes)
-        .where(eq(promoCodes.id, id))
-        .returning();
-        
-      if (!result) {
-        return res.status(404).json({ message: 'Promo code not found' });
-      }
-      
+      await storage.deletePromoCode(id);
       res.json({ message: 'Promo code deleted successfully' });
     } catch (error) {
+      if (error.message === "Promo code not found") {
+        return res.status(404).json({ message: 'Promo code not found' });
+      }
       res.status(500).json({ message: 'Error deleting promo code', error });
     }
   });
