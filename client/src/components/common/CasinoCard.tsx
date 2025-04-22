@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import RatingStars from "./RatingStars";
 import PromoCodeModal from "./PromoCodeModal";
 import { formatDate } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CasinoCardProps {
   id?: number;
@@ -33,6 +34,7 @@ export default function CasinoCard({
   isLoading = false
 }: CasinoCardProps) {
   const [promoModalOpen, setPromoModalOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <>
