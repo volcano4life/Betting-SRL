@@ -40,8 +40,13 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.claim': 'Claim Now',
     'promos.viewCasino': 'View Casino',
     
-    'sports.title': 'Sports Betting',
-    'sports.viewAll': 'View All Odds',
+    'sports.title': 'Sports Betting Insights',
+    'sports.subtitle': 'Expert predictions, odds analysis and betting tips',
+    'sports.viewAll': 'View All Articles',
+    'sports.empty': 'No sports articles available',
+    'sports.readMore': 'Read Full Analysis',
+    'sports.hotTip': 'Hot Tip',
+    'sports.analysis': 'Analysis',
     
     'responsible.title': 'Responsible Gambling',
     'responsible.description': 'Play responsibly and know your limits. Gambling should be entertaining, not a way to make money.',
@@ -89,8 +94,13 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.claim': 'Ottieni Ora',
     'promos.viewCasino': 'Vedi Casinò',
     
-    'sports.title': 'Scommesse Sportive',
-    'sports.viewAll': 'Vedi Tutte le Quote',
+    'sports.title': 'Approfondimenti Scommesse Sportive',
+    'sports.subtitle': 'Previsioni di esperti, analisi delle quote e consigli per le scommesse',
+    'sports.viewAll': 'Vedi Tutti gli Articoli',
+    'sports.empty': 'Nessun articolo sportivo disponibile',
+    'sports.readMore': 'Leggi Analisi Completa',
+    'sports.hotTip': 'Suggerimento Caldo',
+    'sports.analysis': 'Analisi',
     
     'responsible.title': 'Gioco Responsabile',
     'responsible.description': 'Gioca responsabilmente e conosci i tuoi limiti. Il gioco dovrebbe essere un divertimento, non un modo per fare soldi.',
