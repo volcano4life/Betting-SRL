@@ -78,7 +78,7 @@ export default function GuideCard({
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-3">
           <Badge className={getBadgeColor(difficulty || "")}>{difficulty}</Badge>
-          <span className="text-xs text-gray-500">{date && formatDate(date)}</span>
+          <span className="text-xs text-gray-500">{date && formatDate(date, language)}</span>
         </div>
         <h3 className="text-lg font-bold mb-3">{title}</h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{summary}</p>

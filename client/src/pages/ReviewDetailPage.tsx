@@ -17,10 +17,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import RatingStars from "@/components/common/RatingStars";
 import { ChevronRight, Facebook, Twitter, Link as LinkIcon } from "lucide-react";
 import { formatDate, getRatingText } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ReviewDetailPage() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
+  const { language } = useLanguage();
   
   // Redirect to 404 if no slug
   useEffect(() => {
@@ -182,7 +184,7 @@ export default function ReviewDetailPage() {
                 
                 <div className="lg:w-2/3">
                   <div className="flex items-center text-sm text-gray-500 mb-2">
-                    <span>Published: {formatDate(review.publishDate)}</span>
+                    <span>Published: {formatDate(review.publishDate, language)}</span>
                   </div>
                   <h1 className="text-2xl lg:text-3xl font-bold mb-3">{review.title}</h1>
                   <div className="flex items-center mb-4">
