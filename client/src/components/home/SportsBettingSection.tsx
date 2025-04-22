@@ -76,12 +76,12 @@ export default function SportsBettingSection() {
                     
                     <Link href={`/sports/${article.slug}`}>
                       <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition">
-                        {article.title}
+                        {getLocalizedField(article, 'title')}
                       </h3>
                     </Link>
                     
                     <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">
-                      {article.summary}
+                      {getLocalizedField(article, 'summary')}
                     </p>
                     
                     <Button variant="outline" size="sm" className="mt-auto w-full" asChild>

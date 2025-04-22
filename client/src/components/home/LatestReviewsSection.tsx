@@ -7,7 +7,7 @@ import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LatestReviewsSection() {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { data: latestReviews, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/latest'],
   });
@@ -34,11 +34,11 @@ export default function LatestReviewsSection() {
               <GameCard
                 key={review.id}
                 id={review.id}
-                title={review.title}
+                title={getLocalizedField(review, 'title')}
                 slug={review.slug}
                 coverImage={review.coverImage}
                 rating={review.rating}
-                summary={review.summary}
+                summary={getLocalizedField(review, 'summary')}
                 categoryInfo={{
                   platforms: ["PC"], // This would normally come from the game data
                   genres: ["RPG"],   // This would normally come from the game data
