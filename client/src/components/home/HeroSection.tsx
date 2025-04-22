@@ -6,8 +6,11 @@ import RatingStars from "../common/RatingStars";
 import { formatDate } from "@/lib/utils";
 import { Game, Review, News } from "@shared/schema";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HeroSection() {
+  const { t } = useLanguage();
+  
   const { data: featuredCasinos, isLoading: casinosLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/featured'],
   });
@@ -28,6 +31,12 @@ export default function HeroSection() {
   return (
     <section className="bg-[#222236] text-white py-12 md:py-16">
       <div className="container mx-auto px-4">
+        {/* Translated Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('hero.title')}</h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('hero.subtitle')}</p>
+        </div>
+        
         {/* Desktop Hero */}
         <div className="hidden md:grid grid-cols-3 gap-6">
           {/* Main Featured */}
@@ -58,7 +67,7 @@ export default function HeroSection() {
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
                 </div>
                 <Button size="sm" variant="secondary" className="bg-accent text-[#222236] hover:bg-accent/90 font-medium">
-                  View Promo Codes
+                  {t('hero.cta')}
                 </Button>
               </div>
             </Link>
@@ -130,7 +139,7 @@ export default function HeroSection() {
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
                 </div>
                 <Button size="sm" variant="secondary" className="bg-accent text-[#222236] hover:bg-accent/90 font-medium text-xs">
-                  View Promo Codes
+                  {t('hero.cta')}
                 </Button>
               </div>
             </Link>

@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -38,8 +39,13 @@ const sportsCategories = [
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [location] = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   const isActive = (path: string) => location === path;
+  
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'it' : 'en');
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
@@ -166,7 +172,7 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Search and Mobile Menu Toggle */}
+          {/* Search, Language, and Mobile Menu Toggle */}
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
@@ -175,6 +181,14 @@ export default function Header() {
               className="text-[#222236] hover:text-primary"
             >
               <Search className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={toggleLanguage}
+              className="flex items-center space-x-2 text-[#222236] hover:text-primary"
+            >
+              <Globe className="h-5 w-5" />
+              <span className="hidden md:inline">{t('nav.language')}</span>
             </Button>
             <Sheet>
               <SheetTrigger asChild>
@@ -238,6 +252,13 @@ export default function Header() {
                   <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
                     Sports
                   </Link>
+                  <button 
+                    onClick={toggleLanguage}
+                    className="flex items-center space-x-2 text-[#222236] hover:text-primary font-semibold py-2"
+                  >
+                    <Globe className="h-5 w-5 mr-2" />
+                    {t('nav.language')}
+                  </button>
                 </div>
               </SheetContent>
             </Sheet>
