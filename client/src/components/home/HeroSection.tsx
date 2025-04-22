@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HeroSection() {
-  const { t, getLocalizedField } = useLanguage();
+  const { t, getLocalizedField, language } = useLanguage();
   
   const { data: featuredCasinos, isLoading: casinosLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/featured'],
@@ -58,7 +58,7 @@ export default function HeroSection() {
               <div className="absolute bottom-0 left-0 p-6">
                 <div className="flex items-center mb-3">
                   <Badge variant="secondary" className="mr-3">{t('hero.new')}</Badge>
-                  <span className="text-sm text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
+                  <span className="text-sm text-gray-300">{formatDate(mainFeatured.publishDate, language)}</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('hero.featuredReview')}</h2>
                 <p className="text-gray-200 mb-4 line-clamp-2">{t('hero.featuredReviewSummary')}</p>
@@ -131,7 +131,7 @@ export default function HeroSection() {
               <div className="absolute bottom-0 left-0 p-4">
                 <div className="flex items-center mb-2">
                   <Badge variant="secondary" className="mr-2">{t('hero.new')}</Badge>
-                  <span className="text-xs text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
+                  <span className="text-xs text-gray-300">{formatDate(mainFeatured.publishDate, language)}</span>
                 </div>
                 <h2 className="text-xl font-bold mb-2">{t('hero.featuredReview')}</h2>
                 <p className="text-gray-200 mb-2 line-clamp-2 text-sm">{t('hero.featuredReviewSummary')}</p>
