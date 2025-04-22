@@ -181,13 +181,45 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.terms': 'Termini & Condizioni',
     'footer.privacy': 'Privacy Policy',
     'footer.contact': 'Contattaci',
-    'footer.copyright': '© 2023 Betting SRL. Tutti i diritti riservati.',
-    'footer.disclaimer': 'Il gioco comporta rischi. Gioca responsabilmente.'
+    'footer.copyright': '© {year} Betting SRL. Tutti i diritti riservati. Tutti i marchi sono di proprietà dei rispettivi proprietari.',
+    'footer.disclaimer': 'Il gioco comporta rischi. Gioca responsabilmente.',
+    'footer.tagline': 'La tua fonte affidabile per recensioni di casinò italiani, codici promozionali esclusivi e approfondimenti sulle scommesse sportive.',
+    'footer.casinoGames': 'Giochi da Casinò',
+    'footer.promotions': 'Promozioni',
+    'footer.company': 'Azienda',
+    
+    // Footer casino links
+    'footer.casino.slotmachines': 'Slot Machine',
+    'footer.casino.roulette': 'Roulette',
+    'footer.casino.blackjack': 'Blackjack', 
+    'footer.casino.poker': 'Poker',
+    'footer.casino.baccarat': 'Baccarat',
+    'footer.casino.livecasino': 'Casinò Live',
+    'footer.casino.bingo': 'Bingo',
+    
+    // Footer promo links
+    'footer.promos.welcomebonuses': 'Bonus di Benvenuto',
+    'footer.promos.nodeposit': 'Senza Deposito',
+    'footer.promos.freespins': 'Giri Gratuiti',
+    'footer.promos.cashback': 'Cashback',
+    'footer.promos.loyaltyprograms': 'Programmi Fedeltà',
+    
+    // Footer company links
+    'footer.links.aboutus': 'Chi Siamo',
+    'footer.links.ourteam': 'Il Nostro Team',
+    'footer.links.careers': 'Lavora con Noi',
+    'footer.links.contactus': 'Contattaci',
+    'footer.links.privacypolicy': 'Privacy Policy',
+    'footer.links.termsofservice': 'Termini di Servizio',
+    
+    // Promo code section
+    'promos.defaultSummary': 'Bonus di benvenuto esclusivo con giri gratuiti e match sul deposito',
+    'promos.defaultCode': 'BENVENUTO100'
   }
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('it');
 
   // Function to get translation for a key
   const t = (key: string): string => {
