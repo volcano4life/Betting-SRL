@@ -49,6 +49,9 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.expires': 'Expires',
     'promos.copy': 'Copy Code',
     'promos.copied': 'Copied!',
+    'promos.close': 'Close',
+    'promos.casino': 'Casino',
+    'promos.promoCode': 'Promo Code',
     
     'sports.title': 'Sports Betting Insights',
     'sports.subtitle': 'Expert predictions, odds analysis and betting tips',
@@ -116,6 +119,9 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.expires': 'Scade il',
     'promos.copy': 'Copia Codice',
     'promos.copied': 'Copiato!',
+    'promos.close': 'Chiudi',
+    'promos.casino': 'Casinò',
+    'promos.promoCode': 'Codice Promo',
     
     'sports.title': 'Approfondimenti Scommesse Sportive',
     'sports.subtitle': 'Previsioni di esperti, analisi delle quote e consigli per le scommesse',
