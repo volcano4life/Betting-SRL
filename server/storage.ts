@@ -83,13 +83,13 @@ export class MemStorage implements IStorage {
   private initializeData() {
     // Initialize with sample game
     const game1: InsertGame = {
-      title: "The Legend of Zelda: Tears of the Kingdom",
-      slug: "legend-of-zelda-tears-of-the-kingdom",
-      description: "The sequel to Breath of the Wild takes everything that made the original special and expands on it in meaningful ways. Link's new abilities transform the gameplay, allowing for unprecedented creativity in how you approach challenges.",
-      coverImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
+      title: "Starcasino",
+      slug: "starcasino",
+      description: "Starcasino is a premier Italian online casino offering a comprehensive selection of games, generous bonuses, and excellent customer support.",
+      coverImage: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
       releaseDate: new Date("2023-05-12"),
-      platforms: ["Nintendo Switch"],
-      genres: ["Action", "Adventure"],
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Slots", "Live Casino", "Table Games"],
       overallRating: 9.8,
       gameplayRating: 9.8,
       graphicsRating: 9.0,
@@ -100,13 +100,13 @@ export class MemStorage implements IStorage {
     this.createGame(game1);
     
     const game2: InsertGame = {
-      title: "Baldur's Gate 3",
-      slug: "baldurs-gate-3",
-      description: "A storytelling masterpiece that sets a new standard for RPGs with its deep character development and reactive world.",
-      coverImage: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      title: "888Casino",
+      slug: "888casino",
+      description: "888Casino offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
+      coverImage: "https://images.unsplash.com/photo-1596838132731-3301c3fd4527?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
       releaseDate: new Date("2023-08-03"),
-      platforms: ["PC", "PlayStation 5"],
-      genres: ["RPG"],
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Slots", "Poker", "Sports Betting"],
       overallRating: 9.7,
       gameplayRating: 9.6,
       graphicsRating: 9.5,
@@ -117,13 +117,13 @@ export class MemStorage implements IStorage {
     this.createGame(game2);
     
     const game3: InsertGame = {
-      title: "Elden Ring",
-      slug: "elden-ring",
-      description: "FromSoftware's open-world masterpiece that redefines exploration with its vast landscapes and challenging combat.",
-      coverImage: "https://images.unsplash.com/photo-1620336655055-088d06e36bf0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      title: "LeoVegas",
+      slug: "leovegas",
+      description: "LeoVegas stands out for its exceptional mobile casino experience, offering thousands of games and a user-friendly interface optimized for on-the-go play.",
+      coverImage: "https://images.unsplash.com/photo-1560415755-bd80d06eda60?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
       releaseDate: new Date("2022-02-25"),
-      platforms: ["PC", "PlayStation 5", "Xbox Series X"],
-      genres: ["Action RPG"],
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Slots", "Live Casino", "Sports Betting"],
       overallRating: 9.6,
       gameplayRating: 9.7,
       graphicsRating: 9.3,
@@ -133,42 +133,76 @@ export class MemStorage implements IStorage {
     };
     this.createGame(game3);
     
-    // Sample reviews
+    // Sample casino reviews
     const review1: InsertReview = {
       gameId: 1,
-      title: "The Legend of Zelda: Tears of the Kingdom Review",
-      slug: "legend-of-zelda-tears-of-the-kingdom-review",
-      summary: "Nintendo delivers another masterpiece that redefines open-world adventure games.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.",
-      coverImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
+      title: "Starcasino Review: Italy's Premier Online Casino Experience",
+      slug: "starcasino-review-italy-premier-online-casino",
+      summary: "Starcasino delivers an exceptional gaming experience with a vast selection of slots and generous welcome bonuses.",
+      content: "Starcasino stands out as one of Italy's top online gambling destinations. With over 2,000 slot games from providers like NetEnt and Playtech, a comprehensive live dealer section, and a user-friendly mobile app, it caters to all types of players. New users can claim a welcome bonus of up to €500 plus 200 free spins, with reasonable 35x wagering requirements. Customer support is available 24/7 in Italian and English, and the platform offers secure payment methods including PayPal, credit cards, and bank transfers.",
+      coverImage: "https://images.unsplash.com/photo-1566694271453-390536dd1f0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
       rating: 9.8,
       featured: 1
     };
     this.createReview(review1);
+
+    const review2: InsertReview = {
+      gameId: 2,
+      title: "888Casino: The Complete Italian Player's Guide",
+      slug: "888casino-italian-players-guide",
+      summary: "888Casino combines excellent game variety with outstanding bonuses and promotions for Italian players.",
+      content: "888Casino has established itself as a leading option for Italian gamblers seeking quality entertainment. The platform holds all necessary licenses for operation in Italy and offers a clean, modern interface that's simple to navigate. With a welcome bonus of 100% up to €200 and frequent reload bonuses, players have plenty of incentives. The game selection includes over 1,000 slots, numerous table games, and an award-winning poker platform. Mobile gameplay is smooth across all devices, and withdrawals are processed efficiently within 24-48 hours.",
+      coverImage: "https://images.unsplash.com/photo-1518895312237-a9e23508fd43?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
+      rating: 9.2,
+      featured: 0
+    };
+    this.createReview(review2);
     
-    // Add news samples
+    // Add casino news samples
     const news1: InsertNews = {
-      title: "Sony Officially Announces PS5 Pro for 2024 Release",
-      slug: "sony-announces-ps5-pro-2024-release",
-      summary: "Sony has finally confirmed the existence of the PS5 Pro, promising significant performance improvements and enhanced ray tracing capabilities.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.",
-      coverImage: "https://images.unsplash.com/photo-1575792324513-3441e9a08224?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "News",
+      title: "Italian Gambling Authority Announces Stricter Regulations for 2024",
+      slug: "italian-gambling-authority-stricter-regulations-2024",
+      summary: "New regulations aimed at enhancing player protection will require additional identity verification steps and deposit limits.",
+      content: "The Italian gambling regulatory authority (ADM) has announced significant changes to online gambling regulations, set to take effect in early 2024. The new framework will require operators to implement stricter identity verification procedures, mandatory deposit limits that players must set before gambling, and enhanced self-exclusion options. While the measures aim to combat problem gambling, industry experts suggest they may impact the user experience with additional verification steps. Licensed operators, including major brands like Starcasino and 888, have six months to implement the required changes.",
+      coverImage: "https://images.unsplash.com/photo-1563237023-b1e970526dcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Regulation",
       featured: 1
     };
     this.createNews(news1);
+
+    const news2: InsertNews = {
+      title: "Exclusive: LeoVegas Launches 'Leo Millions' €5M Guaranteed Jackpot",
+      slug: "leovegas-launches-leo-millions-jackpot",
+      summary: "LeoVegas introduces a new progressive jackpot slot with a minimum guaranteed prize pool of €5 million.",
+      content: "LeoVegas has announced the launch of 'Leo Millions,' a proprietary progressive jackpot slot game with a guaranteed minimum prize pool of €5 million. The exclusive game, developed in partnership with Play'n GO, will be available only to Italian players for the first month before expanding to other European markets. The launch is accompanied by a promotion offering 50 free spins to all players who deposit €20 or more between October 15-31. Industry analysts note this represents one of the largest guaranteed jackpots ever offered by an online casino operating in the Italian market.",
+      coverImage: "https://images.unsplash.com/photo-1605870445919-838d190e8e1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Promotions",
+      featured: 0
+    };
+    this.createNews(news2);
     
-    // Add guides
+    // Add betting guides
     const guide1: InsertGuide = {
-      title: "Starfield: 10 Essential Tips for New Players",
-      slug: "starfield-essential-tips-new-players",
-      summary: "Navigate Bethesda's massive space RPG with confidence using these beginner-friendly tips and tricks.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl nec ultricies ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.",
-      coverImage: "https://images.unsplash.com/photo-1564049489314-60d154ff107d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      difficulty: "BEGINNER",
-      category: "Guides"
+      title: "Roulette Strategy Guide: Mastering the Most Popular Casino Table Game",
+      slug: "roulette-strategy-guide-mastering-casino-table-game",
+      summary: "Learn proven roulette strategies including the Martingale, Fibonacci, and D'Alembert systems to maximize your chances of winning.",
+      content: "Roulette remains one of the most popular casino games in Italy, combining simplicity with excitement. This comprehensive guide covers everything from understanding the European, American, and French roulette variations to implementing betting strategies that can improve your odds. We explain the mathematics behind the Martingale system (doubling your bet after each loss), the more conservative Fibonacci approach (following the Fibonacci sequence for bet sizes), and the D'Alembert strategy (increasing bets by one unit after losses). The guide also includes bankroll management techniques and explains when each strategy is most appropriate based on your risk tolerance.",
+      coverImage: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      difficulty: "INTERMEDIATE",
+      category: "Casino Guides"
     };
     this.createGuide(guide1);
+
+    const guide2: InsertGuide = {
+      title: "Serie A Betting Guide: Expert Tips for the 2023-24 Season",
+      slug: "serie-a-betting-guide-expert-tips-2023-24-season",
+      summary: "Maximize your Serie A betting success with our expert analysis, team insights, and strategic betting approaches.",
+      content: "This comprehensive Serie A betting guide provides everything you need to know before placing wagers on Italy's top football league. We analyze the strengths and weaknesses of title contenders including Inter Milan, AC Milan, Juventus, and Napoli, with detailed statistical insights on home/away performance, scoring patterns, and defensive solidity. The guide includes expert tips on identifying value bets, leveraging Asian handicap markets, and utilizing in-play betting opportunities. We also cover the impact of European competition schedules on domestic performance and identify promising mid-table teams that consistently offer value against the betting spread.",
+      coverImage: "https://images.unsplash.com/photo-1610215078970-51f8395af5e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      difficulty: "ADVANCED",
+      category: "Sports Betting"
+    };
+    this.createGuide(guide2);
   }
   
   // Games methods
