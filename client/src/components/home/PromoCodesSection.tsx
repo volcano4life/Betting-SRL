@@ -40,11 +40,11 @@ export default function PromoCodesSection() {
               {t('promos.subtitle')}
             </p>
           </div>
-          <Link href="/promos">
-            <Button variant="outline" className="hidden md:inline-flex">
+          <Button variant="outline" className="hidden md:inline-flex" asChild>
+            <Link href="/promos">
               {t('promos.viewAll')}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -116,9 +116,9 @@ export default function PromoCodesSection() {
         </div>
 
         <div className="mt-8 text-center md:hidden">
-          <Link href="/promos">
-            <Button variant="outline">{t('promos.viewAll')}</Button>
-          </Link>
+          <Button variant="outline" asChild>
+            <Link href="/promos">{t('promos.viewAll')}</Link>
+          </Button>
         </div>
       </div>
       
