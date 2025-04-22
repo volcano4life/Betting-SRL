@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import PromoCodeModal from "@/components/common/PromoCodeModal";
 
 export default function PromoCodesSection() {
-  const { t, getLocalizedField } = useLanguage();
+  const { t, getLocalizedField, language } = useLanguage();
   const [promoModalData, setPromoModalData] = useState<{
     open: boolean;
     promoCode: string;
@@ -58,7 +58,7 @@ export default function PromoCodesSection() {
                 <CardContent className="p-0 relative">
                   <div className="absolute top-0 right-0 m-3 z-10">
                     <Badge className="bg-red-500 hover:bg-red-600 text-white">
-                      {t('promos.expires')} {formatDate(new Date(promo.validUntil))}
+                      {t('promos.expires')} {formatDate(new Date(promo.validUntil), language)}
                     </Badge>
                   </div>
                   <div className="relative p-6 pt-12">
@@ -97,7 +97,7 @@ export default function PromoCodesSection() {
                           open: true,
                           promoCode: promo.code,
                           casino: getLocalizedField(promo, 'casino_name'),
-                          expiryDate: formatDate(new Date(promo.validUntil))
+                          expiryDate: formatDate(new Date(promo.validUntil), language)
                         })}
                       >
                         {t('promos.viewCode')}

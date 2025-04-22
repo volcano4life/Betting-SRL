@@ -34,7 +34,7 @@ export default function CasinoCard({
   isLoading = false
 }: CasinoCardProps) {
   const [promoModalOpen, setPromoModalOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <>
@@ -57,7 +57,7 @@ export default function CasinoCard({
               </Link>
               <Badge variant="outline" className="text-sm font-normal">
                 {typeof validUntil === 'string' || validUntil instanceof Date 
-                  ? `${t('featured.validUntil')} ${formatDate(validUntil)}` 
+                  ? `${t('featured.validUntil')} ${formatDate(validUntil, language)}` 
                   : t('featured.limitedTimeOffer')}
               </Badge>
             </div>
@@ -104,7 +104,7 @@ export default function CasinoCard({
           description={t('promos.modalDescription')}
           promoCode={promoCode}
           casino={title}
-          expiryDate={validUntil ? formatDate(validUntil) : undefined}
+          expiryDate={validUntil ? formatDate(validUntil, language) : undefined}
         />
       )}
     </>
