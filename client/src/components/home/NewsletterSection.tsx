@@ -42,15 +42,15 @@ export default function NewsletterSection() {
     onSuccess: () => {
       setIsSubmitted(true);
       toast({
-        title: "Subscription Successful",
-        description: "Thank you for subscribing to our newsletter!",
+        title: t('newsletter.successTitle'),
+        description: t('newsletter.successDesc'),
         variant: "default",
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Subscription Failed",
-        description: error.message || "Failed to subscribe. Please try again.",
+        title: t('newsletter.errorTitle'),
+        description: error.message || t('newsletter.errorDesc'),
         variant: "destructive",
       });
     },
@@ -70,8 +70,8 @@ export default function NewsletterSection() {
         
         {isSubmitted ? (
           <div className="bg-primary/20 p-6 rounded-lg max-w-xl mx-auto">
-            <h3 className="text-xl font-bold mb-2">Thank You for Subscribing!</h3>
-            <p>You have successfully subscribed to our newsletter. Stay tuned for the latest updates!</p>
+            <h3 className="text-xl font-bold mb-2">{t('newsletter.thankYou')}</h3>
+            <p>{t('newsletter.successMessage')}</p>
           </div>
         ) : (
           <Form {...form}>
@@ -97,7 +97,7 @@ export default function NewsletterSection() {
                 className="bg-secondary hover:bg-secondary/90 text-white font-bold px-6 py-3 rounded-lg"
                 disabled={subscribeMutation.isPending}
               >
-                {subscribeMutation.isPending ? "Subscribing..." : (
+                {subscribeMutation.isPending ? t('newsletter.subscribing') : (
                   <>
                     {t('newsletter.button')} <Send className="ml-2 h-4 w-4" />
                   </>
@@ -107,7 +107,7 @@ export default function NewsletterSection() {
           </Form>
         )}
         <p className="text-xs text-gray-400 mt-4">
-          By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+          {t('newsletter.privacyNotice')}
         </p>
       </div>
     </section>
