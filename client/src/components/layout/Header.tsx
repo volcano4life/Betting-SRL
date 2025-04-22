@@ -72,7 +72,7 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  Casino Games
+                  {t('nav.casinos')}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
@@ -98,7 +98,7 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  Promotions
+                  {t('nav.promotions')}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
@@ -124,7 +124,7 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  Sports
+                  {t('nav.sportsBetting')}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
@@ -152,7 +152,7 @@ export default function Header() {
                       isActive("/casinos") && "text-primary"
                     )}
                   >
-                    Casinos
+                    {t('nav.casinos')}
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -165,7 +165,7 @@ export default function Header() {
                       isActive("/promos") && "text-primary"
                     )}
                   >
-                    Promo Codes
+                    {t('nav.promoCodes')}
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -199,10 +199,10 @@ export default function Header() {
               <SheetContent side="right">
                 <div className="py-4 flex flex-col space-y-4">
                   <Link href="/" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    Home
+                    {t('nav.home')}
                   </Link>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">Casino Games</h3>
+                    <h3 className="font-semibold mb-2">{t('nav.casinos')}</h3>
                     <div className="flex flex-col space-y-2 pl-2">
                       {casinoCategories.map((category) => (
                         <Link 
@@ -216,7 +216,7 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">Promotions</h3>
+                    <h3 className="font-semibold mb-2">{t('nav.promotions')}</h3>
                     <div className="flex flex-col space-y-2 pl-2">
                       {promotionCategories.map((category) => (
                         <Link 
@@ -230,7 +230,7 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">Sports</h3>
+                    <h3 className="font-semibold mb-2">{t('nav.sportsBetting')}</h3>
                     <div className="flex flex-col space-y-2 pl-2">
                       {sportsCategories.map((category) => (
                         <Link 
@@ -244,13 +244,13 @@ export default function Header() {
                     </div>
                   </div>
                   <Link href="/casinos" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    Casinos
+                    {t('nav.casinos')}
                   </Link>
                   <Link href="/promos" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    Promo Codes
+                    {t('nav.promoCodes')}
                   </Link>
                   <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    Sports
+                    {t('nav.sportsBetting')}
                   </Link>
                   <button 
                     onClick={toggleLanguage}
