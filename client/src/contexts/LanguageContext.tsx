@@ -33,6 +33,9 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.noNewsAvailable': 'No news available',
     'hero.new': 'NEW',
     'hero.hot': 'HOT',
+    'hero.featuredReviewSummary': 'Play at one of the top Italian online casinos with an exclusive welcome bonus and a massive selection of slots and live games.',
+    'hero.news1Title': 'Italian Gambling Authority Announces New Regulation Changes',
+    'hero.news2Title': 'Top Sports Betting Trends for Football Season 2025',
     
     'featured.title': 'Top Rated Casinos',
     'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
@@ -157,6 +160,9 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.noNewsAvailable': 'Nessuna notizia disponibile',
     'hero.new': 'NUOVO',
     'hero.hot': 'CALDO',
+    'hero.featuredReviewSummary': 'Gioca in uno dei migliori casinò online italiani con un bonus di benvenuto esclusivo e una vasta selezione di slot e giochi dal vivo.',
+    'hero.news1Title': 'L\'Autorità Italiana di Gioco Annuncia Nuovi Cambiamenti Normativi',
+    'hero.news2Title': 'Principali Tendenze nelle Scommesse Sportive per la Stagione Calcistica 2025',
     
     'featured.title': 'Casinò Più Votati',
     'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
