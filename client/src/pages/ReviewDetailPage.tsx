@@ -107,7 +107,7 @@ export default function ReviewDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${review.title} - GameReviews`}</title>
+        <title>{`${review.title} - Betting SRL`}</title>
         <meta name="description" content={review.summary} />
       </Helmet>
       

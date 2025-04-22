@@ -48,10 +48,10 @@ export default function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-xl">G</span>
+                <span className="text-white font-bold text-xl">B</span>
               </div>
               <span className="text-xl font-bold text-[#222236] font-medium">
-                Game<span className="text-primary">Reviews</span>
+                Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
           </div>
