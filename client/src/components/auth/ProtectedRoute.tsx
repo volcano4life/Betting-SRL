@@ -15,23 +15,36 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
 
-  return (
-    <Route path={path}>
-      {isLoading ? (
+  if (isLoading) {
+    return (
+      <Route path={path}>
         <div className="flex items-center justify-center min-h-screen">
           <Loader2 className="h-8 w-8 animate-spin text-border" />
         </div>
-      ) : !user ? (
+      </Route>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Route path={path}>
         <Redirect to="/auth" />
-      ) : adminOnly && !user.isAdmin ? (
-        <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-          <h1 className="text-2xl font-bold">Access Denied</h1>
-          <p>You need administrator privileges to access this page.</p>
-          <Redirect to="/" />
-        </div>
-      ) : (
-        <Component />
-      )}
+      </Route>
+    );
+  }
+
+  // If route requires admin and user is not admin, redirect
+  if (adminOnly && !user.isAdmin) {
+    return (
+      <Route path={path}>
+        <Redirect to="/" />
+      </Route>
+    );
+  }
+
+  return (
+    <Route path={path}>
+      <Component />
     </Route>
   );
 }
