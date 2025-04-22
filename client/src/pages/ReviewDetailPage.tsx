@@ -22,7 +22,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function ReviewDetailPage() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
-  const { language } = useLanguage();
+  const { language, getLocalizedField } = useLanguage();
   
   // Redirect to 404 if no slug
   useEffect(() => {
@@ -109,8 +109,8 @@ export default function ReviewDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${review.title} - Betting SRL`}</title>
-        <meta name="description" content={review.summary} />
+        <title>{`${getLocalizedField(review, 'title')} - Betting SRL`}</title>
+        <meta name="description" content={getLocalizedField(review, 'summary')} />
       </Helmet>
       
       <div className="bg-[#F7F7FA] py-8">
@@ -135,7 +135,7 @@ export default function ReviewDetailPage() {
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbLink isCurrentPage>
-                  {review.title}
+                  {getLocalizedField(review, 'title')}
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -148,7 +148,7 @@ export default function ReviewDetailPage() {
                   <div className="relative mb-4">
                     <img 
                       src={review.coverImage} 
-                      alt={review.title} 
+                      alt={getLocalizedField(review, 'title')} 
                       className="w-full rounded-lg shadow-md" 
                     />
                     <div className="absolute top-3 right-3 bg-accent text-[#222236] text-lg font-bold rounded-full w-12 h-12 flex items-center justify-center">
@@ -186,12 +186,12 @@ export default function ReviewDetailPage() {
                   <div className="flex items-center text-sm text-gray-500 mb-2">
                     <span>Published: {formatDate(review.publishDate, language)}</span>
                   </div>
-                  <h1 className="text-2xl lg:text-3xl font-bold mb-3">{review.title}</h1>
+                  <h1 className="text-2xl lg:text-3xl font-bold mb-3">{getLocalizedField(review, 'title')}</h1>
                   <div className="flex items-center mb-4">
                     <RatingStars rating={review.rating} size="lg" />
                     <span className="ml-2 font-bold">{getRatingText(review.rating)}</span>
                   </div>
-                  <p className="text-gray-700 mb-6 text-lg">{review.summary}</p>
+                  <p className="text-gray-700 mb-6 text-lg">{getLocalizedField(review, 'summary')}</p>
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center">
                       <span className="w-24 text-sm font-semibold">Gameplay:</span>
@@ -231,7 +231,7 @@ export default function ReviewDetailPage() {
             <h2 className="text-2xl font-bold mb-6">Review</h2>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="prose lg:prose-lg max-w-none">
-                <p>{review.content}</p>
+                <p>{getLocalizedField(review, 'content')}</p>
                 
                 {/* In a real implementation, we would render the full review content here */}
                 <p>Full review content would be rendered here from the database.</p>
