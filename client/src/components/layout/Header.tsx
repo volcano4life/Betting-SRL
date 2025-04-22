@@ -209,19 +209,6 @@ export default function Header() {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[180px] gap-1 p-2">
-                          {user.isAdmin && (
-                            <li>
-                              <NavigationMenuLink asChild>
-                                <Link
-                                  href="/admin"
-                                  className="flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                                >
-                                  <Settings className="h-4 w-4" />
-                                  {t('nav.admin')}
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                          )}
                           <li>
                             <button
                               onClick={handleLogout} 
@@ -315,15 +302,6 @@ export default function Header() {
                   {/* Authentication Links in Mobile Menu */}
                   {user ? (
                     <>
-                      {user.isAdmin && (
-                        <Link 
-                          href="/admin" 
-                          className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
-                        >
-                          <Settings className="h-5 w-5 mr-2" />
-                          {t('nav.admin')}
-                        </Link>
-                      )}
                       <button 
                         onClick={handleLogout}
                         className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
