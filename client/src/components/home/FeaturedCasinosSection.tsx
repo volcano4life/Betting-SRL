@@ -7,7 +7,7 @@ import { Game } from "@shared/schema"; // We're temporarily using Game until we 
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FeaturedCasinosSection() {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { data: featuredCasinos, isLoading } = useQuery<Game[]>({
     queryKey: ['/api/games/top-rated'],
   });
@@ -47,7 +47,7 @@ export default function FeaturedCasinosSection() {
               <CasinoCard
                 key={casino.id}
                 id={casino.id}
-                title={casino.title}
+                title={getLocalizedField(casino, 'title')}
                 slug={casino.slug}
                 logo={casino.coverImage}
                 rating={casino.overallRating || 8.5}

@@ -9,7 +9,7 @@ import { Review } from "@shared/schema"; // We're temporarily using Review until
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PromoCodesSection() {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { data: promos, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/latest'],
   });
@@ -51,13 +51,13 @@ export default function PromoCodesSection() {
                     <div className="mb-3 flex items-center">
                       <img 
                         src={promo.coverImage} 
-                        alt={promo.title} 
+                        alt={getLocalizedField(promo, 'title')} 
                         className="h-12 mr-3 object-contain" 
                       />
-                      <h3 className="font-bold text-lg">{promo.title}</h3>
+                      <h3 className="font-bold text-lg">{getLocalizedField(promo, 'title')}</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">
-                      {promo.summary || t('promos.defaultSummary')}
+                      {getLocalizedField(promo, 'summary') || t('promos.defaultSummary')}
                     </p>
                     <div className="bg-primary/10 border border-primary/20 rounded p-2 text-center mb-4">
                       <span className="font-mono font-bold">{t('promos.defaultCode')}</span>

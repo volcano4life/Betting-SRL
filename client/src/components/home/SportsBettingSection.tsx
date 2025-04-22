@@ -10,7 +10,7 @@ import { News } from "@shared/schema"; // We're temporarily using News until we 
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SportsBettingSection() {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { data: sportsArticles, isLoading } = useQuery<News[]>({
     queryKey: ['/api/news/latest'],
   });
@@ -46,7 +46,7 @@ export default function SportsBettingSection() {
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={article.coverImage} 
-                      alt={article.title}
+                      alt={getLocalizedField(article, 'title')}
                       className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                     />
                     <div className="absolute top-0 left-0 m-3">
