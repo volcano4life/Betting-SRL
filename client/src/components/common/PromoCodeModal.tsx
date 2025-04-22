@@ -43,7 +43,7 @@ export default function PromoCodeModal({
         <div className="space-y-4 py-4">
           {casino && (
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Casino</p>
+              <p className="text-sm text-muted-foreground mb-1">{t('promos.casino')}</p>
               <p className="font-medium">{casino}</p>
             </div>
           )}
@@ -56,7 +56,7 @@ export default function PromoCodeModal({
           )}
           
           <div>
-            <p className="text-sm text-muted-foreground mb-1">Promo Code</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('promos.promoCode')}</p>
             <div className="flex items-center space-x-2">
               <Input 
                 value={promoCode} 
@@ -80,13 +80,13 @@ export default function PromoCodeModal({
             variant="outline" 
             onClick={() => onOpenChange(false)}
           >
-            Close
+            {t('promos.close')}
           </Button>
           <Button 
             variant="default" 
             onClick={handleCopy}
           >
-            {copied ? "Copied!" : "Copy Code"}
+            {copied ? t('promos.copied') : t('promos.copy')}
           </Button>
         </div>
       </DialogContent>
