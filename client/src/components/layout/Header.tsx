@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Search, Menu, Globe, User, Settings } from "lucide-react";
+import { Search, Menu, Globe, User, Settings, Shield } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -209,6 +209,17 @@ export default function Header() {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[180px] gap-1 p-2">
+                          {user.isAdmin && (
+                            <li>
+                              <Link 
+                                href="/admin"
+                                className="w-full text-left flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                              >
+                                <Shield className="h-4 w-4" />
+                                {t('nav.adminPanel')}
+                              </Link>
+                            </li>
+                          )}
                           <li>
                             <button
                               onClick={handleLogout} 
@@ -295,15 +306,26 @@ export default function Header() {
                   
                   {/* Authentication Links in Mobile Menu */}
                   {user && (
-                    <button 
-                      onClick={handleLogout}
-                      className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
-                    >
-                      <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      {t('nav.logout')}
-                    </button>
+                    <>
+                      {user.isAdmin && (
+                        <Link 
+                          href="/admin"
+                          className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
+                        >
+                          <Shield className="h-5 w-5 mr-2" />
+                          {t('nav.adminPanel')}
+                        </Link>
+                      )}
+                      <button 
+                        onClick={handleLogout}
+                        className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
+                      >
+                        <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        {t('nav.logout')}
+                      </button>
+                    </>
                   )}
                   
                   <button 
