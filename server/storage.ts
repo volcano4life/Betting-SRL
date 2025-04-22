@@ -16,6 +16,7 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   updateUserStatus(id: number, isBlocked: boolean): Promise<User>;
   approveAdmin(id: number): Promise<User>;
+  updateUserPassword(id: number, newPassword: string): Promise<User>;
   
   // Games
   getAllGames(): Promise<Game[]>;
@@ -151,6 +152,18 @@ export class MemStorage implements IStorage {
     
     // Set isAdmin to true
     const updatedUser = { ...user, isAdmin: true };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+  
+  async updateUserPassword(id: number, newPassword: string): Promise<User> {
+    const user = await this.getUser(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    // Update password
+    const updatedUser = { ...user, password: newPassword };
     this.users.set(id, updatedUser);
     return updatedUser;
   }

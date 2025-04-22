@@ -56,10 +56,15 @@ export default function AuthPage() {
     registerMutation.mutate(registerData);
   };
 
-  // If user is already logged in, redirect to home page
+  // If user is already logged in, redirect to appropriate page
   useEffect(() => {
     if (user) {
-      navigate("/");
+      // If user is admin, redirect to admin panel, otherwise to home page
+      if (user.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     }
   }, [user, navigate]);
 
