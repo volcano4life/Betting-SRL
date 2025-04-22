@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,7 +26,7 @@ export default function ChangePasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [, navigate] = useNavigate();
+  const [, setLocation] = useLocation();
 
   const form = useForm<PasswordValues>({
     resolver: zodResolver(passwordSchema),
@@ -51,7 +51,7 @@ export default function ChangePasswordPage() {
           title: t('changePassword.success'),
           description: t('changePassword.successDescription'),
         });
-        navigate("/");
+        setLocation("/");
       } else {
         const error = await response.json();
         toast({
@@ -127,7 +127,7 @@ export default function ChangePasswordPage() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="ghost" onClick={() => navigate("/")} disabled={isLoading}>
+          <Button variant="ghost" onClick={() => setLocation("/")} disabled={isLoading}>
             {t('common.cancel')}
           </Button>
         </CardFooter>
