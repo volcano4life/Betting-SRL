@@ -61,19 +61,23 @@ export default function PromoCodesSection() {
                       {t('promos.expires')} {formatDate(new Date(promo.validUntil))}
                     </Badge>
                   </div>
-                  <div className="relative p-6">
+                  <div className="relative p-6 pt-12">
                     <div className="mb-3 flex items-center">
                       {promo.casinoLogo ? (
                         <img 
                           src={promo.casinoLogo} 
                           alt={getLocalizedField(promo, 'casino_name')} 
                           className="h-12 w-12 mr-3 object-contain" 
+                          onError={(e) => {
+                            e.currentTarget.onerror = null; 
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement?.querySelector('.fallback-logo')?.classList.remove('hidden');
+                          }}
                         />
-                      ) : (
-                        <div className="h-12 w-12 mr-3 bg-gray-200 rounded-md flex items-center justify-center">
-                          <span className="text-gray-500">Logo</span>
-                        </div>
-                      )}
+                      ) : null}
+                      <div className={`h-12 w-12 mr-3 bg-gray-200 rounded-md flex items-center justify-center ${promo.casinoLogo ? 'hidden fallback-logo' : ''}`}>
+                        <span className="text-gray-500 text-xs">{getLocalizedField(promo, 'casino_name').substring(0, 3)}</span>
+                      </div>
                       <h3 className="font-bold text-lg">{getLocalizedField(promo, 'casino_name')}</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">
