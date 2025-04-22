@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HeroSection() {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   
   const { data: featuredCasinos, isLoading: casinosLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/featured'],
@@ -51,7 +51,7 @@ export default function HeroSection() {
             >
               <img 
                 src={mainFeatured.coverImage} 
-                alt={mainFeatured.title} 
+                alt={getLocalizedField(mainFeatured, 'title')} 
                 className="w-full h-full object-cover transition duration-300 transform group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
@@ -93,7 +93,7 @@ export default function HeroSection() {
                 >
                   <img 
                     src={news.coverImage} 
-                    alt={news.title} 
+                    alt={getLocalizedField(news, 'title')} 
                     className="w-full h-full object-cover transition duration-300 transform group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
