@@ -44,6 +44,11 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.empty': 'No promo codes available',
     'promos.claim': 'Claim Now',
     'promos.viewCasino': 'View Casino',
+    'promos.modalTitle': 'Your Exclusive Bonus Code',
+    'promos.modalDescription': 'Use this code when registering to claim your bonus',
+    'promos.expires': 'Expires',
+    'promos.copy': 'Copy Code',
+    'promos.copied': 'Copied!',
     
     'sports.title': 'Sports Betting Insights',
     'sports.subtitle': 'Expert predictions, odds analysis and betting tips',
@@ -106,6 +111,11 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.empty': 'Nessun codice promo disponibile',
     'promos.claim': 'Ottieni Ora',
     'promos.viewCasino': 'Vedi Casinò',
+    'promos.modalTitle': 'Il Tuo Codice Bonus Esclusivo',
+    'promos.modalDescription': 'Utilizza questo codice durante la registrazione per ottenere il tuo bonus',
+    'promos.expires': 'Scade il',
+    'promos.copy': 'Copia Codice',
+    'promos.copied': 'Copiato!',
     
     'sports.title': 'Approfondimenti Scommesse Sportive',
     'sports.subtitle': 'Previsioni di esperti, analisi delle quote e consigli per le scommesse',

@@ -42,7 +42,7 @@ export default function CasinoCard({
         <div className="flex flex-col h-full">
           {featured && (
             <div className="bg-primary text-white text-xs font-bold py-1 px-3 text-center">
-              RECOMMENDED
+              {t('featured.recommended')}
             </div>
           )}
           
@@ -57,8 +57,8 @@ export default function CasinoCard({
               </Link>
               <Badge variant="outline" className="text-sm font-normal">
                 {typeof validUntil === 'string' || validUntil instanceof Date 
-                  ? `Valid until ${formatDate(validUntil)}` 
-                  : 'Limited Time Offer'}
+                  ? `${t('featured.validUntil')} ${formatDate(validUntil)}` 
+                  : t('featured.limitedTimeOffer')}
               </Badge>
             </div>
             
@@ -82,13 +82,13 @@ export default function CasinoCard({
                   variant="outline" 
                   className="w-full"
                 >
-                  Show Promo Code
+                  {t('featured.showPromoCode')}
                 </Button>
               )}
               
               <Link href={`/casinos/${slug}`}>
                 <Button className="w-full">
-                  Visit Casino
+                  {t('featured.visitCasino')}
                 </Button>
               </Link>
             </div>
