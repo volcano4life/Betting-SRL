@@ -100,8 +100,8 @@ export default function CasinoCard({
         <PromoCodeModal
           open={promoModalOpen}
           onOpenChange={setPromoModalOpen}
-          title="Your Exclusive Bonus Code"
-          description="Use this code when registering to claim your bonus"
+          title={t('promos.modalTitle')}
+          description={t('promos.modalDescription')}
           promoCode={promoCode}
           casino={title}
           expiryDate={validUntil ? formatDate(validUntil) : undefined}
