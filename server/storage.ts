@@ -144,9 +144,11 @@ export class MemStorage implements IStorage {
   private initializeData() {
     // Initialize with sample game
     const game1: InsertGame = {
-      title: "Starcasino",
+      title_en: "Starcasino",
+      title_it: "Starcasino",
       slug: "starcasino",
-      description: "Starcasino is a premier Italian online casino offering a comprehensive selection of games, generous bonuses, and excellent customer support.",
+      description_en: "Starcasino is a premier Italian online casino offering a comprehensive selection of games, generous bonuses, and excellent customer support.",
+      description_it: "Starcasino è un casinò online italiano di prim'ordine che offre una selezione completa di giochi, bonus generosi e un eccellente servizio clienti.",
       coverImage: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
       releaseDate: new Date("2023-05-12"),
       platforms: ["Desktop", "Mobile", "App"],
@@ -161,9 +163,11 @@ export class MemStorage implements IStorage {
     this.createGame(game1);
     
     const game2: InsertGame = {
-      title: "888Casino",
+      title_en: "888Casino",
+      title_it: "888Casino",
       slug: "888casino",
-      description: "888Casino offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
+      description_en: "888Casino offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
+      description_it: "888Casino offre ai giocatori italiani un ambiente di gioco sicuro e divertente con un'ampia gamma di giochi da casinò e opzioni di scommesse sportive.",
       coverImage: "https://images.unsplash.com/photo-1596838132731-3301c3fd4527?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
       releaseDate: new Date("2023-08-03"),
       platforms: ["Desktop", "Mobile", "App"],
@@ -178,9 +182,11 @@ export class MemStorage implements IStorage {
     this.createGame(game2);
     
     const game3: InsertGame = {
-      title: "LeoVegas",
+      title_en: "LeoVegas",
+      title_it: "LeoVegas",
       slug: "leovegas",
-      description: "LeoVegas stands out for its exceptional mobile casino experience, offering thousands of games and a user-friendly interface optimized for on-the-go play.",
+      description_en: "LeoVegas stands out for its exceptional mobile casino experience, offering thousands of games and a user-friendly interface optimized for on-the-go play.",
+      description_it: "LeoVegas si distingue per la sua eccezionale esperienza di casinò mobile, offrendo migliaia di giochi e un'interfaccia user-friendly ottimizzata per il gioco in movimento.",
       coverImage: "https://images.unsplash.com/photo-1560415755-bd80d06eda60?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
       releaseDate: new Date("2022-02-25"),
       platforms: ["Desktop", "Mobile", "App"],
@@ -197,10 +203,13 @@ export class MemStorage implements IStorage {
     // Sample casino reviews
     const review1: InsertReview = {
       gameId: 1,
-      title: "Starcasino Review: Italy's Premier Online Casino Experience",
+      title_en: "Starcasino Review: Italy's Premier Online Casino Experience",
+      title_it: "Recensione Starcasino: La Principale Esperienza di Casinò Online in Italia",
       slug: "starcasino-review-italy-premier-online-casino",
-      summary: "Starcasino delivers an exceptional gaming experience with a vast selection of slots and generous welcome bonuses.",
-      content: "Starcasino stands out as one of Italy's top online gambling destinations. With over 2,000 slot games from providers like NetEnt and Playtech, a comprehensive live dealer section, and a user-friendly mobile app, it caters to all types of players. New users can claim a welcome bonus of up to €500 plus 200 free spins, with reasonable 35x wagering requirements. Customer support is available 24/7 in Italian and English, and the platform offers secure payment methods including PayPal, credit cards, and bank transfers.",
+      summary_en: "Starcasino delivers an exceptional gaming experience with a vast selection of slots and generous welcome bonuses.",
+      summary_it: "Starcasino offre un'esperienza di gioco eccezionale con una vasta selezione di slot e generosi bonus di benvenuto.",
+      content_en: "Starcasino stands out as one of Italy's top online gambling destinations. With over 2,000 slot games from providers like NetEnt and Playtech, a comprehensive live dealer section, and a user-friendly mobile app, it caters to all types of players. New users can claim a welcome bonus of up to €500 plus 200 free spins, with reasonable 35x wagering requirements. Customer support is available 24/7 in Italian and English, and the platform offers secure payment methods including PayPal, credit cards, and bank transfers.",
+      content_it: "Starcasino si distingue come una delle principali destinazioni di gioco d'azzardo online in Italia. Con oltre 2.000 giochi di slot di fornitori come NetEnt e Playtech, una sezione completa di dealer dal vivo e un'app mobile facile da usare, soddisfa tutti i tipi di giocatori. I nuovi utenti possono richiedere un bonus di benvenuto fino a €500 più 200 giri gratuiti, con ragionevoli requisiti di scommessa 35x. L'assistenza clienti è disponibile 24/7 in italiano e inglese, e la piattaforma offre metodi di pagamento sicuri tra cui PayPal, carte di credito e bonifici bancari.",
       coverImage: "https://images.unsplash.com/photo-1566694271453-390536dd1f0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
       rating: 9.8,
       featured: 1
@@ -209,10 +218,13 @@ export class MemStorage implements IStorage {
 
     const review2: InsertReview = {
       gameId: 2,
-      title: "888Casino: The Complete Italian Player's Guide",
+      title_en: "888Casino: The Complete Italian Player's Guide",
+      title_it: "888Casino: La Guida Completa per il Giocatore Italiano",
       slug: "888casino-italian-players-guide",
-      summary: "888Casino combines excellent game variety with outstanding bonuses and promotions for Italian players.",
-      content: "888Casino has established itself as a leading option for Italian gamblers seeking quality entertainment. The platform holds all necessary licenses for operation in Italy and offers a clean, modern interface that's simple to navigate. With a welcome bonus of 100% up to €200 and frequent reload bonuses, players have plenty of incentives. The game selection includes over 1,000 slots, numerous table games, and an award-winning poker platform. Mobile gameplay is smooth across all devices, and withdrawals are processed efficiently within 24-48 hours.",
+      summary_en: "888Casino combines excellent game variety with outstanding bonuses and promotions for Italian players.",
+      summary_it: "888Casino combina un'eccellente varietà di giochi con bonus e promozioni eccezionali per i giocatori italiani.",
+      content_en: "888Casino has established itself as a leading option for Italian gamblers seeking quality entertainment. The platform holds all necessary licenses for operation in Italy and offers a clean, modern interface that's simple to navigate. With a welcome bonus of 100% up to €200 and frequent reload bonuses, players have plenty of incentives. The game selection includes over 1,000 slots, numerous table games, and an award-winning poker platform. Mobile gameplay is smooth across all devices, and withdrawals are processed efficiently within 24-48 hours.",
+      content_it: "888Casino si è affermato come un'opzione di primo piano per i giocatori italiani in cerca di intrattenimento di qualità. La piattaforma detiene tutte le licenze necessarie per operare in Italia e offre un'interfaccia pulita e moderna facile da navigare. Con un bonus di benvenuto del 100% fino a €200 e frequenti bonus di ricarica, i giocatori hanno molti incentivi. La selezione di giochi include oltre 1.000 slot, numerosi giochi da tavolo e una piattaforma di poker premiata. Il gameplay mobile è fluido su tutti i dispositivi e i prelievi vengono elaborati in modo efficiente entro 24-48 ore.",
       coverImage: "https://images.unsplash.com/photo-1518895312237-a9e23508fd43?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
       rating: 9.2,
       featured: 0
@@ -221,10 +233,13 @@ export class MemStorage implements IStorage {
     
     // Add casino news samples
     const news1: InsertNews = {
-      title: "Italian Gambling Authority Announces Stricter Regulations for 2024",
+      title_en: "Italian Gambling Authority Announces Stricter Regulations for 2024",
+      title_it: "L'Autorità Italiana del Gioco d'Azzardo Annuncia Regolamenti Più Severi per il 2024",
       slug: "italian-gambling-authority-stricter-regulations-2024",
-      summary: "New regulations aimed at enhancing player protection will require additional identity verification steps and deposit limits.",
-      content: "The Italian gambling regulatory authority (ADM) has announced significant changes to online gambling regulations, set to take effect in early 2024. The new framework will require operators to implement stricter identity verification procedures, mandatory deposit limits that players must set before gambling, and enhanced self-exclusion options. While the measures aim to combat problem gambling, industry experts suggest they may impact the user experience with additional verification steps. Licensed operators, including major brands like Starcasino and 888, have six months to implement the required changes.",
+      summary_en: "New regulations aimed at enhancing player protection will require additional identity verification steps and deposit limits.",
+      summary_it: "Nuove normative volte a migliorare la protezione dei giocatori richiederanno ulteriori passaggi di verifica dell'identità e limiti di deposito.",
+      content_en: "The Italian gambling regulatory authority (ADM) has announced significant changes to online gambling regulations, set to take effect in early 2024. The new framework will require operators to implement stricter identity verification procedures, mandatory deposit limits that players must set before gambling, and enhanced self-exclusion options. While the measures aim to combat problem gambling, industry experts suggest they may impact the user experience with additional verification steps. Licensed operators, including major brands like Starcasino and 888, have six months to implement the required changes.",
+      content_it: "L'autorità regolatoria italiana del gioco d'azzardo (ADM) ha annunciato significativi cambiamenti alle normative sul gioco d'azzardo online, che entreranno in vigore all'inizio del 2024. Il nuovo quadro richiederà agli operatori di implementare procedure di verifica dell'identità più rigide, limiti di deposito obbligatori che i giocatori devono impostare prima di giocare d'azzardo e opzioni di auto-esclusione migliorate. Mentre le misure mirano a combattere il gioco d'azzardo problematico, gli esperti del settore suggeriscono che potrebbero influire sull'esperienza utente con ulteriori passaggi di verifica. Gli operatori con licenza, inclusi i principali marchi come Starcasino e 888, hanno sei mesi per implementare le modifiche richieste.",
       coverImage: "https://images.unsplash.com/photo-1563237023-b1e970526dcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       category: "Regulation",
       featured: 1
@@ -232,10 +247,13 @@ export class MemStorage implements IStorage {
     this.createNews(news1);
 
     const news2: InsertNews = {
-      title: "Exclusive: LeoVegas Launches 'Leo Millions' €5M Guaranteed Jackpot",
+      title_en: "Exclusive: LeoVegas Launches 'Leo Millions' €5M Guaranteed Jackpot",
+      title_it: "Esclusiva: LeoVegas Lancia il Jackpot Garantito 'Leo Millions' da €5M",
       slug: "leovegas-launches-leo-millions-jackpot",
-      summary: "LeoVegas introduces a new progressive jackpot slot with a minimum guaranteed prize pool of €5 million.",
-      content: "LeoVegas has announced the launch of 'Leo Millions,' a proprietary progressive jackpot slot game with a guaranteed minimum prize pool of €5 million. The exclusive game, developed in partnership with Play'n GO, will be available only to Italian players for the first month before expanding to other European markets. The launch is accompanied by a promotion offering 50 free spins to all players who deposit €20 or more between October 15-31. Industry analysts note this represents one of the largest guaranteed jackpots ever offered by an online casino operating in the Italian market.",
+      summary_en: "LeoVegas introduces a new progressive jackpot slot with a minimum guaranteed prize pool of €5 million.",
+      summary_it: "LeoVegas introduce una nuova slot a jackpot progressivo con un montepremi minimo garantito di €5 milioni.",
+      content_en: "LeoVegas has announced the launch of 'Leo Millions,' a proprietary progressive jackpot slot game with a guaranteed minimum prize pool of €5 million. The exclusive game, developed in partnership with Play'n GO, will be available only to Italian players for the first month before expanding to other European markets. The launch is accompanied by a promotion offering 50 free spins to all players who deposit €20 or more between October 15-31. Industry analysts note this represents one of the largest guaranteed jackpots ever offered by an online casino operating in the Italian market.",
+      content_it: "LeoVegas ha annunciato il lancio di 'Leo Millions', un gioco di slot a jackpot progressivo proprietario con un montepremi minimo garantito di €5 milioni. Il gioco esclusivo, sviluppato in collaborazione con Play'n GO, sarà disponibile solo per i giocatori italiani per il primo mese prima di espandersi ad altri mercati europei. Il lancio è accompagnato da una promozione che offre 50 giri gratuiti a tutti i giocatori che depositano €20 o più tra il 15 e il 31 ottobre. Gli analisti del settore notano che questo rappresenta uno dei jackpot garantiti più grandi mai offerti da un casinò online operante nel mercato italiano.",
       coverImage: "https://images.unsplash.com/photo-1605870445919-838d190e8e1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       category: "Promotions",
       featured: 0
@@ -244,10 +262,13 @@ export class MemStorage implements IStorage {
     
     // Add betting guides
     const guide1: InsertGuide = {
-      title: "Roulette Strategy Guide: Mastering the Most Popular Casino Table Game",
+      title_en: "Roulette Strategy Guide: Mastering the Most Popular Casino Table Game",
+      title_it: "Guida alle Strategie della Roulette: Padroneggiare il Gioco da Tavolo da Casinò Più Popolare",
       slug: "roulette-strategy-guide-mastering-casino-table-game",
-      summary: "Learn proven roulette strategies including the Martingale, Fibonacci, and D'Alembert systems to maximize your chances of winning.",
-      content: "Roulette remains one of the most popular casino games in Italy, combining simplicity with excitement. This comprehensive guide covers everything from understanding the European, American, and French roulette variations to implementing betting strategies that can improve your odds. We explain the mathematics behind the Martingale system (doubling your bet after each loss), the more conservative Fibonacci approach (following the Fibonacci sequence for bet sizes), and the D'Alembert strategy (increasing bets by one unit after losses). The guide also includes bankroll management techniques and explains when each strategy is most appropriate based on your risk tolerance.",
+      summary_en: "Learn proven roulette strategies including the Martingale, Fibonacci, and D'Alembert systems to maximize your chances of winning.",
+      summary_it: "Impara strategie comprovate per la roulette, inclusi i sistemi Martingale, Fibonacci e D'Alembert per massimizzare le tue possibilità di vincita.",
+      content_en: "Roulette remains one of the most popular casino games in Italy, combining simplicity with excitement. This comprehensive guide covers everything from understanding the European, American, and French roulette variations to implementing betting strategies that can improve your odds. We explain the mathematics behind the Martingale system (doubling your bet after each loss), the more conservative Fibonacci approach (following the Fibonacci sequence for bet sizes), and the D'Alembert strategy (increasing bets by one unit after losses). The guide also includes bankroll management techniques and explains when each strategy is most appropriate based on your risk tolerance.",
+      content_it: "La roulette rimane uno dei giochi da casinò più popolari in Italia, combinando semplicità ed emozione. Questa guida completa copre tutto, dalla comprensione delle varianti di roulette europea, americana e francese all'implementazione di strategie di scommessa che possono migliorare le tue probabilità. Spieghiamo la matematica dietro il sistema Martingale (raddoppiare la puntata dopo ogni perdita), l'approccio più conservativo di Fibonacci (seguendo la sequenza di Fibonacci per le dimensioni delle puntate) e la strategia D'Alembert (aumentare le puntate di un'unità dopo le perdite). La guida include anche tecniche di gestione del bankroll e spiega quando ogni strategia è più appropriata in base alla tua tolleranza al rischio.",
       coverImage: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       difficulty: "INTERMEDIATE",
       category: "Casino Guides"
@@ -255,10 +276,13 @@ export class MemStorage implements IStorage {
     this.createGuide(guide1);
 
     const guide2: InsertGuide = {
-      title: "Serie A Betting Guide: Expert Tips for the 2023-24 Season",
+      title_en: "Serie A Betting Guide: Expert Tips for the 2023-24 Season",
+      title_it: "Guida alle Scommesse sulla Serie A: Consigli di Esperti per la Stagione 2023-24",
       slug: "serie-a-betting-guide-expert-tips-2023-24-season",
-      summary: "Maximize your Serie A betting success with our expert analysis, team insights, and strategic betting approaches.",
-      content: "This comprehensive Serie A betting guide provides everything you need to know before placing wagers on Italy's top football league. We analyze the strengths and weaknesses of title contenders including Inter Milan, AC Milan, Juventus, and Napoli, with detailed statistical insights on home/away performance, scoring patterns, and defensive solidity. The guide includes expert tips on identifying value bets, leveraging Asian handicap markets, and utilizing in-play betting opportunities. We also cover the impact of European competition schedules on domestic performance and identify promising mid-table teams that consistently offer value against the betting spread.",
+      summary_en: "Maximize your Serie A betting success with our expert analysis, team insights, and strategic betting approaches.",
+      summary_it: "Massimizza il tuo successo nelle scommesse sulla Serie A con la nostra analisi di esperti, approfondimenti sulle squadre e approcci strategici alle scommesse.",
+      content_en: "This comprehensive Serie A betting guide provides everything you need to know before placing wagers on Italy's top football league. We analyze the strengths and weaknesses of title contenders including Inter Milan, AC Milan, Juventus, and Napoli, with detailed statistical insights on home/away performance, scoring patterns, and defensive solidity. The guide includes expert tips on identifying value bets, leveraging Asian handicap markets, and utilizing in-play betting opportunities. We also cover the impact of European competition schedules on domestic performance and identify promising mid-table teams that consistently offer value against the betting spread.",
+      content_it: "Questa guida completa alle scommesse sulla Serie A fornisce tutto ciò che devi sapere prima di piazzare scommesse sul principale campionato di calcio italiano. Analizziamo i punti di forza e di debolezza dei contendenti al titolo, tra cui Inter, Milan, Juventus e Napoli, con approfondimenti statistici dettagliati sulle prestazioni in casa/fuori casa, sui modelli di realizzazione e sulla solidità difensiva. La guida include consigli di esperti su come identificare le scommesse di valore, sfruttare i mercati dell'handicap asiatico e utilizzare le opportunità di scommesse dal vivo. Copriamo anche l'impatto dei calendari delle competizioni europee sulle prestazioni nazionali e identifichiamo squadre promettenti di metà classifica che offrono costantemente valore contro lo spread delle scommesse.",
       coverImage: "https://images.unsplash.com/photo-1610215078970-51f8395af5e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       difficulty: "ADVANCED",
       category: "Sports Betting"
