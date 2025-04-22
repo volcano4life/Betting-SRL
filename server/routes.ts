@@ -16,7 +16,7 @@ import { games, reviews, news, guides, promoCodes } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
-  const { requireAdmin } = setupAuth(app);
+  const { requireAdmin, requireSiteOwner } = setupAuth(app);
   
   // Seed admin user
   await seedAdminUser();
@@ -447,6 +447,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: 'Guide deleted successfully' });
     } catch (error) {
       res.status(500).json({ message: 'Error deleting guide', error });
+    }
+  });
+  
+  // ====== ADMINISTRATOR MANAGEMENT ROUTES ======
+  
+  // Get all users (only accessible to admins)
+  app.get('/api/admin/users', requireAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      // Remove password from response
+      const usersWithoutPasswords = users.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching users', error });
+    }
+  });
+  
+  // Block/unblock a user (only site owner can block other admins)
+  app.put('/api/admin/users/:id/block', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { isBlocked } = req.body;
+      
+      // Check if target user exists
+      const targetUser = await storage.getUser(id);
+      if (!targetUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Only the site owner (admin) can block/unblock other admins
+      if (targetUser.isAdmin && req.user.username !== 'admin') {
+        return res.status(403).json({ message: 'Only the site owner can block other administrators' });
+      }
+      
+      // Prevent blocking the site owner (admin)
+      if (targetUser.username === 'admin') {
+        return res.status(403).json({ message: 'The site owner cannot be blocked' });
+      }
+      
+      // Update user status
+      const updatedUser = await storage.updateUserStatus(id, isBlocked);
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating user status', error });
+    }
+  });
+  
+  // Approve an admin user (only site owner can approve)
+  app.put('/api/admin/users/:id/approve', requireSiteOwner, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Check if target user exists
+      const targetUser = await storage.getUser(id);
+      if (!targetUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // If user is already an admin, return error
+      if (targetUser.isAdmin) {
+        return res.status(400).json({ message: 'User is already an administrator' });
+      }
+      
+      // Approve admin
+      const updatedUser = await storage.approveAdmin(id);
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: 'Error approving administrator', error });
     }
   });
 

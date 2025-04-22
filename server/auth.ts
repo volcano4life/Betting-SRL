@@ -113,6 +113,20 @@ export function setupAuth(app: Express) {
     if (!req.isAuthenticated() || !req.user.isAdmin) {
       return res.status(403).json({ message: "Not authorized" });
     }
+    
+    // Check if admin is blocked
+    if (req.user.isBlocked) {
+      return res.status(403).json({ message: "Your account has been blocked. Please contact the administrator." });
+    }
+    
+    next();
+  };
+  
+  // Special middleware that only allows the site owner (username: admin)
+  const requireSiteOwner = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.isAuthenticated() || !req.user.isAdmin || req.user.username !== 'admin') {
+      return res.status(403).json({ message: "Only the site owner can perform this action" });
+    }
     next();
   };
 
@@ -180,5 +194,5 @@ export function setupAuth(app: Express) {
     res.json(userWithoutPassword);
   });
 
-  return { requireAuth, requireAdmin };
+  return { requireAuth, requireAdmin, requireSiteOwner };
 }
