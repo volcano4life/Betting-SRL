@@ -34,6 +34,7 @@ function Router() {
           <Route path="/reviews/:slug" component={ReviewDetailPage} />
           <Route path="/auth" component={AuthPage} />
           <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
+          <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
           {/* Fallback to 404 */}
           <Route component={NotFound} />
         </Switch>
