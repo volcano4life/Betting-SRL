@@ -76,7 +76,7 @@ export default function AdminPage() {
 
       {/* Admin content */}
       <main className="container p-4 space-y-6">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ContentType)}>
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <div className="flex items-center justify-between mb-4">
             <TabsList>
               <TabsTrigger value="promo-codes">{t('admin.promoCodes')}</TabsTrigger>
@@ -354,7 +354,7 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = useState<Partial<PromoCode>>({
+  const [formData, setFormData] = useState<Partial<PromoCode> & { validUntil: string | Date }>({
     casino_name_en: '',
     casino_name_it: '',
     code: '',
@@ -362,7 +362,7 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     description_it: '',
     bonus_en: '',
     bonus_it: '',
-    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
     casinoLogo: '',
     affiliateLink: '',
     active: true,
