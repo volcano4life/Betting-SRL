@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Search, Menu, Globe } from "lucide-react";
+import { Search, Menu, Globe, User, Settings } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/hooks/use-auth";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -40,11 +41,16 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [location] = useLocation();
   const { language, setLanguage, t } = useLanguage();
+  const { user, logoutMutation } = useAuth();
 
   const isActive = (path: string) => location === path;
   
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'it' : 'en');
+  };
+  
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   return (
@@ -172,7 +178,7 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Search, Language, and Mobile Menu Toggle */}
+          {/* Search, Language, User Menu and Mobile Toggle */}
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
@@ -190,6 +196,59 @@ export default function Header() {
               <Globe className="h-5 w-5" />
               <span className="hidden md:inline">{t('nav.language')}</span>
             </Button>
+            
+            {/* User/Admin Menu */}
+            {user ? (
+              <div className="relative flex items-center space-x-2">
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="flex items-center gap-1 text-[#222236] hover:text-primary">
+                        <User className="h-5 w-5" />
+                        <span className="hidden md:inline">{user.username}</span>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[180px] gap-1 p-2">
+                          {user.isAdmin && (
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href="/admin"
+                                  className="flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                                >
+                                  <Settings className="h-4 w-4" />
+                                  {t('nav.admin')}
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          )}
+                          <li>
+                            <button
+                              onClick={handleLogout} 
+                              className="w-full text-left flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                            >
+                              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                              </svg>
+                              {t('nav.logout')}
+                            </button>
+                          </li>
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
+            ) : (
+              <Link 
+                href="/auth" 
+                className="flex items-center px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 text-sm font-medium"
+              >
+                <User className="h-4 w-4 mr-2" />
+                <span>{t('nav.login')}</span>
+              </Link>
+            )}
+            
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden text-[#222236] hover:text-primary">
@@ -252,6 +311,39 @@ export default function Header() {
                   <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
                     {t('nav.sportsBetting')}
                   </Link>
+                  
+                  {/* Authentication Links in Mobile Menu */}
+                  {user ? (
+                    <>
+                      {user.isAdmin && (
+                        <Link 
+                          href="/admin" 
+                          className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
+                        >
+                          <Settings className="h-5 w-5 mr-2" />
+                          {t('nav.admin')}
+                        </Link>
+                      )}
+                      <button 
+                        onClick={handleLogout}
+                        className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
+                      >
+                        <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        {t('nav.logout')}
+                      </button>
+                    </>
+                  ) : (
+                    <Link 
+                      href="/auth" 
+                      className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
+                    >
+                      <User className="h-5 w-5 mr-2" />
+                      {t('nav.login')}
+                    </Link>
+                  )}
+                  
                   <button 
                     onClick={toggleLanguage}
                     className="flex items-center space-x-2 text-[#222236] hover:text-primary font-semibold py-2"
