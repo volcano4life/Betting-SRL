@@ -6,6 +6,7 @@ import {
   Youtube, 
   MessageCircle 
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -35,6 +36,8 @@ const companyLinks = [
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
+  
   return (
     <footer className="bg-[#222236] text-gray-300">
       <div className="container mx-auto px-4 py-12">
@@ -49,7 +52,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm mb-4">
-              Your trusted source for Italian casino reviews, exclusive promo codes, and sports betting insights.
+              {t('footer.tagline')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition duration-200">
@@ -71,12 +74,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-4">Casino Games</h3>
+            <h3 className="text-white font-bold mb-4">{t('footer.casinoGames')}</h3>
             <ul className="space-y-2 text-sm">
               {casinoCategories.map((category) => (
                 <li key={category.href}>
                   <Link href={category.href} className="hover:text-white transition duration-200">
-                    {category.label}
+                    {t(`footer.casino.${category.label.toLowerCase().replace(/ /g, '')}`)}
                   </Link>
                 </li>
               ))}
@@ -84,12 +87,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-4">Promotions</h3>
+            <h3 className="text-white font-bold mb-4">{t('footer.promotions')}</h3>
             <ul className="space-y-2 text-sm">
               {promoCategories.map((promo) => (
                 <li key={promo.href}>
                   <Link href={promo.href} className="hover:text-white transition duration-200">
-                    {promo.label}
+                    {t(`footer.promos.${promo.label.toLowerCase().replace(/ /g, '')}`)}
                   </Link>
                 </li>
               ))}
@@ -97,12 +100,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-4">Company</h3>
+            <h3 className="text-white font-bold mb-4">{t('footer.company')}</h3>
             <ul className="space-y-2 text-sm">
               {companyLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-white transition duration-200">
-                    {link.label}
+                    {t(`footer.links.${link.label.toLowerCase().replace(/ /g, '')}`)}
                   </Link>
                 </li>
               ))}
@@ -111,7 +114,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-sm text-center">
-          <p>© {new Date().getFullYear()} Betting SRL. All rights reserved. All trademarks are property of their respective owners.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>
       </div>
     </footer>
