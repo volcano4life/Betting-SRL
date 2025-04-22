@@ -51,7 +51,10 @@ const translations: Record<Language, Record<string, string>> = {
     'responsible.title': 'Responsible Gambling',
     'responsible.description': 'Play responsibly and know your limits. Gambling should be entertaining, not a way to make money.',
     
-    'faq.title': 'Frequently Asked Questions',
+    'faq.title': 'Online Gambling FAQs',
+    'faq.subtitle': 'Find answers to commonly asked questions about online casinos and gambling in Italy',
+    'faq.moreQuestions': 'Have more questions?',
+    'faq.contactTeam': 'Contact our team',
     
     'newsletter.title': 'Get Exclusive Casino Offers',
     'newsletter.subtitle': 'Subscribe to our newsletter for the latest bonuses and promotions',
@@ -105,7 +108,10 @@ const translations: Record<Language, Record<string, string>> = {
     'responsible.title': 'Gioco Responsabile',
     'responsible.description': 'Gioca responsabilmente e conosci i tuoi limiti. Il gioco dovrebbe essere un divertimento, non un modo per fare soldi.',
     
-    'faq.title': 'Domande Frequenti',
+    'faq.title': 'FAQ sul Gioco d\'Azzardo Online',
+    'faq.subtitle': 'Trova risposte alle domande più frequenti sui casinò online e il gioco d\'azzardo in Italia',
+    'faq.moreQuestions': 'Hai altre domande?',
+    'faq.contactTeam': 'Contatta il nostro team',
     
     'newsletter.title': 'Ottieni Offerte Esclusive dei Casinò',
     'newsletter.subtitle': 'Iscriviti alla nostra newsletter per gli ultimi bonus e promozioni',
