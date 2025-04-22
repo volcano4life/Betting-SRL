@@ -1,9 +1,25 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertSubscriberSchema } from "@shared/schema";
+import { 
+  insertSubscriberSchema, 
+  insertGameSchema, 
+  insertReviewSchema, 
+  insertNewsSchema,
+  insertGuideSchema,
+  insertPromoCodeSchema
+} from "@shared/schema";
+import { setupAuth, seedAdminUser } from "./auth";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { games, reviews, news, guides, promoCodes } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication
+  const { requireAdmin } = setupAuth(app);
+  
+  // Seed admin user
+  await seedAdminUser();
   // API routes
   const apiRouter = app.route('/api');
   
@@ -126,6 +142,311 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json({ message: 'Successfully subscribed', subscriber });
     } catch (error) {
       res.status(400).json({ message: 'Invalid subscriber data', error });
+    }
+  });
+
+  // ====== ADMIN ROUTES ======
+  
+  // PromoCode endpoints - requires admin auth
+  app.get('/api/admin/promo-codes', requireAdmin, async (req, res) => {
+    try {
+      const result = await db.select().from(promoCodes).orderBy(promoCodes.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching promo codes', error });
+    }
+  });
+
+  app.get('/api/admin/promo-codes/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db.select().from(promoCodes).where(eq(promoCodes.id, id));
+      if (!result) {
+        return res.status(404).json({ message: 'Promo code not found' });
+      }
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching promo code', error });
+    }
+  });
+
+  app.post('/api/admin/promo-codes', requireAdmin, async (req, res) => {
+    try {
+      const parsedData = insertPromoCodeSchema.parse(req.body);
+      const [result] = await db.insert(promoCodes).values(parsedData).returning();
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid promo code data', error });
+    }
+  });
+
+  app.put('/api/admin/promo-codes/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const parsedData = insertPromoCodeSchema.parse(req.body);
+      const [result] = await db
+        .update(promoCodes)
+        .set(parsedData)
+        .where(eq(promoCodes.id, id))
+        .returning();
+      
+      if (!result) {
+        return res.status(404).json({ message: 'Promo code not found' });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid promo code data', error });
+    }
+  });
+
+  app.delete('/api/admin/promo-codes/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db
+        .delete(promoCodes)
+        .where(eq(promoCodes.id, id))
+        .returning();
+        
+      if (!result) {
+        return res.status(404).json({ message: 'Promo code not found' });
+      }
+      
+      res.json({ message: 'Promo code deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting promo code', error });
+    }
+  });
+
+  // Games admin endpoints
+  app.get('/api/admin/games', requireAdmin, async (req, res) => {
+    try {
+      const result = await db.select().from(games).orderBy(games.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching games', error });
+    }
+  });
+
+  app.post('/api/admin/games', requireAdmin, async (req, res) => {
+    try {
+      const parsedData = insertGameSchema.parse(req.body);
+      const [result] = await db.insert(games).values(parsedData).returning();
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid game data', error });
+    }
+  });
+
+  app.put('/api/admin/games/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const parsedData = insertGameSchema.parse(req.body);
+      const [result] = await db
+        .update(games)
+        .set(parsedData)
+        .where(eq(games.id, id))
+        .returning();
+      
+      if (!result) {
+        return res.status(404).json({ message: 'Game not found' });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid game data', error });
+    }
+  });
+
+  app.delete('/api/admin/games/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db
+        .delete(games)
+        .where(eq(games.id, id))
+        .returning();
+        
+      if (!result) {
+        return res.status(404).json({ message: 'Game not found' });
+      }
+      
+      res.json({ message: 'Game deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting game', error });
+    }
+  });
+
+  // Reviews admin endpoints
+  app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
+    try {
+      const result = await db.select().from(reviews).orderBy(reviews.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching reviews', error });
+    }
+  });
+
+  app.post('/api/admin/reviews', requireAdmin, async (req, res) => {
+    try {
+      const parsedData = insertReviewSchema.parse(req.body);
+      const [result] = await db.insert(reviews).values(parsedData).returning();
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid review data', error });
+    }
+  });
+
+  app.put('/api/admin/reviews/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const parsedData = insertReviewSchema.parse(req.body);
+      const [result] = await db
+        .update(reviews)
+        .set(parsedData)
+        .where(eq(reviews.id, id))
+        .returning();
+      
+      if (!result) {
+        return res.status(404).json({ message: 'Review not found' });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid review data', error });
+    }
+  });
+
+  app.delete('/api/admin/reviews/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db
+        .delete(reviews)
+        .where(eq(reviews.id, id))
+        .returning();
+        
+      if (!result) {
+        return res.status(404).json({ message: 'Review not found' });
+      }
+      
+      res.json({ message: 'Review deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting review', error });
+    }
+  });
+
+  // News admin endpoints
+  app.get('/api/admin/news', requireAdmin, async (req, res) => {
+    try {
+      const result = await db.select().from(news).orderBy(news.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching news', error });
+    }
+  });
+
+  app.post('/api/admin/news', requireAdmin, async (req, res) => {
+    try {
+      const parsedData = insertNewsSchema.parse(req.body);
+      const [result] = await db.insert(news).values(parsedData).returning();
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid news data', error });
+    }
+  });
+
+  app.put('/api/admin/news/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const parsedData = insertNewsSchema.parse(req.body);
+      const [result] = await db
+        .update(news)
+        .set(parsedData)
+        .where(eq(news.id, id))
+        .returning();
+      
+      if (!result) {
+        return res.status(404).json({ message: 'News item not found' });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid news data', error });
+    }
+  });
+
+  app.delete('/api/admin/news/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db
+        .delete(news)
+        .where(eq(news.id, id))
+        .returning();
+        
+      if (!result) {
+        return res.status(404).json({ message: 'News item not found' });
+      }
+      
+      res.json({ message: 'News item deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting news item', error });
+    }
+  });
+
+  // Guides admin endpoints
+  app.get('/api/admin/guides', requireAdmin, async (req, res) => {
+    try {
+      const result = await db.select().from(guides).orderBy(guides.id);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching guides', error });
+    }
+  });
+
+  app.post('/api/admin/guides', requireAdmin, async (req, res) => {
+    try {
+      const parsedData = insertGuideSchema.parse(req.body);
+      const [result] = await db.insert(guides).values(parsedData).returning();
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid guide data', error });
+    }
+  });
+
+  app.put('/api/admin/guides/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const parsedData = insertGuideSchema.parse(req.body);
+      const [result] = await db
+        .update(guides)
+        .set(parsedData)
+        .where(eq(guides.id, id))
+        .returning();
+      
+      if (!result) {
+        return res.status(404).json({ message: 'Guide not found' });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid guide data', error });
+    }
+  });
+
+  app.delete('/api/admin/guides/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [result] = await db
+        .delete(guides)
+        .where(eq(guides.id, id))
+        .returning();
+        
+      if (!result) {
+        return res.status(404).json({ message: 'Guide not found' });
+      }
+      
+      res.json({ message: 'Guide deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting guide', error });
     }
   });
 
