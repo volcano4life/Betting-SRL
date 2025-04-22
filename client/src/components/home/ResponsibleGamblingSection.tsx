@@ -1,7 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, Clock, Ban, Shield } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ResponsibleGamblingSection() {
+  const { t } = useLanguage();
   const responsibleGamblingPrinciples = [
     {
       icon: <Clock className="h-8 w-8 text-primary" />,
@@ -30,11 +32,10 @@ export default function ResponsibleGamblingSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-[#222236] mb-4">
-            Responsible Gambling
+            {t('responsible.title')}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            At Betting SRL, we promote safe and responsible gambling practices. 
-            Gambling should be an enjoyable form of entertainment, not a way to make money.
+            {t('responsible.description')}
           </p>
         </div>
 
