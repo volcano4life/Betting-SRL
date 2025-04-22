@@ -79,8 +79,40 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.terms': 'Terms & Conditions',
     'footer.privacy': 'Privacy Policy',
     'footer.contact': 'Contact Us',
-    'footer.copyright': '© 2023 Betting SRL. All rights reserved.',
-    'footer.disclaimer': 'Gambling involves risk. Please gamble responsibly.'
+    'footer.copyright': '© {year} Betting SRL. All rights reserved. All trademarks are property of their respective owners.',
+    'footer.disclaimer': 'Gambling involves risk. Please gamble responsibly.',
+    'footer.tagline': 'Your trusted source for Italian casino reviews, exclusive promo codes, and sports betting insights.',
+    'footer.casinoGames': 'Casino Games',
+    'footer.promotions': 'Promotions',
+    'footer.company': 'Company',
+    
+    // Footer casino links
+    'footer.casino.slotmachines': 'Slot Machines',
+    'footer.casino.roulette': 'Roulette',
+    'footer.casino.blackjack': 'Blackjack', 
+    'footer.casino.poker': 'Poker',
+    'footer.casino.baccarat': 'Baccarat',
+    'footer.casino.livecasino': 'Live Casino',
+    'footer.casino.bingo': 'Bingo',
+    
+    // Footer promo links
+    'footer.promos.welcomebonuses': 'Welcome Bonuses',
+    'footer.promos.nodeposit': 'No Deposit',
+    'footer.promos.freespins': 'Free Spins',
+    'footer.promos.cashback': 'Cashback',
+    'footer.promos.loyaltyprograms': 'Loyalty Programs',
+    
+    // Footer company links
+    'footer.links.aboutus': 'About Us',
+    'footer.links.ourteam': 'Our Team',
+    'footer.links.careers': 'Careers',
+    'footer.links.contactus': 'Contact Us',
+    'footer.links.privacypolicy': 'Privacy Policy',
+    'footer.links.termsofservice': 'Terms of Service',
+    
+    // Promo code section
+    'promos.defaultSummary': 'Exclusive welcome bonus with free spins and deposit match',
+    'promos.defaultCode': 'WELCOME100'
   },
   it: {
     // Navigation

@@ -44,7 +44,7 @@ export default function PromoCodesSection() {
                 <CardContent className="p-0 relative">
                   <div className="absolute top-0 right-0 m-3 z-10">
                     <Badge className="bg-red-500 hover:bg-red-600 text-white">
-                      Expires {formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))}
+                      {t('promos.expires')} {formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))}
                     </Badge>
                   </div>
                   <div className="relative p-6">
@@ -57,10 +57,10 @@ export default function PromoCodesSection() {
                       <h3 className="font-bold text-lg">{promo.title}</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">
-                      {promo.summary || "Exclusive welcome bonus with free spins and deposit match"}
+                      {promo.summary || t('promos.defaultSummary')}
                     </p>
                     <div className="bg-primary/10 border border-primary/20 rounded p-2 text-center mb-4">
-                      <span className="font-mono font-bold">WELCOME100</span>
+                      <span className="font-mono font-bold">{t('promos.defaultCode')}</span>
                     </div>
                     <div className="flex space-x-2">
                       <Button className="w-full" size="sm" asChild>
