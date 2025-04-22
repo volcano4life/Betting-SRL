@@ -3,10 +3,16 @@ import {
   Review, InsertReview, 
   News, InsertNews, 
   Guide, InsertGuide, 
-  Subscriber, InsertSubscriber 
+  Subscriber, InsertSubscriber,
+  User, InsertUser
 } from "@shared/schema";
 
 export interface IStorage {
+  // Users
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  
   // Games
   getAllGames(): Promise<Game[]>;
   getFeaturedGames(): Promise<Game[]>;
@@ -51,12 +57,14 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
+  private users: Map<number, User>;
   private games: Map<number, Game>;
   private reviews: Map<number, Review>;
   private news: Map<number, News>;
   private guides: Map<number, Guide>;
   private subscribers: Map<number, Subscriber>;
   
+  private userId: number;
   private gameId: number;
   private reviewId: number;
   private newsId: number;
@@ -64,12 +72,14 @@ export class MemStorage implements IStorage {
   private subscriberId: number;
   
   constructor() {
+    this.users = new Map();
     this.games = new Map();
     this.reviews = new Map();
     this.news = new Map();
     this.guides = new Map();
     this.subscribers = new Map();
     
+    this.userId = 1;
     this.gameId = 1;
     this.reviewId = 1;
     this.newsId = 1;
@@ -78,6 +88,24 @@ export class MemStorage implements IStorage {
     
     // Add some initial data
     this.initializeData();
+  }
+  
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.username === username);
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const id = this.userId++;
+    const createdAt = new Date();
+    const isAdmin = user.isAdmin === true; // Ensure isAdmin is a boolean, default to false if undefined
+    const newUser: User = { ...user, id, createdAt, isAdmin };
+    this.users.set(id, newUser);
+    return newUser;
   }
   
   private initializeData() {
