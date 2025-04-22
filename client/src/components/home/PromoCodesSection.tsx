@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -5,13 +6,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
-import { Review } from "@shared/schema"; // We're temporarily using Review until we update schema.ts
+import { PromoCode } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
+import PromoCodeModal from "@/components/common/PromoCodeModal";
 
 export default function PromoCodesSection() {
   const { t, getLocalizedField } = useLanguage();
-  const { data: promos, isLoading } = useQuery<Review[]>({
-    queryKey: ['/api/reviews/latest'],
+  const [promoModalData, setPromoModalData] = useState<{
+    open: boolean;
+    promoCode: string;
+    casino: string;
+    expiryDate: string;
+  }>({
+    open: false,
+    promoCode: "",
+    casino: "",
+    expiryDate: "",
+  });
+  
+  const { data: promos, isLoading } = useQuery<PromoCode[]>({
+    queryKey: ['/api/promo-codes/featured'],
   });
 
   return (
@@ -44,34 +58,50 @@ export default function PromoCodesSection() {
                 <CardContent className="p-0 relative">
                   <div className="absolute top-0 right-0 m-3 z-10">
                     <Badge className="bg-red-500 hover:bg-red-600 text-white">
-                      {t('promos.expires')} {formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))}
+                      {t('promos.expires')} {formatDate(new Date(promo.validUntil))}
                     </Badge>
                   </div>
                   <div className="relative p-6">
                     <div className="mb-3 flex items-center">
-                      <img 
-                        src={promo.coverImage} 
-                        alt={getLocalizedField(promo, 'title')} 
-                        className="h-12 mr-3 object-contain" 
-                      />
-                      <h3 className="font-bold text-lg">{getLocalizedField(promo, 'title')}</h3>
+                      {promo.casinoLogo ? (
+                        <img 
+                          src={promo.casinoLogo} 
+                          alt={getLocalizedField(promo, 'casino_name')} 
+                          className="h-12 w-12 mr-3 object-contain" 
+                        />
+                      ) : (
+                        <div className="h-12 w-12 mr-3 bg-gray-200 rounded-md flex items-center justify-center">
+                          <span className="text-gray-500">Logo</span>
+                        </div>
+                      )}
+                      <h3 className="font-bold text-lg">{getLocalizedField(promo, 'casino_name')}</h3>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">
-                      {getLocalizedField(promo, 'summary') || t('promos.defaultSummary')}
+                      {getLocalizedField(promo, 'description')}
                     </p>
                     <div className="bg-primary/10 border border-primary/20 rounded p-2 text-center mb-4">
-                      <span className="font-mono font-bold">{t('promos.defaultCode')}</span>
+                      <span className="font-mono font-bold">{promo.code}</span>
                     </div>
+                    <p className="text-sm font-medium text-center mb-3">
+                      {getLocalizedField(promo, 'bonus')}
+                    </p>
                     <div className="flex space-x-2">
-                      <Button className="w-full" size="sm" asChild>
-                        <Link href={`/promos/${promo.slug}`}>
-                          {t('promos.claim')}
-                        </Link>
+                      <Button 
+                        className="w-full" 
+                        size="sm"
+                        onClick={() => setPromoModalData({
+                          open: true,
+                          promoCode: promo.code,
+                          casino: getLocalizedField(promo, 'casino_name'),
+                          expiryDate: formatDate(new Date(promo.validUntil))
+                        })}
+                      >
+                        {t('promos.viewCode')}
                       </Button>
                       <Button variant="outline" size="sm" className="w-full" asChild>
-                        <Link href={`/casinos/${promo.slug}`}>
-                          {t('promos.viewCasino')}
-                        </Link>
+                        <a href={promo.affiliateLink} target="_blank" rel="noopener noreferrer">
+                          {t('promos.claimBonus')}
+                        </a>
                       </Button>
                     </div>
                   </div>
@@ -91,6 +121,19 @@ export default function PromoCodesSection() {
           </Link>
         </div>
       </div>
+      
+      {/* Promo Code Modal */}
+      {promoModalData.open && (
+        <PromoCodeModal
+          open={promoModalData.open}
+          onOpenChange={(open) => setPromoModalData({ ...promoModalData, open })}
+          title={t('promos.modalTitle')}
+          description={t('promos.modalDescription')}
+          promoCode={promoModalData.promoCode}
+          casino={promoModalData.casino}
+          expiryDate={promoModalData.expiryDate}
+        />
+      )}
     </section>
   );
 }
