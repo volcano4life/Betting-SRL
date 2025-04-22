@@ -42,10 +42,10 @@ export default function Footer() {
           <div>
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-xl">G</span>
+                <span className="text-white font-bold text-xl">B</span>
               </div>
               <span className="text-xl font-bold text-white font-medium">
-                Game<span className="text-primary">Reviews</span>
+                Betting <span className="text-primary">SRL</span>
               </span>
             </div>
             <p className="text-sm mb-4">
@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-sm text-center">
-          <p>© {new Date().getFullYear()} GameReviews. All rights reserved. All trademarks are property of their respective owners.</p>
+          <p>© {new Date().getFullYear()} Betting SRL. All rights reserved. All trademarks are property of their respective owners.</p>
         </div>
       </div>
     </footer>

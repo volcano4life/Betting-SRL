@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>GameReviews - Your Source for Gaming Information</title>
+        <title>Betting SRL - Your Source for Gaming Information</title>
         <meta name="description" content="Discover the latest game reviews, news, and guides for PC, console, and mobile gaming." />
       </Helmet>
 
