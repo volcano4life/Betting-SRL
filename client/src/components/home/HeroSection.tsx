@@ -61,7 +61,7 @@ export default function HeroSection() {
                   <span className="text-sm text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('hero.featuredReview')}</h2>
-                <p className="text-gray-200 mb-4 line-clamp-2">{mainFeatured.summary}</p>
+                <p className="text-gray-200 mb-4 line-clamp-2">{t('hero.featuredReviewSummary')}</p>
                 <div className="flex items-center mb-3">
                   <RatingStars rating={mainFeatured.rating} size="xl" />
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
@@ -85,7 +85,7 @@ export default function HeroSection() {
                 <Skeleton className="h-44 w-full rounded-lg" />
               </>
             ) : secondaryFeatured && secondaryFeatured.length > 0 ? (
-              secondaryFeatured.map((news) => (
+              secondaryFeatured.map((news, index) => (
                 <Link
                   key={news.id}
                   href={`/news/${news.slug}`}
@@ -98,7 +98,7 @@ export default function HeroSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 p-4">
-                    <h3 className="text-lg font-bold mb-1">{news.title}</h3>
+                    <h3 className="text-lg font-bold mb-1">{index === 0 ? t('hero.news1Title') : t('hero.news2Title')}</h3>
                     <div className="flex items-center">
                       <Badge variant="outline" className="bg-accent text-[#222236] font-bold">{t('hero.hot')}</Badge>
                     </div>
@@ -134,6 +134,7 @@ export default function HeroSection() {
                   <span className="text-xs text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
                 </div>
                 <h2 className="text-xl font-bold mb-2">{t('hero.featuredReview')}</h2>
+                <p className="text-gray-200 mb-2 line-clamp-2 text-sm">{t('hero.featuredReviewSummary')}</p>
                 <div className="flex items-center mb-2">
                   <RatingStars rating={mainFeatured.rating} size="sm" />
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
