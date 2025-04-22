@@ -7,22 +7,22 @@ import {
   MessageCircle 
 } from "lucide-react";
 
-const gameCategories = [
-  { label: "Action", href: "/reviews?category=action" },
-  { label: "Adventure", href: "/reviews?category=adventure" },
-  { label: "RPG", href: "/reviews?category=rpg" },
-  { label: "Strategy", href: "/reviews?category=strategy" },
-  { label: "Simulation", href: "/reviews?category=simulation" },
-  { label: "Sports", href: "/reviews?category=sports" },
-  { label: "Racing", href: "/reviews?category=racing" },
+const casinoCategories = [
+  { label: "Slot Machines", href: "/casinos?category=slots" },
+  { label: "Roulette", href: "/casinos?category=roulette" },
+  { label: "Blackjack", href: "/casinos?category=blackjack" },
+  { label: "Poker", href: "/casinos?category=poker" },
+  { label: "Baccarat", href: "/casinos?category=baccarat" },
+  { label: "Live Casino", href: "/casinos?category=live" },
+  { label: "Bingo", href: "/casinos?category=bingo" },
 ];
 
-const platforms = [
-  { label: "PC", href: "/reviews?platform=pc" },
-  { label: "PlayStation 5", href: "/reviews?platform=playstation-5" },
-  { label: "Xbox Series X|S", href: "/reviews?platform=xbox-series-x" },
-  { label: "Nintendo Switch", href: "/reviews?platform=nintendo-switch" },
-  { label: "Mobile", href: "/reviews?platform=mobile" },
+const promoCategories = [
+  { label: "Welcome Bonuses", href: "/promos?type=welcome" },
+  { label: "No Deposit", href: "/promos?type=no-deposit" },
+  { label: "Free Spins", href: "/promos?type=free-spins" },
+  { label: "Cashback", href: "/promos?type=cashback" },
+  { label: "Loyalty Programs", href: "/promos?type=loyalty" },
 ];
 
 const companyLinks = [
@@ -49,7 +49,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm mb-4">
-              Your trusted source for comprehensive game reviews, industry news, and gaming guides.
+              Your trusted source for Italian casino reviews, exclusive promo codes, and sports betting insights.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition duration-200">
@@ -71,9 +71,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-4">Game Categories</h3>
+            <h3 className="text-white font-bold mb-4">Casino Games</h3>
             <ul className="space-y-2 text-sm">
-              {gameCategories.map((category) => (
+              {casinoCategories.map((category) => (
                 <li key={category.href}>
                   <Link href={category.href} className="hover:text-white transition duration-200">
                     {category.label}
@@ -84,12 +84,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-4">Platforms</h3>
+            <h3 className="text-white font-bold mb-4">Promotions</h3>
             <ul className="space-y-2 text-sm">
-              {platforms.map((platform) => (
-                <li key={platform.href}>
-                  <Link href={platform.href} className="hover:text-white transition duration-200">
-                    {platform.label}
+              {promoCategories.map((promo) => (
+                <li key={promo.href}>
+                  <Link href={promo.href} className="hover:text-white transition duration-200">
+                    {promo.label}
                   </Link>
                 </li>
               ))}

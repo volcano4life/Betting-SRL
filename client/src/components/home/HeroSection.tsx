@@ -5,13 +5,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import RatingStars from "../common/RatingStars";
 import { formatDate } from "@/lib/utils";
 import { Game, Review, News } from "@shared/schema";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
-  const { data: featuredReviews, isLoading: reviewsLoading } = useQuery<Review[]>({
+  const { data: featuredCasinos, isLoading: casinosLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/featured'],
   });
   
-  const { data: featuredGames, isLoading: gamesLoading } = useQuery<Game[]>({
+  const { data: featuredBonuses, isLoading: bonusesLoading } = useQuery<Game[]>({
     queryKey: ['/api/games/featured'],
   });
   
@@ -19,9 +20,9 @@ export default function HeroSection() {
     queryKey: ['/api/news/latest', 2],
   });
   
-  const isLoading = reviewsLoading || gamesLoading || newsLoading;
+  const isLoading = casinosLoading || bonusesLoading || newsLoading;
   
-  const mainFeatured = featuredReviews?.[0];
+  const mainFeatured = featuredCasinos?.[0];
   const secondaryFeatured = latestNews?.slice(0, 2);
   
   return (
@@ -52,10 +53,13 @@ export default function HeroSection() {
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-2">{mainFeatured.title}</h2>
                 <p className="text-gray-200 mb-4 line-clamp-2">{mainFeatured.summary}</p>
-                <div className="flex items-center">
+                <div className="flex items-center mb-3">
                   <RatingStars rating={mainFeatured.rating} size="xl" />
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
                 </div>
+                <Button size="sm" variant="secondary" className="bg-accent text-[#222236] hover:bg-accent/90 font-medium">
+                  View Promo Codes
+                </Button>
               </div>
             </Link>
           ) : (
@@ -121,10 +125,13 @@ export default function HeroSection() {
                   <span className="text-xs text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
                 </div>
                 <h2 className="text-xl font-bold mb-2">{mainFeatured.title}</h2>
-                <div className="flex items-center">
+                <div className="flex items-center mb-2">
                   <RatingStars rating={mainFeatured.rating} size="sm" />
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
                 </div>
+                <Button size="sm" variant="secondary" className="bg-accent text-[#222236] hover:bg-accent/90 font-medium text-xs">
+                  View Promo Codes
+                </Button>
               </div>
             </Link>
           ) : (
