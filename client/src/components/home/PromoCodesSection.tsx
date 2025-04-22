@@ -91,7 +91,7 @@ export default function PromoCodesSection() {
                     </p>
                     <div className="flex space-x-2">
                       <Button 
-                        className="w-full" 
+                        className="w-1/2" 
                         size="sm"
                         onClick={() => setPromoModalData({
                           open: true,
@@ -102,7 +102,7 @@ export default function PromoCodesSection() {
                       >
                         {t('promos.viewCode')}
                       </Button>
-                      <Button variant="outline" size="sm" className="w-full" asChild>
+                      <Button variant="outline" size="sm" className="w-1/2" asChild>
                         <a href={promo.affiliateLink} target="_blank" rel="noopener noreferrer">
                           {t('promos.claimBonus')}
                         </a>
