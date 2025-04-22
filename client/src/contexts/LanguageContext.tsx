@@ -197,6 +197,10 @@ const translations: Record<Language, Record<string, string>> = {
     'newsletter.successMessage': 'You have successfully subscribed to our newsletter. Stay tuned for the latest updates!',
     'newsletter.privacyNotice': 'By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.',
     'newsletter.subscribing': 'Subscribing...',
+    'newsletter.successTitle': 'Subscription Successful',
+    'newsletter.successDesc': 'Thank you for subscribing to our newsletter!',
+    'newsletter.errorTitle': 'Subscription Failed',
+    'newsletter.errorDesc': 'Failed to subscribe. Please try again.',
     
     // Footer
     'footer.about': 'About Us',
@@ -422,6 +426,10 @@ const translations: Record<Language, Record<string, string>> = {
     'newsletter.successMessage': 'Ti sei iscritto con successo alla nostra newsletter. Resta sintonizzato per gli ultimi aggiornamenti!',
     'newsletter.privacyNotice': 'Iscrivendoti, accetti la nostra Informativa sulla Privacy e acconsenti a ricevere aggiornamenti dalla nostra azienda.',
     'newsletter.subscribing': 'Iscrizione in corso...',
+    'newsletter.successTitle': 'Iscrizione Riuscita',
+    'newsletter.successDesc': 'Grazie per esserti iscritto alla nostra newsletter!',
+    'newsletter.errorTitle': 'Iscrizione Fallita',
+    'newsletter.errorDesc': 'Impossibile completare l\'iscrizione. Riprova più tardi.',
     
     // Footer
     'footer.about': 'Chi Siamo',
