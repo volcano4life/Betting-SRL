@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { PromoCode, Game, News, Review, Guide } from "@shared/schema";
+import { PromoCode, Game, News, Review, Guide, User } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock } from "lucide-react";
 import { Link } from "wouter";
 import {
   Table,
@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
 
-type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides";
+type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides" | "administrators";
 
 export default function AdminPage() {
   const { t } = useLanguage();
@@ -36,6 +36,9 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<ContentType>("promo-codes");
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  
+  // Check if current user is site owner (username: 'admin')
+  const isSiteOwner = user?.username === 'admin';
 
   // Handle logout
   const handleLogout = () => {
@@ -74,13 +77,26 @@ export default function AdminPage() {
               <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
               <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
               <TabsTrigger value="guides">{t('admin.guides')}</TabsTrigger>
+              <TabsTrigger value="administrators">{t('admin.administrators')}</TabsTrigger>
             </TabsList>
-            <Button onClick={() => {
-              setIsAdding(true);
-              setEditingItemId(null);
-            }}>
-              {t('admin.addNew')}
-            </Button>
+            {activeTab !== 'administrators' ? (
+              <Button onClick={() => {
+                setIsAdding(true);
+                setEditingItemId(null);
+              }}>
+                {activeTab === 'administrators' 
+                  ? t('admin.inviteAdmin') 
+                  : t('admin.addNew')}
+              </Button>
+            ) : isSiteOwner && (
+              <Button onClick={() => {
+                setIsAdding(true);
+                setEditingItemId(null);
+              }}>
+                <UserPlus className="h-4 w-4 mr-2" />
+                {t('admin.inviteAdmin')}
+              </Button>
+            )}
           </div>
 
           {/* Promo Codes Management */}
@@ -175,6 +191,24 @@ export default function AdminPage() {
               />
             ) : (
               <GuidesList onEdit={setEditingItemId} />
+            )}
+          </TabPanel>
+          
+          {/* Administrators Management */}
+          <TabPanel value="administrators">
+            {isAdding ? (
+              <AdminInviteForm 
+                onCancel={() => setIsAdding(false)} 
+                onSuccess={() => setIsAdding(false)} 
+              />
+            ) : editingItemId ? (
+              <AdminEditForm 
+                id={editingItemId} 
+                onCancel={() => setEditingItemId(null)} 
+                onSuccess={() => setEditingItemId(null)} 
+              />
+            ) : (
+              <AdminsList onEdit={setEditingItemId} />
             )}
           </TabPanel>
         </Tabs>
@@ -808,6 +842,305 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
         <CardDescription>
           {t('admin.guideFormDesc')}
         </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="text-center py-8">
+          <p>{t('admin.implementationPending')}</p>
+          <Button variant="outline" className="mt-4" onClick={onCancel}>
+            {t('admin.back')}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ===== ADMINISTRATORS =====
+function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  
+  // Check if current user is site owner (username: 'admin')
+  const isSiteOwner = user?.username === 'admin';
+  
+  const { data: admins, isLoading } = useQuery<User[]>({
+    queryKey: ['/api/admin/users'],
+    meta: {
+      errorMessage: t('admin.usersLoadError')
+    }
+  });
+  
+  const toggleBlockMutation = useMutation({
+    mutationFn: async ({ id, isBlocked }: { id: number; isBlocked: boolean }) => {
+      await apiRequest('PUT', `/api/admin/users/${id}/status`, { isBlocked });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      toast({
+        title: t('admin.userStatusUpdatedTitle'),
+        description: t('admin.userStatusUpdatedDesc'),
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.userStatusErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  const approveAdminMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('PUT', `/api/admin/users/${id}/approve`, {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      toast({
+        title: t('admin.adminApprovedTitle'),
+        description: t('admin.adminApprovedDesc'),
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.adminApproveErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('admin.administrators')}</CardTitle>
+        <CardDescription>{t('admin.administratorsDesc')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.username')}</TableHead>
+                <TableHead>{t('admin.status')}</TableHead>
+                <TableHead>{t('admin.createdAt')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {admins?.length ? (
+                admins.map((admin) => (
+                  <TableRow key={admin.id}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center">
+                        {admin.username}
+                        {admin.username === 'admin' && (
+                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
+                            {t('admin.siteOwner')}
+                          </span>
+                        )}
+                        {!admin.isAdmin && (
+                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
+                            {t('admin.pendingApproval')}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {admin.isBlocked ? (
+                        <span className="inline-flex items-center text-destructive">
+                          <Lock className="h-4 w-4 mr-1" />
+                          {t('admin.blocked')}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center text-green-600">
+                          <ShieldCheck className="h-4 w-4 mr-1" />
+                          {t('admin.active')}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>{format(new Date(admin.createdAt), 'dd/MM/yyyy')}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      {/* Don't show action buttons for site owner or for current user */}
+                      {admin.username !== 'admin' && admin.id !== user?.id && (
+                        <>
+                          {!admin.isAdmin && isSiteOwner && (
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => approveAdminMutation.mutate(admin.id)}
+                            >
+                              <ShieldCheck className="h-4 w-4 mr-2" />
+                              {t('admin.approve')}
+                            </Button>
+                          )}
+                          
+                          {admin.isAdmin && isSiteOwner && (
+                            <Button 
+                              size="sm" 
+                              variant={admin.isBlocked ? 'outline' : 'destructive'}
+                              onClick={() => toggleBlockMutation.mutate({ 
+                                id: admin.id, 
+                                isBlocked: !admin.isBlocked 
+                              })}
+                            >
+                              {admin.isBlocked ? (
+                                <>
+                                  <ShieldCheck className="h-4 w-4 mr-2" />
+                                  {t('admin.unblock')}
+                                </>
+                              ) : (
+                                <>
+                                  <Lock className="h-4 w-4 mr-2" />
+                                  {t('admin.block')}
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-6">
+                    {t('admin.noAdministrators')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  );
+}
+
+type AdminFormProps = {
+  id?: number;
+  onCancel: () => void;
+  onSuccess: () => void;
+};
+
+function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    isAdmin: true
+  });
+  
+  const inviteMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      await apiRequest('POST', '/api/admin/users/invite', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      toast({
+        title: t('admin.adminInvitedTitle'),
+        description: t('admin.adminInvitedDesc'),
+      });
+      onSuccess();
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.adminInviteErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    inviteMutation.mutate(formData);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('admin.inviteAdmin')}</CardTitle>
+        <CardDescription>{t('admin.inviteAdminDesc')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">{t('admin.username')}</Label>
+              <Input
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">{t('admin.initialPassword')}</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-sm text-muted-foreground">
+                {t('admin.passwordRequirements')}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-4 pt-4">
+            <Button type="button" variant="outline" onClick={onCancel}>
+              {t('admin.cancel')}
+            </Button>
+            <Button type="submit" disabled={inviteMutation.isPending}>
+              {inviteMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <UserPlus className="h-4 w-4 mr-2" />
+              )}
+              {t('admin.sendInvite')}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+function AdminEditForm({ id, onCancel, onSuccess }: AdminFormProps) {
+  const { t } = useLanguage();
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('admin.editAdmin')}</CardTitle>
+        <CardDescription>{t('admin.editAdminDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
