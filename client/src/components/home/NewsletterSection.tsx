@@ -61,9 +61,9 @@ export default function NewsletterSection() {
   return (
     <section className="py-16 bg-[#222236] text-white">
       <div className="container mx-auto px-4 max-w-4xl text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">Stay Updated with Gaming News</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3">Get Exclusive Casino Offers</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Subscribe to our newsletter and never miss the latest game reviews, news, and exclusive content.
+          Subscribe to our newsletter and receive exclusive promo codes, bonus alerts, and the latest betting tips.
         </p>
         
         {isSubmitted ? (

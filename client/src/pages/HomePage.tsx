@@ -1,8 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
-import LatestReviewsSection from "@/components/home/LatestReviewsSection";
-import TopRatedGamesSection from "@/components/home/TopRatedGamesSection";
-import GamingNewsSection from "@/components/home/GamingNewsSection";
-import GamingGuidesSection from "@/components/home/GamingGuidesSection";
+import FeaturedCasinosSection from "@/components/home/FeaturedCasinosSection";
+import PromoCodesSection from "@/components/home/PromoCodesSection";
+import SportsBettingSection from "@/components/home/SportsBettingSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
 import { Helmet } from "react-helmet";
 
@@ -10,15 +9,14 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Betting SRL - Your Source for Gaming Information</title>
-        <meta name="description" content="Discover the latest game reviews, news, and guides for PC, console, and mobile gaming." />
+        <title>Betting SRL - Italian Casino Affiliates & Sport Betting</title>
+        <meta name="description" content="Find the best Italian casino bonuses, exclusive promo codes, and expert sports betting insights for a premium gambling experience." />
       </Helmet>
 
       <HeroSection />
-      <LatestReviewsSection />
-      <TopRatedGamesSection />
-      <GamingNewsSection />
-      <GamingGuidesSection />
+      <FeaturedCasinosSection />
+      <PromoCodesSection />
+      <SportsBettingSection />
       <NewsletterSection />
     </>
   );
