@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Check, Copy } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PromoCodeModalProps {
   open: boolean;
@@ -24,6 +25,7 @@ export default function PromoCodeModal({
   expiryDate
 }: PromoCodeModalProps) {
   const [copied, setCopied] = useState(false);
+  const { t } = useLanguage();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(promoCode);
@@ -48,7 +50,7 @@ export default function PromoCodeModal({
           
           {expiryDate && (
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Valid Until</p>
+              <p className="text-sm text-muted-foreground mb-1">{t('promos.expires')}</p>
               <p className="font-medium">{expiryDate}</p>
             </div>
           )}
