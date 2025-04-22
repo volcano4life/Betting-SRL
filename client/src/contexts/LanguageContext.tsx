@@ -159,6 +159,8 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.close': 'Close',
     'promos.casino': 'Casino',
     'promos.promoCode': 'Promo Code',
+    'promos.viewCode': 'View Code',
+    'promos.claimBonus': 'Claim Bonus',
     
     'sports.title': 'Sports Betting Insights',
     'sports.subtitle': 'Expert predictions, odds analysis and betting tips',
@@ -378,6 +380,8 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.close': 'Chiudi',
     'promos.casino': 'Casinò',
     'promos.promoCode': 'Codice Promo',
+    'promos.viewCode': 'Vedi Codice',
+    'promos.claimBonus': 'Ottieni Bonus',
     
     'sports.title': 'Approfondimenti Scommesse Sportive',
     'sports.subtitle': 'Previsioni di esperti, analisi delle quote e consigli per le scommesse',

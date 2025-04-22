@@ -10,7 +10,7 @@ import { News } from "@shared/schema"; // We're temporarily using News until we 
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SportsBettingSection() {
-  const { t, getLocalizedField } = useLanguage();
+  const { t, getLocalizedField, language } = useLanguage();
   const { data: sportsArticles, isLoading } = useQuery<News[]>({
     queryKey: ['/api/news/latest'],
   });
@@ -59,7 +59,7 @@ export default function SportsBettingSection() {
                   <div className="p-5 flex-grow flex flex-col">
                     <div className="flex items-center text-sm text-gray-500 mb-3">
                       <Calendar className="h-4 w-4 mr-1" />
-                      <span>{formatDate(article.publishDate)}</span>
+                      <span>{formatDate(article.publishDate, language)}</span>
                       
                       {article.id % 2 === 0 ? (
                         <Badge variant="outline" className="ml-auto flex items-center text-xs">
