@@ -6,8 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { Review } from "@shared/schema"; // We're temporarily using Review until we update schema.ts
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PromoCodesSection() {
+  const { t } = useLanguage();
   const { data: promos, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews/latest'],
   });
@@ -18,15 +20,15 @@ export default function PromoCodesSection() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-[#222236]">
-              Exclusive Promo Codes
+              {t('promos.title')}
             </h2>
             <p className="text-gray-500 mt-2">
-              Special bonuses only available through Betting SRL
+              {t('promos.subtitle')}
             </p>
           </div>
           <Link href="/promos">
             <Button variant="outline" className="hidden md:inline-flex">
-              View All Promos
+              {t('promos.viewAll')}
             </Button>
           </Link>
         </div>

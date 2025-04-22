@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import CasinoCard from "../common/CasinoCard";
 import { Game } from "@shared/schema"; // We're temporarily using Game until we update schema.ts
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FeaturedCasinosSection() {
+  const { t } = useLanguage();
   const { data: featuredCasinos, isLoading } = useQuery<Game[]>({
     queryKey: ['/api/games/top-rated'],
   });
@@ -16,15 +18,15 @@ export default function FeaturedCasinosSection() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-[#222236]">
-              Featured Italian Casinos
+              {t('featured.title')}
             </h2>
             <p className="text-gray-500 mt-2">
-              Exclusive bonus offers from our top-rated partners
+              {t('featured.subtitle')}
             </p>
           </div>
           <Link href="/casinos">
             <Button variant="outline" className="hidden md:inline-flex">
-              View All Casinos
+              {t('featured.viewAll')}
             </Button>
           </Link>
         </div>
@@ -57,14 +59,14 @@ export default function FeaturedCasinosSection() {
             ))
           ) : (
             <div className="col-span-3 text-center py-12">
-              <p className="text-gray-500">No featured casinos available</p>
+              <p className="text-gray-500">{t('featured.empty')}</p>
             </div>
           )}
         </div>
 
         <div className="mt-8 text-center md:hidden">
           <Link href="/casinos">
-            <Button variant="outline">View All Casinos</Button>
+            <Button variant="outline">{t('featured.viewAll')}</Button>
           </Link>
         </div>
       </div>
