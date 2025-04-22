@@ -1685,6 +1685,20 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
 function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState<Partial<News>>({
+    title_en: '',
+    title_it: '',
+    summary_en: '',
+    summary_it: '',
+    content_en: '',
+    content_it: '',
+    slug: '',
+    category: '',
+    featured: 0,
+    coverImage: ''
+  });
   
   const { data: newsItem, isLoading, isError } = useQuery<News>({
     queryKey: [`/api/admin/news/${id}`],
@@ -1694,6 +1708,92 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     },
     retry: false
   });
+  
+  // Initialize form with news data when loaded (editing mode)
+  React.useEffect(() => {
+    if (newsItem) {
+      setFormData({
+        ...newsItem,
+        publishDate: new Date(newsItem.publishDate)
+      });
+    }
+  }, [newsItem]);
+  
+  const saveMutation = useMutation({
+    mutationFn: async (data: Partial<News>) => {
+      const dataToSend = {
+        ...data,
+        publishDate: data.publishDate instanceof Date 
+          ? data.publishDate 
+          : new Date(data.publishDate as string)
+      };
+      
+      if (id) {
+        // Update existing
+        await apiRequest('PUT', `/api/admin/news/${id}`, dataToSend);
+      } else {
+        // Create new
+        await apiRequest('POST', '/api/admin/news', dataToSend);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/news'] });
+      toast({
+        title: id ? t('admin.newsUpdatedTitle') : t('admin.newsCreatedTitle'),
+        description: id ? t('admin.newsUpdatedDesc') : t('admin.newsCreatedDesc'),
+      });
+      onSuccess();
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.savingErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Make sure slug is filled
+    if (!formData.slug) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en || '')
+      }));
+    }
+    
+    saveMutation.mutate(formData);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Auto-generate slug when title changes
+  useEffect(() => {
+    if (formData.title_en && !id) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en)
+      }));
+    }
+  }, [formData.title_en, id]);
+  
+  // News categories
+  const categories = [
+    'casino-news',
+    'sports-betting',
+    'gambling-regulations',
+    'promotions',
+    'industry-news'
+  ];
   
   // Show loading spinner when loading data
   if (isLoading && id) {
@@ -1735,12 +1835,180 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-          <Button variant="outline" className="mt-4" onClick={onCancel}>
-            {t('admin.back')}
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* English Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.englishContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_en">{t('admin.title')} (EN)</Label>
+                <Input
+                  id="title_en"
+                  name="title_en"
+                  value={formData.title_en || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Textarea
+                  id="summary_en"
+                  name="summary_en"
+                  value={formData.summary_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_en">{t('admin.content')} (EN)</Label>
+                <Textarea
+                  id="content_en"
+                  name="content_en"
+                  value={formData.content_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+            
+            {/* Italian Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.italianContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_it">{t('admin.title')} (IT)</Label>
+                <Input
+                  id="title_it"
+                  name="title_it"
+                  value={formData.title_it || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Textarea
+                  id="summary_it"
+                  name="summary_it"
+                  value={formData.summary_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_it">{t('admin.content')} (IT)</Label>
+                <Textarea
+                  id="content_it"
+                  name="content_it"
+                  value={formData.content_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Common Fields */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="slug">{t('admin.slug')}</Label>
+                <Input
+                  id="slug"
+                  name="slug"
+                  value={formData.slug || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="category">{t('admin.category')}</Label>
+                <Select 
+                  name="category" 
+                  value={formData.category || ""}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'category', value, type: 'select' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectCategory')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {t(`admin.category.${category}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="publishDate">{t('admin.publishDate')}</Label>
+                <Input
+                  id="publishDate"
+                  name="publishDate"
+                  type="date"
+                  value={formData.publishDate instanceof Date 
+                    ? formData.publishDate.toISOString().split('T')[0] 
+                    : String(formData.publishDate || new Date().toISOString().split('T')[0])}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+              <Input
+                id="coverImage"
+                name="coverImage"
+                value={formData.coverImage || ''}
+                onChange={handleChange}
+                placeholder="https://example.com/image.png"
+                required
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="featured" 
+                checked={formData.featured ? true : false}
+                onCheckedChange={(checked) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    featured: checked ? 1 : 0
+                  }))
+                }}
+              />
+              <Label htmlFor="featured">{t('admin.featuredNews')}</Label>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" type="button" onClick={onCancel}>
+              {t('admin.cancel')}
+            </Button>
+            <Button type="submit" disabled={saveMutation.isPending}>
+              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Save className="mr-2 h-4 w-4" />
+              {t('admin.save')}
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );
@@ -1850,6 +2118,20 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
 function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState<Partial<Guide>>({
+    title_en: '',
+    title_it: '',
+    summary_en: '',
+    summary_it: '',
+    content_en: '',
+    content_it: '',
+    slug: '',
+    category: '',
+    difficulty: 'beginner',
+    coverImage: ''
+  });
   
   const { data: guide, isLoading, isError } = useQuery<Guide>({
     queryKey: [`/api/admin/guides/${id}`],
@@ -1859,6 +2141,100 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     },
     retry: false
   });
+  
+  // Initialize form with guide data when loaded (editing mode)
+  React.useEffect(() => {
+    if (guide) {
+      setFormData({
+        ...guide,
+        publishDate: new Date(guide.publishDate)
+      });
+    }
+  }, [guide]);
+  
+  const saveMutation = useMutation({
+    mutationFn: async (data: Partial<Guide>) => {
+      const dataToSend = {
+        ...data,
+        publishDate: data.publishDate instanceof Date 
+          ? data.publishDate 
+          : new Date(data.publishDate as string)
+      };
+      
+      if (id) {
+        // Update existing
+        await apiRequest('PUT', `/api/admin/guides/${id}`, dataToSend);
+      } else {
+        // Create new
+        await apiRequest('POST', '/api/admin/guides', dataToSend);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/guides'] });
+      toast({
+        title: id ? t('admin.guideUpdatedTitle') : t('admin.guideCreatedTitle'),
+        description: id ? t('admin.guideUpdatedDesc') : t('admin.guideCreatedDesc'),
+      });
+      onSuccess();
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.savingErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Make sure slug is filled
+    if (!formData.slug) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en || '')
+      }));
+    }
+    
+    saveMutation.mutate(formData);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Auto-generate slug when title changes
+  useEffect(() => {
+    if (formData.title_en && !id) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en)
+      }));
+    }
+  }, [formData.title_en, id]);
+  
+  // Guide categories
+  const categories = [
+    'betting-strategies',
+    'casino-games',
+    'sports-betting',
+    'poker-guides',
+    'responsible-gambling'
+  ];
+  
+  // Guide difficulty levels
+  const difficultyLevels = [
+    'beginner',
+    'intermediate',
+    'advanced',
+    'expert'
+  ];
   
   // Show loading spinner when loading data
   if (isLoading && id) {
@@ -1900,12 +2276,190 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-          <Button variant="outline" className="mt-4" onClick={onCancel}>
-            {t('admin.back')}
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* English Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.englishContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_en">{t('admin.title')} (EN)</Label>
+                <Input
+                  id="title_en"
+                  name="title_en"
+                  value={formData.title_en || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Textarea
+                  id="summary_en"
+                  name="summary_en"
+                  value={formData.summary_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_en">{t('admin.content')} (EN)</Label>
+                <Textarea
+                  id="content_en"
+                  name="content_en"
+                  value={formData.content_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+            
+            {/* Italian Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.italianContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_it">{t('admin.title')} (IT)</Label>
+                <Input
+                  id="title_it"
+                  name="title_it"
+                  value={formData.title_it || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Textarea
+                  id="summary_it"
+                  name="summary_it"
+                  value={formData.summary_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_it">{t('admin.content')} (IT)</Label>
+                <Textarea
+                  id="content_it"
+                  name="content_it"
+                  value={formData.content_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Common Fields */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="slug">{t('admin.slug')}</Label>
+                <Input
+                  id="slug"
+                  name="slug"
+                  value={formData.slug || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="category">{t('admin.category')}</Label>
+                <Select 
+                  name="category" 
+                  value={formData.category || ""}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'category', value, type: 'select' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectCategory')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {t(`admin.category.${category}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="difficulty">{t('admin.difficulty')}</Label>
+                <Select 
+                  name="difficulty" 
+                  value={formData.difficulty || "beginner"}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'difficulty', value, type: 'select' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectDifficulty')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {difficultyLevels.map(level => (
+                      <SelectItem key={level} value={level}>
+                        {t(`admin.difficulty.${level}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="publishDate">{t('admin.publishDate')}</Label>
+                <Input
+                  id="publishDate"
+                  name="publishDate"
+                  type="date"
+                  value={formData.publishDate instanceof Date 
+                    ? formData.publishDate.toISOString().split('T')[0] 
+                    : String(formData.publishDate || new Date().toISOString().split('T')[0])}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+                <Input
+                  id="coverImage"
+                  name="coverImage"
+                  value={formData.coverImage || ''}
+                  onChange={handleChange}
+                  placeholder="https://example.com/image.png"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" type="button" onClick={onCancel}>
+              {t('admin.cancel')}
+            </Button>
+            <Button type="submit" disabled={saveMutation.isPending}>
+              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Save className="mr-2 h-4 w-4" />
+              {t('admin.save')}
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );
