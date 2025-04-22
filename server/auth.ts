@@ -1,23 +1,20 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Express } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
+import { storage } from "./storage";
 import { User } from "@shared/schema";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
-import { users } from "@shared/schema";
-import connectPg from "connect-pg-simple";
-
-const PostgresSessionStore = connectPg(session);
-const scryptAsync = promisify(scrypt);
+import MemoryStore from "memorystore";
 
 declare global {
   namespace Express {
     interface User extends User {}
   }
 }
+
+const scryptAsync = promisify(scrypt);
 
 async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
@@ -32,42 +29,23 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
-async function getUserByUsername(username: string): Promise<User | undefined> {
-  const result = await db.select().from(users).where(eq(users.username, username));
-  return result[0];
-}
-
-async function getUserById(id: number): Promise<User | undefined> {
-  const result = await db.select().from(users).where(eq(users.id, id));
-  return result[0];
-}
-
-async function createUser(username: string, password: string, isAdmin: boolean = false): Promise<User> {
-  const hashedPassword = await hashPassword(password);
-  const result = await db.insert(users)
-    .values({ username, password: hashedPassword, isAdmin })
-    .returning();
-  return result[0];
-}
-
 export function setupAuth(app: Express) {
-  const sessionStore = new PostgresSessionStore({
-    pool: db.client,
-    createTableIfMissing: true,
-  });
-
+  const MemStore = MemoryStore(session);
+  
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "betting-srl-secret",
+    secret: process.env.SESSION_SECRET || "betting-srl-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,
     cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    }
+      sameSite: 'lax'
+    },
+    store: new MemStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    })
   };
 
-  app.set("trust proxy", 1);
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -75,95 +53,122 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        const user = await getUserByUsername(username);
+        const user = await storage.getUserByUsername(username);
         if (!user || !(await comparePasswords(password, user.password))) {
-          return done(null, false);
-        } else {
-          return done(null, user);
+          return done(null, false, { message: "Invalid username or password" });
         }
-      } catch (err) {
-        return done(err);
+        return done(null, user);
+      } catch (error) {
+        return done(error);
       }
-    }),
+    })
   );
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
   passport.deserializeUser(async (id: number, done) => {
     try {
-      const user = await getUserById(id);
+      const user = await storage.getUser(id);
       done(null, user);
     } catch (err) {
       done(err);
     }
   });
 
-  // Auth routes
-  app.post("/api/auth/register", async (req, res, next) => {
+  // Registration endpoint
+  app.post("/api/register", async (req, res, next) => {
     try {
-      const existingUser = await getUserByUsername(req.body.username);
+      const { username, password, isAdmin = false } = req.body;
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
-
-      const user = await createUser(
-        req.body.username, 
-        req.body.password,
-        req.body.isAdmin || false
-      );
-
+      
+      // Create user with hashed password
+      const hashedPassword = await hashPassword(password);
+      const user = await storage.createUser({
+        username,
+        password: hashedPassword,
+        isAdmin
+      });
+      
+      // Login the newly created user
       req.login(user, (err) => {
         if (err) return next(err);
-        return res.status(201).json({ id: user.id, username: user.username, isAdmin: user.isAdmin });
+        // Return user without password
+        const { password, ...userWithoutPassword } = user;
+        return res.status(201).json(userWithoutPassword);
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   });
 
-  app.post("/api/auth/login", passport.authenticate("local"), (req, res) => {
-    const user = req.user;
-    return res.status(200).json({ id: user.id, username: user.username, isAdmin: user.isAdmin });
-  });
-
-  app.post("/api/auth/logout", (req, res, next) => {
-    req.logout((err) => {
+  // Login endpoint
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
-      return res.sendStatus(200);
+      if (!user) {
+        return res.status(401).json({ message: info?.message || "Authentication failed" });
+      }
+      req.login(user, (err) => {
+        if (err) return next(err);
+        // Return user without password
+        const { password, ...userWithoutPassword } = user;
+        return res.json(userWithoutPassword);
+      });
+    })(req, res, next);
+  });
+
+  // Logout endpoint
+  app.post("/api/logout", (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Error during logout" });
+      }
+      res.json({ message: "Logged out successfully" });
     });
   });
 
-  app.get("/api/auth/session", (req, res) => {
+  // Current user endpoint
+  app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) {
-      return res.status(401).json({ authenticated: false });
+      return res.status(401).json({ message: "Not authenticated" });
     }
-    const user = req.user;
-    return res.json({ 
-      authenticated: true, 
-      user: { id: user.id, username: user.username, isAdmin: user.isAdmin } 
-    });
+    // Return user without password
+    const { password, ...userWithoutPassword } = req.user as User;
+    res.json(userWithoutPassword);
   });
 
-  // Middleware to check if user is admin
-  const requireAdmin = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: "Unauthorized" });
+  // Admin middleware
+  return {
+    requireAdmin: (req: Request, res: Response, next: NextFunction) => {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      if (!(req.user as User).isAdmin) {
+        return res.status(403).json({ message: "Admin rights required" });
+      }
+      next();
     }
-    const user = req.user;
-    if (!user.isAdmin) {
-      return res.status(403).json({ message: "Forbidden: Admin access required" });
-    }
-    next();
   };
-
-  return { requireAdmin };
 }
 
-// Function to seed an admin user (used during initial setup)
+// Seed admin user on startup
 export async function seedAdminUser() {
   try {
-    const adminExists = await getUserByUsername("admin");
-    if (!adminExists) {
-      await createUser("admin", "adminpassword", true);
+    const existingAdmin = await storage.getUserByUsername("admin");
+    
+    if (!existingAdmin) {
+      await storage.createUser({
+        username: "admin",
+        password: await hashPassword("admin123"),
+        isAdmin: true
+      });
       console.log("Admin user created successfully");
     }
   } catch (error) {
