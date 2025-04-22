@@ -1,27 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from "@/hooks/use-auth";
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Redirect } from "wouter";
 import { z } from "zod";
+import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+// Form schemas
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const registerSchema = loginSchema.extend({
-  confirmPassword: z.string().min(1, "Please confirm your password"),
+  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
+  message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
@@ -29,11 +23,11 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
+  const { t, language } = useLanguage();
+  const [location, navigate] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<string>("login");
-  const { t } = useLanguage();
 
+  // Login form
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -42,6 +36,7 @@ export default function AuthPage() {
     },
   });
 
+  // Register form
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -51,153 +46,185 @@ export default function AuthPage() {
     },
   });
 
+  // Handle form submissions
   const onLoginSubmit = (values: LoginFormValues) => {
     loginMutation.mutate(values);
   };
 
   const onRegisterSubmit = (values: RegisterFormValues) => {
-    registerMutation.mutate({
-      username: values.username,
-      password: values.password,
-    });
+    const { confirmPassword, ...registerData } = values;
+    registerMutation.mutate(registerData);
   };
 
-  // If already logged in, redirect to home
-  if (user) {
-    return <Redirect to="/" />;
-  }
+  // If user is already logged in, redirect to home page
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   return (
-    <div className="flex min-h-screen">
-      {/* Auth Form */}
-      <div className="flex items-center justify-center w-full lg:w-1/2 p-4">
-        <div className="w-full max-w-md">
-          <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
-              <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
-            </TabsList>
-            
-            {/* Login Form */}
-            <TabsContent value="login">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('auth.welcomeBack')}</CardTitle>
-                  <CardDescription>{t('auth.loginDesc')}</CardDescription>
-                </CardHeader>
-                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="username">{t('auth.username')}</Label>
-                      <Input 
-                        id="username"
-                        {...loginForm.register("username")} 
-                        placeholder={t('auth.usernamePlaceholder')} 
-                      />
-                      {loginForm.formState.errors.username && (
-                        <p className="text-sm text-red-500">{loginForm.formState.errors.username.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">{t('auth.password')}</Label>
-                      <Input 
-                        id="password"
-                        type="password" 
-                        {...loginForm.register("password")} 
-                        placeholder={t('auth.passwordPlaceholder')} 
-                      />
-                      {loginForm.formState.errors.password && (
-                        <p className="text-sm text-red-500">{loginForm.formState.errors.password.message}</p>
-                      )}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" type="submit" disabled={loginMutation.isPending}>
-                      {loginMutation.isPending ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : null}
-                      {t('auth.loginButton')}
-                    </Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-            
-            {/* Register Form */}
-            <TabsContent value="register">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('auth.createAccount')}</CardTitle>
-                  <CardDescription>{t('auth.registerDesc')}</CardDescription>
-                </CardHeader>
-                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)}>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="register-username">{t('auth.username')}</Label>
-                      <Input 
-                        id="register-username"
-                        {...registerForm.register("username")} 
-                        placeholder={t('auth.usernamePlaceholder')} 
-                      />
-                      {registerForm.formState.errors.username && (
-                        <p className="text-sm text-red-500">{registerForm.formState.errors.username.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="register-password">{t('auth.password')}</Label>
-                      <Input 
-                        id="register-password"
-                        type="password" 
-                        {...registerForm.register("password")} 
-                        placeholder={t('auth.passwordPlaceholder')} 
-                      />
-                      {registerForm.formState.errors.password && (
-                        <p className="text-sm text-red-500">{registerForm.formState.errors.password.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirm-password">{t('auth.confirmPassword')}</Label>
-                      <Input 
-                        id="confirm-password"
-                        type="password" 
-                        {...registerForm.register("confirmPassword")} 
-                        placeholder={t('auth.confirmPasswordPlaceholder')} 
-                      />
-                      {registerForm.formState.errors.confirmPassword && (
-                        <p className="text-sm text-red-500">{registerForm.formState.errors.confirmPassword.message}</p>
-                      )}
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" type="submit" disabled={registerMutation.isPending}>
-                      {registerMutation.isPending ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : null}
-                      {t('auth.registerButton')}
-                    </Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-          </Tabs>
+    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+      {/* Left side - Forms */}
+      <div className="w-full md:w-1/2 p-8 flex items-center justify-center">
+        <div className="max-w-md w-full space-y-8">
+          {/* Tabs */}
+          <div className="flex border-b border-muted">
+            <button 
+              className={`px-4 py-2 font-medium ${loginForm.formState.isSubmitted ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'}`}
+              onClick={() => {
+                document.getElementById('login-form')?.classList.remove('hidden');
+                document.getElementById('register-form')?.classList.add('hidden');
+              }}
+            >
+              {t('auth.login')}
+            </button>
+            <button 
+              className={`px-4 py-2 font-medium ${registerForm.formState.isSubmitted ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'}`}
+              onClick={() => {
+                document.getElementById('login-form')?.classList.add('hidden');
+                document.getElementById('register-form')?.classList.remove('hidden');
+              }}
+            >
+              {t('auth.register')}
+            </button>
+          </div>
+
+          {/* Login Form */}
+          <div id="login-form" className="">
+            <h2 className="text-2xl font-bold mb-6">{t('auth.loginHeading')}</h2>
+            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="login-username" className="text-sm font-medium">
+                  {t('auth.username')}
+                </label>
+                <input
+                  id="login-username"
+                  type="text"
+                  className="w-full p-2 border border-input rounded-md"
+                  {...loginForm.register("username")}
+                />
+                {loginForm.formState.errors.username && (
+                  <p className="text-destructive text-sm">{loginForm.formState.errors.username.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="login-password" className="text-sm font-medium">
+                  {t('auth.password')}
+                </label>
+                <input
+                  id="login-password"
+                  type="password"
+                  className="w-full p-2 border border-input rounded-md"
+                  {...loginForm.register("password")}
+                />
+                {loginForm.formState.errors.password && (
+                  <p className="text-destructive text-sm">{loginForm.formState.errors.password.message}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-primary-foreground py-2 rounded-md hover:bg-primary/90"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? t('auth.loggingIn') : t('auth.login')}
+              </button>
+            </form>
+          </div>
+
+          {/* Register Form */}
+          <div id="register-form" className="hidden">
+            <h2 className="text-2xl font-bold mb-6">{t('auth.registerHeading')}</h2>
+            <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="register-username" className="text-sm font-medium">
+                  {t('auth.username')}
+                </label>
+                <input
+                  id="register-username"
+                  type="text"
+                  className="w-full p-2 border border-input rounded-md"
+                  {...registerForm.register("username")}
+                />
+                {registerForm.formState.errors.username && (
+                  <p className="text-destructive text-sm">{registerForm.formState.errors.username.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="register-password" className="text-sm font-medium">
+                  {t('auth.password')}
+                </label>
+                <input
+                  id="register-password"
+                  type="password"
+                  className="w-full p-2 border border-input rounded-md"
+                  {...registerForm.register("password")}
+                />
+                {registerForm.formState.errors.password && (
+                  <p className="text-destructive text-sm">{registerForm.formState.errors.password.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="register-confirm-password" className="text-sm font-medium">
+                  {t('auth.confirmPassword')}
+                </label>
+                <input
+                  id="register-confirm-password"
+                  type="password"
+                  className="w-full p-2 border border-input rounded-md"
+                  {...registerForm.register("confirmPassword")}
+                />
+                {registerForm.formState.errors.confirmPassword && (
+                  <p className="text-destructive text-sm">{registerForm.formState.errors.confirmPassword.message}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-primary-foreground py-2 rounded-md hover:bg-primary/90"
+                disabled={registerMutation.isPending}
+              >
+                {registerMutation.isPending ? t('auth.registering') : t('auth.register')}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-      
-      {/* Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-gradient-to-br from-[#222236] to-[#1c1c2e] p-12">
-        <div className="max-w-lg text-center">
-          <h1 className="text-3xl font-bold mb-6">{t('auth.heroTitle')}</h1>
-          <p className="text-lg mb-8">{t('auth.heroDescription')}</p>
-          <div className="grid grid-cols-2 gap-6 text-center">
-            <div className="bg-black/20 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">{t('auth.feature1Title')}</h3>
-              <p>{t('auth.feature1Desc')}</p>
-            </div>
-            <div className="bg-black/20 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">{t('auth.feature2Title')}</h3>
-              <p>{t('auth.feature2Desc')}</p>
-            </div>
-          </div>
+
+      {/* Right side - Hero section */}
+      <div className="w-full md:w-1/2 bg-gradient-to-r from-primary/20 to-primary p-8 text-white hidden md:flex md:flex-col md:justify-center">
+        <div className="max-w-md mx-auto">
+          <h1 className="text-4xl font-bold mb-4">{t('auth.welcome')}</h1>
+          <p className="text-lg mb-6">
+            {t('auth.heroDescription')}
+          </p>
+          <ul className="space-y-2 mb-6">
+            <li className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              {t('auth.feature1')}
+            </li>
+            <li className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              {t('auth.feature2')}
+            </li>
+            <li className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              {t('auth.feature3')}
+            </li>
+          </ul>
+          <Link href="/" className="inline-block bg-white text-primary px-4 py-2 rounded-md font-medium hover:bg-opacity-90">
+            {t('auth.backToHome')}
+          </Link>
         </div>
       </div>
     </div>

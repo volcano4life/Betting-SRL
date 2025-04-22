@@ -19,7 +19,7 @@ export function ProtectedRoute({
     return (
       <Route path={path}>
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-border" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </Route>
     );
@@ -33,7 +33,6 @@ export function ProtectedRoute({
     );
   }
 
-  // If route requires admin and user is not admin, redirect
   if (adminOnly && !user.isAdmin) {
     return (
       <Route path={path}>
@@ -42,9 +41,5 @@ export function ProtectedRoute({
     );
   }
 
-  return (
-    <Route path={path}>
-      <Component />
-    </Route>
-  );
+  return <Route path={path} component={Component} />;
 }
