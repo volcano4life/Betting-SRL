@@ -438,26 +438,37 @@ export class MemStorage implements IStorage {
     const lowerQuery = query.toLowerCase();
     
     const games = Array.from(this.games.values()).filter(game => 
-      game.title.toLowerCase().includes(lowerQuery) || 
-      game.description.toLowerCase().includes(lowerQuery)
+      game.title_en.toLowerCase().includes(lowerQuery) || 
+      game.title_it.toLowerCase().includes(lowerQuery) || 
+      game.description_en.toLowerCase().includes(lowerQuery) ||
+      game.description_it.toLowerCase().includes(lowerQuery)
     );
     
     const reviews = Array.from(this.reviews.values()).filter(review => 
-      review.title.toLowerCase().includes(lowerQuery) || 
-      review.summary.toLowerCase().includes(lowerQuery) ||
-      review.content.toLowerCase().includes(lowerQuery)
+      review.title_en.toLowerCase().includes(lowerQuery) || 
+      review.title_it.toLowerCase().includes(lowerQuery) || 
+      review.summary_en.toLowerCase().includes(lowerQuery) ||
+      review.summary_it.toLowerCase().includes(lowerQuery) ||
+      review.content_en.toLowerCase().includes(lowerQuery) ||
+      review.content_it.toLowerCase().includes(lowerQuery)
     );
     
     const news = Array.from(this.news.values()).filter(news => 
-      news.title.toLowerCase().includes(lowerQuery) || 
-      news.summary.toLowerCase().includes(lowerQuery) ||
-      news.content.toLowerCase().includes(lowerQuery)
+      news.title_en.toLowerCase().includes(lowerQuery) || 
+      news.title_it.toLowerCase().includes(lowerQuery) || 
+      news.summary_en.toLowerCase().includes(lowerQuery) ||
+      news.summary_it.toLowerCase().includes(lowerQuery) ||
+      news.content_en.toLowerCase().includes(lowerQuery) ||
+      news.content_it.toLowerCase().includes(lowerQuery)
     );
     
     const guides = Array.from(this.guides.values()).filter(guide => 
-      guide.title.toLowerCase().includes(lowerQuery) || 
-      guide.summary.toLowerCase().includes(lowerQuery) ||
-      guide.content.toLowerCase().includes(lowerQuery)
+      guide.title_en.toLowerCase().includes(lowerQuery) || 
+      guide.title_it.toLowerCase().includes(lowerQuery) || 
+      guide.summary_en.toLowerCase().includes(lowerQuery) ||
+      guide.summary_it.toLowerCase().includes(lowerQuery) ||
+      guide.content_en.toLowerCase().includes(lowerQuery) ||
+      guide.content_it.toLowerCase().includes(lowerQuery)
     );
     
     return { games, reviews, news, guides };
