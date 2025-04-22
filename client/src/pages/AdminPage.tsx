@@ -397,13 +397,21 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   }, [promoCode]);
 
   const saveMutation = useMutation({
-    mutationFn: async (data: Partial<PromoCode>) => {
+    mutationFn: async (data: Partial<PromoCode> & { validUntil: string | Date }) => {
+      // Convert validUntil to Date object for API submission
+      const dataToSend = {
+        ...data,
+        validUntil: data.validUntil instanceof Date 
+          ? data.validUntil 
+          : new Date(data.validUntil)
+      };
+      
       if (id) {
         // Update existing
-        await apiRequest('PUT', `/api/admin/promo-codes/${id}`, data);
+        await apiRequest('PUT', `/api/admin/promo-codes/${id}`, dataToSend);
       } else {
         // Create new
-        await apiRequest('POST', '/api/admin/promo-codes', data);
+        await apiRequest('POST', '/api/admin/promo-codes', dataToSend);
       }
     },
     onSuccess: () => {

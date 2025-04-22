@@ -236,6 +236,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Error fetching games', error });
     }
   });
+  
+  app.get('/api/admin/games/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const game = await storage.getGameById(id);
+      
+      if (!game) {
+        return res.status(404).json({ message: 'Game not found' });
+      }
+      
+      res.json(game);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching game', error });
+    }
+  });
 
   app.post('/api/admin/games', requireAdmin, async (req, res) => {
     try {
@@ -292,6 +307,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching reviews', error });
+    }
+  });
+  
+  app.get('/api/admin/reviews/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const review = await storage.getReviewById(id);
+      
+      if (!review) {
+        return res.status(404).json({ message: 'Review not found' });
+      }
+      
+      res.json(review);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching review', error });
     }
   });
 
@@ -352,6 +382,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Error fetching news', error });
     }
   });
+  
+  app.get('/api/admin/news/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const newsItem = await storage.getNewsById(id);
+      
+      if (!newsItem) {
+        return res.status(404).json({ message: 'News item not found' });
+      }
+      
+      res.json(newsItem);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching news item', error });
+    }
+  });
 
   app.post('/api/admin/news', requireAdmin, async (req, res) => {
     try {
@@ -408,6 +453,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching guides', error });
+    }
+  });
+  
+  app.get('/api/admin/guides/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const guide = await storage.getGuideById(id);
+      
+      if (!guide) {
+        return res.status(404).json({ message: 'Guide not found' });
+      }
+      
+      res.json(guide);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching guide', error });
     }
   });
 
