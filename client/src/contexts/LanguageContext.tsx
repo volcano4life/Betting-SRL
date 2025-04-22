@@ -32,6 +32,11 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
     'featured.viewAll': 'View All Casinos',
     'featured.empty': 'No featured casinos available',
+    'featured.recommended': 'RECOMMENDED',
+    'featured.validUntil': 'Valid until',
+    'featured.limitedTimeOffer': 'Limited Time Offer',
+    'featured.showPromoCode': 'Show Promo Code',
+    'featured.visitCasino': 'Visit Casino',
     
     'promos.title': 'Exclusive Promo Codes',
     'promos.subtitle': 'Special bonuses only available through Betting SRL',
@@ -89,6 +94,11 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
     'featured.viewAll': 'Vedi Tutti i Casinò',
     'featured.empty': 'Nessun casinò in evidenza disponibile',
+    'featured.recommended': 'CONSIGLIATO',
+    'featured.validUntil': 'Valido fino al',
+    'featured.limitedTimeOffer': 'Offerta a Tempo Limitato',
+    'featured.showPromoCode': 'Mostra Codice Promo',
+    'featured.visitCasino': 'Visita il Casinò',
     
     'promos.title': 'Codici Promo Esclusivi',
     'promos.subtitle': 'Bonus speciali disponibili solo tramite Betting SRL',
