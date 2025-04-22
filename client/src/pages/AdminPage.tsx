@@ -30,7 +30,7 @@ import { generateSlug } from "@/lib/utils";
 type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides" | "administrators";
 
 export default function AdminPage() {
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<ContentType>("promo-codes");
@@ -51,6 +51,11 @@ export default function AdminPage() {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+  
+  // Handle language toggle
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'it' : 'en');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,6 +69,9 @@ export default function AdminPage() {
             </span>
           </div>
           <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={toggleLanguage}>
+              {language === 'en' ? '🇮🇹 Italiano' : '🇬🇧 English'}
+            </Button>
             <Link href="/">
               <Button variant="outline">{t('admin.backToSite')}</Button>
             </Link>
