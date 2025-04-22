@@ -92,7 +92,8 @@ export default function AuthPage() {
 
           {/* Login Form */}
           <div id="login-form" className="">
-            <h2 className="text-2xl font-bold mb-6">{t('auth.loginHeading')}</h2>
+            <h2 className="text-2xl font-bold mb-6">{t('auth.welcomeBack')}</h2>
+            <p className="text-muted-foreground mb-6">{t('auth.loginDesc')}</p>
             <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="login-username" className="text-sm font-medium">
@@ -101,6 +102,7 @@ export default function AuthPage() {
                 <input
                   id="login-username"
                   type="text"
+                  placeholder={t('auth.usernamePlaceholder')}
                   className="w-full p-2 border border-input rounded-md"
                   {...loginForm.register("username")}
                 />
@@ -116,6 +118,7 @@ export default function AuthPage() {
                 <input
                   id="login-password"
                   type="password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="w-full p-2 border border-input rounded-md"
                   {...loginForm.register("password")}
                 />
@@ -129,14 +132,15 @@ export default function AuthPage() {
                 className="w-full bg-primary text-primary-foreground py-2 rounded-md hover:bg-primary/90"
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? t('auth.loggingIn') : t('auth.login')}
+                {loginMutation.isPending ? t('auth.loginButton') + '...' : t('auth.loginButton')}
               </button>
             </form>
           </div>
 
           {/* Register Form */}
           <div id="register-form" className="hidden">
-            <h2 className="text-2xl font-bold mb-6">{t('auth.registerHeading')}</h2>
+            <h2 className="text-2xl font-bold mb-6">{t('auth.createAccount')}</h2>
+            <p className="text-muted-foreground mb-6">{t('auth.registerDesc')}</p>
             <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="register-username" className="text-sm font-medium">
@@ -145,6 +149,7 @@ export default function AuthPage() {
                 <input
                   id="register-username"
                   type="text"
+                  placeholder={t('auth.usernamePlaceholder')}
                   className="w-full p-2 border border-input rounded-md"
                   {...registerForm.register("username")}
                 />
@@ -160,6 +165,7 @@ export default function AuthPage() {
                 <input
                   id="register-password"
                   type="password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="w-full p-2 border border-input rounded-md"
                   {...registerForm.register("password")}
                 />
@@ -175,6 +181,7 @@ export default function AuthPage() {
                 <input
                   id="register-confirm-password"
                   type="password"
+                  placeholder={t('auth.confirmPasswordPlaceholder')}
                   className="w-full p-2 border border-input rounded-md"
                   {...registerForm.register("confirmPassword")}
                 />
@@ -188,7 +195,7 @@ export default function AuthPage() {
                 className="w-full bg-primary text-primary-foreground py-2 rounded-md hover:bg-primary/90"
                 disabled={registerMutation.isPending}
               >
-                {registerMutation.isPending ? t('auth.registering') : t('auth.register')}
+                {registerMutation.isPending ? t('auth.registerButton') + '...' : t('auth.registerButton')}
               </button>
             </form>
           </div>
@@ -198,32 +205,32 @@ export default function AuthPage() {
       {/* Right side - Hero section */}
       <div className="w-full md:w-1/2 bg-gradient-to-r from-primary/20 to-primary p-8 text-white hidden md:flex md:flex-col md:justify-center">
         <div className="max-w-md mx-auto">
-          <h1 className="text-4xl font-bold mb-4">{t('auth.welcome')}</h1>
+          <h1 className="text-4xl font-bold mb-4">{t('auth.heroTitle')}</h1>
           <p className="text-lg mb-6">
             {t('auth.heroDescription')}
           </p>
-          <ul className="space-y-2 mb-6">
-            <li className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <ul className="space-y-4 mb-6">
+            <li className="flex">
+              <svg className="w-5 h-5 mr-2 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              {t('auth.feature1')}
+              <div>
+                <h3 className="font-semibold">{t('auth.feature1Title')}</h3>
+                <p className="text-sm opacity-90">{t('auth.feature1Desc')}</p>
+              </div>
             </li>
-            <li className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <li className="flex">
+              <svg className="w-5 h-5 mr-2 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              {t('auth.feature2')}
-            </li>
-            <li className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              {t('auth.feature3')}
+              <div>
+                <h3 className="font-semibold">{t('auth.feature2Title')}</h3>
+                <p className="text-sm opacity-90">{t('auth.feature2Desc')}</p>
+              </div>
             </li>
           </ul>
-          <Link href="/" className="inline-block bg-white text-primary px-4 py-2 rounded-md font-medium hover:bg-opacity-90">
-            {t('auth.backToHome')}
+          <Link href="/" className="inline-block bg-white text-primary px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">
+            {t('nav.home')}
           </Link>
         </div>
       </div>
