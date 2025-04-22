@@ -645,9 +645,76 @@ function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
         <CardDescription>{t('admin.gamesDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-        </div>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.slug')}</TableHead>
+                <TableHead>{t('admin.featured')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {games?.length ? (
+                games.map((game) => (
+                  <TableRow key={game.id}>
+                    <TableCell>
+                      {game.title_en} / {game.title_it}
+                    </TableCell>
+                    <TableCell>{game.slug}</TableCell>
+                    <TableCell>{game.featured ? '✓' : '–'}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => onEdit(game.id)}
+                      >
+                        {t('admin.edit')}
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            <Trash className="h-4 w-4 mr-1" />
+                            {t('admin.delete')}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
+                            <DialogDescription>
+                              {t('admin.confirmDeleteGame')}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
+                              {t('admin.cancel')}
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => {
+                                // Add deletion logic here when implemented
+                                document.querySelector('dialog')?.close();
+                              }}
+                            >
+                              {t('admin.confirmDelete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-6">
+                    {t('admin.noGames')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
@@ -704,9 +771,78 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
         <CardDescription>{t('admin.reviewsDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-        </div>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.gameId')}</TableHead>
+                <TableHead>{t('admin.rating')}</TableHead>
+                <TableHead>{t('admin.featured')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {reviews?.length ? (
+                reviews.map((review) => (
+                  <TableRow key={review.id}>
+                    <TableCell>
+                      {review.title_en} / {review.title_it}
+                    </TableCell>
+                    <TableCell>{review.gameId}</TableCell>
+                    <TableCell>{review.rating}/10</TableCell>
+                    <TableCell>{review.featured ? '✓' : '–'}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => onEdit(review.id)}
+                      >
+                        {t('admin.edit')}
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            <Trash className="h-4 w-4 mr-1" />
+                            {t('admin.delete')}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
+                            <DialogDescription>
+                              {t('admin.confirmDeleteReview')}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
+                              {t('admin.cancel')}
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => {
+                                // Add deletion logic here when implemented
+                                document.querySelector('dialog')?.close();
+                              }}
+                            >
+                              {t('admin.confirmDelete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-6">
+                    {t('admin.noReviews')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
@@ -763,9 +899,76 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
         <CardDescription>{t('admin.newsDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-        </div>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.category')}</TableHead>
+                <TableHead>{t('admin.publishDate')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {news?.length ? (
+                news.map((newsItem) => (
+                  <TableRow key={newsItem.id}>
+                    <TableCell>
+                      {newsItem.title_en} / {newsItem.title_it}
+                    </TableCell>
+                    <TableCell>{newsItem.category}</TableCell>
+                    <TableCell>{format(new Date(newsItem.publishDate), 'dd/MM/yyyy')}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => onEdit(newsItem.id)}
+                      >
+                        {t('admin.edit')}
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            <Trash className="h-4 w-4 mr-1" />
+                            {t('admin.delete')}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
+                            <DialogDescription>
+                              {t('admin.confirmDeleteNews')}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
+                              {t('admin.cancel')}
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => {
+                                // Add deletion logic here when implemented
+                                document.querySelector('dialog')?.close();
+                              }}
+                            >
+                              {t('admin.confirmDelete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-6">
+                    {t('admin.noNews')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
@@ -822,9 +1025,76 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
         <CardDescription>{t('admin.guidesDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-        </div>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.difficulty')}</TableHead>
+                <TableHead>{t('admin.publishDate')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {guides?.length ? (
+                guides.map((guide) => (
+                  <TableRow key={guide.id}>
+                    <TableCell>
+                      {guide.title_en} / {guide.title_it}
+                    </TableCell>
+                    <TableCell>{guide.difficulty}</TableCell>
+                    <TableCell>{format(new Date(guide.publishDate), 'dd/MM/yyyy')}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => onEdit(guide.id)}
+                      >
+                        {t('admin.edit')}
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            <Trash className="h-4 w-4 mr-1" />
+                            {t('admin.delete')}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
+                            <DialogDescription>
+                              {t('admin.confirmDeleteGuide')}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
+                              {t('admin.cancel')}
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => {
+                                // Add deletion logic here when implemented
+                                document.querySelector('dialog')?.close();
+                              }}
+                            >
+                              {t('admin.confirmDelete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-6">
+                    {t('admin.noGuides')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
