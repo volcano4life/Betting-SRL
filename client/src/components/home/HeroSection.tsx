@@ -124,7 +124,7 @@ export default function HeroSection() {
             >
               <img 
                 src={mainFeatured.coverImage} 
-                alt={mainFeatured.title} 
+                alt={getLocalizedField(mainFeatured, 'title')} 
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
