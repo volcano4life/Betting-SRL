@@ -37,6 +37,13 @@ export default function AdminPage() {
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   
+  // Reset editing state when changing tabs
+  const handleTabChange = (value: string) => {
+    setActiveTab(value as ContentType);
+    setEditingItemId(null);
+    setIsAdding(false);
+  };
+  
   // Check if current user is site owner (username: 'admin')
   const isSiteOwner = user?.username === 'admin';
 
@@ -84,9 +91,7 @@ export default function AdminPage() {
                 setIsAdding(true);
                 setEditingItemId(null);
               }}>
-                {activeTab === 'administrators' 
-                  ? t('admin.inviteAdmin') 
-                  : t('admin.addNew')}
+                {t('admin.addNew')}
               </Button>
             ) : isSiteOwner && (
               <Button onClick={() => {
@@ -364,12 +369,13 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     featured: 0
   });
 
-  const { data: promoCode, isLoading } = useQuery<PromoCode>({
+  const { data: promoCode, isLoading, isError } = useQuery<PromoCode>({
     queryKey: [`/api/admin/promo-codes/${id}`],
     enabled: !!id,
     meta: {
       errorMessage: t('admin.promoCodeLoadError')
-    }
+    },
+    retry: false
   });
 
   // Initialize form with promoCode data when loaded (editing mode)
@@ -427,11 +433,32 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     }));
   };
 
+  // Show loading spinner when loading data
   if (isLoading && id) {
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -722,6 +749,45 @@ function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
 
 function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  
+  const { data: game, isLoading, isError } = useQuery<Game>({
+    queryKey: [`/api/admin/games/${id}`],
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.gameLoadError')
+    },
+    retry: false
+  });
+  
+  // Show loading spinner when loading data
+  if (isLoading && id) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   return (
     <Card>
@@ -850,6 +916,45 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
 
 function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  
+  const { data: review, isLoading, isError } = useQuery<Review>({
+    queryKey: [`/api/admin/reviews/${id}`],
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.reviewLoadError')
+    },
+    retry: false
+  });
+  
+  // Show loading spinner when loading data
+  if (isLoading && id) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   return (
     <Card>
@@ -976,6 +1081,45 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
 
 function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  
+  const { data: newsItem, isLoading, isError } = useQuery<News>({
+    queryKey: [`/api/admin/news/${id}`],
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.newsLoadError')
+    },
+    retry: false
+  });
+  
+  // Show loading spinner when loading data
+  if (isLoading && id) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   return (
     <Card>
@@ -1102,6 +1246,45 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
 
 function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  
+  const { data: guide, isLoading, isError } = useQuery<Guide>({
+    queryKey: [`/api/admin/guides/${id}`],
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.guideLoadError')
+    },
+    retry: false
+  });
+  
+  // Show loading spinner when loading data
+  if (isLoading && id) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   return (
     <Card>
