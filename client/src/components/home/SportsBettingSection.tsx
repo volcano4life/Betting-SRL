@@ -24,7 +24,7 @@ export default function SportsBettingSection() {
               {t('sports.title')}
             </h2>
             <p className="text-gray-500 mt-2">
-              Expert predictions, odds analysis and betting tips
+              {t('sports.subtitle')}
             </p>
           </div>
           <Link href="/sports">
@@ -64,12 +64,12 @@ export default function SportsBettingSection() {
                       {article.id % 2 === 0 ? (
                         <Badge variant="outline" className="ml-auto flex items-center text-xs">
                           <Trophy className="h-3 w-3 mr-1" />
-                          Hot Tip
+                          {t('sports.hotTip')}
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="ml-auto flex items-center text-xs">
                           <TrendingUp className="h-3 w-3 mr-1" />
-                          Analysis
+                          {t('sports.analysis')}
                         </Badge>
                       )}
                     </div>
@@ -86,7 +86,7 @@ export default function SportsBettingSection() {
                     
                     <Button variant="outline" size="sm" className="mt-auto w-full" asChild>
                       <Link href={`/sports/${article.slug}`}>
-                        Read Full Analysis
+                        {t('sports.readMore')}
                       </Link>
                     </Button>
                   </div>

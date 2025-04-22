@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const faqItems = [
   {
@@ -33,6 +34,7 @@ const faqItems = [
 ];
 
 export default function GamblingFAQSection() {
+  const { t } = useLanguage();
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
