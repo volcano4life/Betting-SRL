@@ -4,7 +4,8 @@ import {
   News, InsertNews, 
   Guide, InsertGuide, 
   Subscriber, InsertSubscriber,
-  User, InsertUser
+  User, InsertUser,
+  PromoCode, InsertPromoCode
 } from "@shared/schema";
 
 export interface IStorage {
@@ -47,6 +48,15 @@ export interface IStorage {
   getGuideById(id: number): Promise<Guide | undefined>;
   createGuide(guide: InsertGuide): Promise<Guide>;
   
+  // Promo Codes
+  getAllPromoCodes(): Promise<PromoCode[]>;
+  getActivePromoCodes(): Promise<PromoCode[]>;
+  getFeaturedPromoCodes(limit?: number): Promise<PromoCode[]>;
+  getPromoCodeById(id: number): Promise<PromoCode | undefined>;
+  createPromoCode(promoCode: InsertPromoCode): Promise<PromoCode>;
+  updatePromoCode(id: number, promoCode: Partial<InsertPromoCode>): Promise<PromoCode>;
+  deletePromoCode(id: number): Promise<PromoCode>;
+  
   // Subscribers
   addSubscriber(subscriber: InsertSubscriber): Promise<Subscriber>;
   
@@ -66,6 +76,7 @@ export class MemStorage implements IStorage {
   private news: Map<number, News>;
   private guides: Map<number, Guide>;
   private subscribers: Map<number, Subscriber>;
+  private promoCodes: Map<number, PromoCode>;
   
   private userId: number;
   private gameId: number;
@@ -73,6 +84,7 @@ export class MemStorage implements IStorage {
   private newsId: number;
   private guideId: number;
   private subscriberId: number;
+  private promoCodeId: number;
   
   constructor() {
     this.users = new Map();
@@ -81,6 +93,7 @@ export class MemStorage implements IStorage {
     this.news = new Map();
     this.guides = new Map();
     this.subscribers = new Map();
+    this.promoCodes = new Map();
     
     this.userId = 1;
     this.gameId = 1;
@@ -88,6 +101,7 @@ export class MemStorage implements IStorage {
     this.newsId = 1;
     this.guideId = 1;
     this.subscriberId = 1;
+    this.promoCodeId = 1;
     
     // Add some initial data
     this.initializeData();
@@ -426,6 +440,69 @@ export class MemStorage implements IStorage {
     const newSubscriber: Subscriber = { ...subscriber, id, createdAt };
     this.subscribers.set(id, newSubscriber);
     return newSubscriber;
+  }
+  
+  // Promo Codes methods
+  async getAllPromoCodes(): Promise<PromoCode[]> {
+    return Array.from(this.promoCodes.values());
+  }
+  
+  async getActivePromoCodes(): Promise<PromoCode[]> {
+    return Array.from(this.promoCodes.values())
+      .filter(code => code.active && new Date(code.validUntil) > new Date());
+  }
+  
+  async getFeaturedPromoCodes(limit: number = 10): Promise<PromoCode[]> {
+    return Array.from(this.promoCodes.values())
+      .filter(code => code.active && new Date(code.validUntil) > new Date() && code.featured)
+      .sort((a, b) => Number(b.featured) - Number(a.featured))
+      .slice(0, limit);
+  }
+  
+  async getPromoCodeById(id: number): Promise<PromoCode | undefined> {
+    return this.promoCodes.get(id);
+  }
+  
+  async createPromoCode(promoCode: InsertPromoCode): Promise<PromoCode> {
+    const id = this.promoCodeId++;
+    const createdAt = new Date();
+    const newPromoCode: PromoCode = { 
+      ...promoCode, 
+      id, 
+      createdAt,
+      featured: promoCode.featured || 0,
+      active: promoCode.active === undefined ? true : promoCode.active
+    };
+    this.promoCodes.set(id, newPromoCode);
+    return newPromoCode;
+  }
+  
+  async updatePromoCode(id: number, promoCode: Partial<InsertPromoCode>): Promise<PromoCode> {
+    const existingPromoCode = await this.getPromoCodeById(id);
+    if (!existingPromoCode) {
+      throw new Error("Promo code not found");
+    }
+    
+    // Update the promo code fields
+    const updatedPromoCode: PromoCode = { 
+      ...existingPromoCode, 
+      ...promoCode,
+      // Make sure we have proper featured value
+      featured: promoCode.featured !== undefined ? promoCode.featured : existingPromoCode.featured
+    };
+    
+    this.promoCodes.set(id, updatedPromoCode);
+    return updatedPromoCode;
+  }
+  
+  async deletePromoCode(id: number): Promise<PromoCode> {
+    const promoCode = await this.getPromoCodeById(id);
+    if (!promoCode) {
+      throw new Error("Promo code not found");
+    }
+    
+    this.promoCodes.delete(id);
+    return promoCode;
   }
   
   // Search functionality
