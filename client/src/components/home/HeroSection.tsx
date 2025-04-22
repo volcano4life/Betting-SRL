@@ -57,10 +57,10 @@ export default function HeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-6">
                 <div className="flex items-center mb-3">
-                  <Badge variant="secondary" className="mr-3">NEW</Badge>
+                  <Badge variant="secondary" className="mr-3">{t('hero.new')}</Badge>
                   <span className="text-sm text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-2">{mainFeatured.title}</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('hero.featuredReview')}</h2>
                 <p className="text-gray-200 mb-4 line-clamp-2">{mainFeatured.summary}</p>
                 <div className="flex items-center mb-3">
                   <RatingStars rating={mainFeatured.rating} size="xl" />
@@ -73,7 +73,7 @@ export default function HeroSection() {
             </Link>
           ) : (
             <div className="col-span-2 relative rounded-lg overflow-hidden flex items-center justify-center h-96 bg-neutral-800">
-              <p>No featured content available</p>
+              <p>{t('hero.noFeaturedContent')}</p>
             </div>
           )}
 
@@ -100,14 +100,14 @@ export default function HeroSection() {
                   <div className="absolute bottom-0 left-0 p-4">
                     <h3 className="text-lg font-bold mb-1">{news.title}</h3>
                     <div className="flex items-center">
-                      <Badge variant="outline" className="bg-accent text-[#222236] font-bold">HOT</Badge>
+                      <Badge variant="outline" className="bg-accent text-[#222236] font-bold">{t('hero.hot')}</Badge>
                     </div>
                   </div>
                 </Link>
               ))
             ) : (
               <div className="h-full flex items-center justify-center bg-neutral-800 rounded-lg">
-                <p>No news available</p>
+                <p>{t('hero.noNewsAvailable')}</p>
               </div>
             )}
           </div>
@@ -130,10 +130,10 @@ export default function HeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-4">
                 <div className="flex items-center mb-2">
-                  <Badge variant="secondary" className="mr-2">NEW</Badge>
+                  <Badge variant="secondary" className="mr-2">{t('hero.new')}</Badge>
                   <span className="text-xs text-gray-300">{formatDate(mainFeatured.publishDate)}</span>
                 </div>
-                <h2 className="text-xl font-bold mb-2">{mainFeatured.title}</h2>
+                <h2 className="text-xl font-bold mb-2">{t('hero.featuredReview')}</h2>
                 <div className="flex items-center mb-2">
                   <RatingStars rating={mainFeatured.rating} size="sm" />
                   <span className="ml-2 font-bold">{mainFeatured.rating.toFixed(1)}</span>
@@ -145,7 +145,7 @@ export default function HeroSection() {
             </Link>
           ) : (
             <div className="relative rounded-lg overflow-hidden mb-6 h-80 flex items-center justify-center bg-neutral-800">
-              <p>No featured content available</p>
+              <p>{t('hero.noFeaturedContent')}</p>
             </div>
           )}
         </div>

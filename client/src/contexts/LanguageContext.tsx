@@ -28,6 +28,11 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.title': 'Find the Best Italian Online Casinos',
     'hero.subtitle': 'Exclusive Bonuses & Expert Reviews',
     'hero.cta': 'Claim Bonus',
+    'hero.featuredReview': 'Featured Review',
+    'hero.noFeaturedContent': 'No featured content available',
+    'hero.noNewsAvailable': 'No news available',
+    'hero.new': 'NEW',
+    'hero.hot': 'HOT',
     
     'featured.title': 'Top Rated Casinos',
     'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
@@ -147,6 +152,11 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.title': 'Trova i Migliori Casinò Online Italiani',
     'hero.subtitle': 'Bonus Esclusivi & Recensioni di Esperti',
     'hero.cta': 'Ottieni Bonus',
+    'hero.featuredReview': 'Recensione in Evidenza',
+    'hero.noFeaturedContent': 'Nessun contenuto in evidenza disponibile',
+    'hero.noNewsAvailable': 'Nessuna notizia disponibile',
+    'hero.new': 'NUOVO',
+    'hero.hot': 'CALDO',
     
     'featured.title': 'Casinò Più Votati',
     'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
