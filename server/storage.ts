@@ -302,6 +302,39 @@ export class MemStorage implements IStorage {
       category: "Sports Betting"
     };
     this.createGuide(guide2);
+    
+    // Add sample promo codes
+    const promoCode1: InsertPromoCode = {
+      casino_name_en: "Starcasino",
+      casino_name_it: "Starcasino",
+      code: "STAR100",
+      description_en: "Get a 100% welcome bonus up to €200 plus 200 free spins on your first deposit at Starcasino.",
+      description_it: "Ottieni un bonus di benvenuto del 100% fino a €200 più 200 giri gratuiti sul tuo primo deposito su Starcasino.",
+      bonus_en: "100% up to €200 + 200 Free Spins",
+      bonus_it: "100% fino a €200 + 200 Giri Gratuiti",
+      validUntil: new Date(new Date().setMonth(new Date().getMonth() + 3)), // 3 months from now
+      casinoLogo: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+      affiliateLink: "https://example.com/starcasino-affiliate",
+      active: true,
+      featured: 2
+    };
+    this.createPromoCode(promoCode1);
+    
+    const promoCode2: InsertPromoCode = {
+      casino_name_en: "888Casino",
+      casino_name_it: "888Casino",
+      code: "888BONUS",
+      description_en: "New players at 888Casino can claim a 100% match bonus up to €100 using our exclusive promo code.",
+      description_it: "I nuovi giocatori su 888Casino possono richiedere un bonus di corrispondenza del 100% fino a €100 utilizzando il nostro codice promozionale esclusivo.",
+      bonus_en: "100% up to €100",
+      bonus_it: "100% fino a €100",
+      validUntil: new Date(new Date().setMonth(new Date().getMonth() + 2)), // 2 months from now
+      casinoLogo: "https://images.unsplash.com/photo-1596838132731-3301c3fd4527?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80",
+      affiliateLink: "https://example.com/888casino-affiliate",
+      active: true,
+      featured: 1
+    };
+    this.createPromoCode(promoCode2);
   }
   
   // Games methods
