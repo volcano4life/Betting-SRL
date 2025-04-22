@@ -65,12 +65,12 @@ export default function PromoCodesSection() {
                     <div className="flex space-x-2">
                       <Button className="w-full" size="sm" asChild>
                         <Link href={`/promos/${promo.slug}`}>
-                          Claim Now
+                          {t('promos.claim')}
                         </Link>
                       </Button>
                       <Button variant="outline" size="sm" className="w-full" asChild>
                         <Link href={`/casinos/${promo.slug}`}>
-                          View Casino
+                          {t('promos.viewCasino')}
                         </Link>
                       </Button>
                     </div>
@@ -80,14 +80,14 @@ export default function PromoCodesSection() {
             ))
           ) : (
             <div className="col-span-3 text-center py-10">
-              <p className="text-gray-500">No promo codes available</p>
+              <p className="text-gray-500">{t('promos.empty')}</p>
             </div>
           )}
         </div>
 
         <div className="mt-8 text-center md:hidden">
           <Link href="/promos">
-            <Button variant="outline">View All Promos</Button>
+            <Button variant="outline">{t('promos.viewAll')}</Button>
           </Link>
         </div>
       </div>
