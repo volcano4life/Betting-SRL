@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface GameCardProps {
   id?: number;
@@ -29,6 +30,7 @@ export default function GameCard({
   categoryInfo,
   isLoading = false,
 }: GameCardProps) {
+  const { language } = useLanguage();
   if (isLoading) {
     return (
       <Card className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 hover:shadow-lg h-[350px] animate-pulse">
@@ -71,7 +73,7 @@ export default function GameCard({
             <span className="mx-2">•</span>
             <span>{categoryInfo.genres.join(', ')}</span>
             <span className="mx-2">•</span>
-            <span>{formatDate(categoryInfo.date)}</span>
+            <span>{formatDate(categoryInfo.date, language)}</span>
           </div>
         )}
         <h3 className="text-lg font-bold mb-2 line-clamp-2">{title}</h3>

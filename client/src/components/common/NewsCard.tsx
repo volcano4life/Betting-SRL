@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface NewsCardProps {
   id?: number;
@@ -23,6 +24,7 @@ export default function NewsCard({
   summary,
   isLoading = false,
 }: NewsCardProps) {
+  const { language } = useLanguage();
   if (isLoading) {
     return (
       <Card className="bg-[#F7F7FA] rounded-lg p-5 shadow-sm hover:shadow-md transition duration-300 animate-pulse h-[180px]">
@@ -44,7 +46,7 @@ export default function NewsCard({
     <Card className="bg-[#F7F7FA] rounded-lg p-5 shadow-sm hover:shadow-md transition duration-300">
       <CardContent className="p-0">
         <div className="text-xs text-gray-500 mb-2">
-          {date && formatDate(date)} • {category}
+          {date && formatDate(date, language)} • {category}
         </div>
         <h3 className="text-lg font-bold mb-3 line-clamp-2">{title}</h3>
         <p className="text-gray-600 text-sm mb-3 line-clamp-3">{summary}</p>
