@@ -2,6 +2,8 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturedCasinosSection from "@/components/home/FeaturedCasinosSection";
 import PromoCodesSection from "@/components/home/PromoCodesSection";
 import SportsBettingSection from "@/components/home/SportsBettingSection";
+import ResponsibleGamblingSection from "@/components/home/ResponsibleGamblingSection";
+import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
 import { Helmet } from "react-helmet";
 
@@ -17,6 +19,8 @@ export default function HomePage() {
       <FeaturedCasinosSection />
       <PromoCodesSection />
       <SportsBettingSection />
+      <ResponsibleGamblingSection />
+      <GamblingFAQSection />
       <NewsletterSection />
     </>
   );
