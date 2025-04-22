@@ -29,10 +29,16 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.cta': 'Claim Bonus',
     
     'featured.title': 'Top Rated Casinos',
+    'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
     'featured.viewAll': 'View All Casinos',
+    'featured.empty': 'No featured casinos available',
     
     'promos.title': 'Exclusive Promo Codes',
+    'promos.subtitle': 'Special bonuses only available through Betting SRL',
     'promos.viewAll': 'View All Promotions',
+    'promos.empty': 'No promo codes available',
+    'promos.claim': 'Claim Now',
+    'promos.viewCasino': 'View Casino',
     
     'sports.title': 'Sports Betting',
     'sports.viewAll': 'View All Odds',
@@ -72,10 +78,16 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.cta': 'Ottieni Bonus',
     
     'featured.title': 'Casinò Più Votati',
+    'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
     'featured.viewAll': 'Vedi Tutti i Casinò',
+    'featured.empty': 'Nessun casinò in evidenza disponibile',
     
     'promos.title': 'Codici Promo Esclusivi',
+    'promos.subtitle': 'Bonus speciali disponibili solo tramite Betting SRL',
     'promos.viewAll': 'Vedi Tutte le Promozioni',
+    'promos.empty': 'Nessun codice promo disponibile',
+    'promos.claim': 'Ottieni Ora',
+    'promos.viewCasino': 'Vedi Casinò',
     
     'sports.title': 'Scommesse Sportive',
     'sports.viewAll': 'Vedi Tutte le Quote',

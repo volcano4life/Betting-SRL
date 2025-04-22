@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const formSchema = insertSubscriberSchema.extend({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -23,6 +24,7 @@ const formSchema = insertSubscriberSchema.extend({
 
 export default function NewsletterSection() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,9 +63,9 @@ export default function NewsletterSection() {
   return (
     <section className="py-16 bg-[#222236] text-white">
       <div className="container mx-auto px-4 max-w-4xl text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">Get Exclusive Casino Offers</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3">{t('newsletter.title')}</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Subscribe to our newsletter and receive exclusive promo codes, bonus alerts, and the latest betting tips.
+          {t('newsletter.subtitle')}
         </p>
         
         {isSubmitted ? (
@@ -81,7 +83,7 @@ export default function NewsletterSection() {
                   <FormItem className="flex-grow">
                     <FormControl>
                       <Input 
-                        placeholder="Your email address" 
+                        placeholder={t('newsletter.placeholder')} 
                         className="px-5 py-3 rounded-lg text-[#222236] focus:outline-none" 
                         {...field}
                       />
@@ -97,7 +99,7 @@ export default function NewsletterSection() {
               >
                 {subscribeMutation.isPending ? "Subscribing..." : (
                   <>
-                    Subscribe <Send className="ml-2 h-4 w-4" />
+                    {t('newsletter.button')} <Send className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
