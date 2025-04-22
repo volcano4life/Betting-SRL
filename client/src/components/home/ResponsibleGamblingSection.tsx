@@ -7,23 +7,23 @@ export default function ResponsibleGamblingSection() {
   const responsibleGamblingPrinciples = [
     {
       icon: <Clock className="h-8 w-8 text-primary" />,
-      title: "Set Time Limits",
-      description: "Monitor and limit the time you spend gambling online to maintain a healthy balance."
+      titleKey: "responsible.principle1.title",
+      descriptionKey: "responsible.principle1.description"
     },
     {
       icon: <Ban className="h-8 w-8 text-primary" />,
-      title: "Know When to Stop",
-      description: "Set budget limits and never gamble with money you cannot afford to lose."
+      titleKey: "responsible.principle2.title",
+      descriptionKey: "responsible.principle2.description"
     },
     {
       icon: <AlertCircle className="h-8 w-8 text-primary" />,
-      title: "Recognize Warning Signs",
-      description: "Be aware of problematic gambling behaviors and seek help when needed."
+      titleKey: "responsible.principle3.title",
+      descriptionKey: "responsible.principle3.description"
     },
     {
       icon: <Shield className="h-8 w-8 text-primary" />,
-      title: "Use Protective Tools",
-      description: "Utilize deposit limits, self-exclusion, and reality checks offered by casinos."
+      titleKey: "responsible.principle4.title",
+      descriptionKey: "responsible.principle4.description"
     }
   ];
 
@@ -46,8 +46,8 @@ export default function ResponsibleGamblingSection() {
                 <div className="flex justify-center mb-4">
                   {principle.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-2">{principle.title}</h3>
-                <p className="text-sm text-muted-foreground">{principle.description}</p>
+                <h3 className="font-bold text-lg mb-2">{t(principle.titleKey)}</h3>
+                <p className="text-sm text-muted-foreground">{t(principle.descriptionKey)}</p>
               </CardContent>
             </Card>
           ))}
@@ -55,10 +55,10 @@ export default function ResponsibleGamblingSection() {
 
         <div className="mt-10 p-6 bg-[#222236]/5 rounded-lg max-w-4xl mx-auto text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            If you or someone you know is struggling with gambling addiction, please reach out for help:
+            {t('responsible.helpMessage')}
           </p>
           <p className="font-medium">
-            National Problem Gambling Helpline: <span className="text-primary">1-800-522-4700</span>
+            {t('responsible.helpline')}: <span className="text-primary">{t('responsible.helplineNumber')}</span>
           </p>
         </div>
       </div>
