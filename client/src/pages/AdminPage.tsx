@@ -383,7 +383,7 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     if (promoCode) {
       setFormData({
         ...promoCode,
-        validUntil: new Date(promoCode.validUntil).toISOString().split('T')[0]
+        validUntil: new Date(promoCode.validUntil)
       });
     }
   }, [promoCode]);
@@ -417,7 +417,16 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    saveMutation.mutate(formData);
+    
+    // Convert the Date object to an ISO string for API submission
+    const dataToSubmit = {
+      ...formData,
+      validUntil: formData.validUntil instanceof Date 
+        ? formData.validUntil.toISOString() 
+        : formData.validUntil
+    };
+    
+    saveMutation.mutate(dataToSubmit);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -429,7 +438,9 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
         ? (e.target as HTMLInputElement).checked 
         : name === 'featured' 
           ? parseInt(value) 
-          : value
+          : name === 'validUntil' && value
+            ? new Date(value)
+            : value
     }));
   };
 
@@ -576,7 +587,7 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   id="validUntil"
                   name="validUntil"
                   type="date"
-                  value={formData.validUntil || ''}
+                  value={formData.validUntil instanceof Date ? formData.validUntil.toISOString().split('T')[0] : String(formData.validUntil || '')}
                   onChange={handleChange}
                   required
                 />
