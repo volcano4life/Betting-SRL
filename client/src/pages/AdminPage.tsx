@@ -2559,6 +2559,11 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
                             {t('admin.siteOwner')}
                           </span>
                         )}
+                        {admin.username === 'superadmin' && (
+                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
+                            {t('admin.superAdmin')}
+                          </span>
+                        )}
                         {!admin.isAdmin && (
                           <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
                             {t('admin.pendingApproval')}
