@@ -6,6 +6,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: string) => string;
+  getLocalizedField: <T extends Record<string, any>>(item: T, fieldName: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -459,9 +460,27 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const t = (key: string): string => {
     return translations[language][key] || key;
   };
+  
+  // Function to get the correct language field from an item
+  const getLocalizedField = <T extends Record<string, any>>(item: T, fieldName: string): string => {
+    if (!item) return '';
+    
+    // Try to get the field with language suffix first
+    const langField = `${fieldName}_${language}` as keyof T;
+    if (langField in item) {
+      return item[langField] as string;
+    }
+    
+    // Fallback to the direct field name if it exists
+    if (fieldName in item) {
+      return item[fieldName as keyof T] as string;
+    }
+    
+    return '';
+  };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, getLocalizedField }}>
       {children}
     </LanguageContext.Provider>
   );
