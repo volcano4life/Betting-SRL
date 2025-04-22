@@ -20,6 +20,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.liveCasino': 'Live Casino',
     'nav.sportsBetting': 'Sports Betting',
     'nav.promotions': 'Promotions',
+    'nav.promoCodes': 'Promo Codes',
     'nav.guides': 'Guides',
     'nav.language': 'Italiano',
 
@@ -41,6 +42,11 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.title': 'Exclusive Promo Codes',
     'promos.subtitle': 'Special bonuses only available through Betting SRL',
     'promos.viewAll': 'View All Promotions',
+    
+    'reviews.title': 'Latest Reviews',
+    'reviews.subtitle': 'Expert reviews on the best Italian online casinos',
+    'reviews.viewAll': 'View All',
+    'reviews.empty': 'No reviews available at the moment',
     'promos.empty': 'No promo codes available',
     'promos.claim': 'Claim Now',
     'promos.viewCasino': 'View Casino',
@@ -133,6 +139,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.liveCasino': 'Casinò Live',
     'nav.sportsBetting': 'Scommesse Sportive',
     'nav.promotions': 'Promozioni',
+    'nav.promoCodes': 'Codici Promo',
     'nav.guides': 'Guide',
     'nav.language': 'English',
 
@@ -154,6 +161,11 @@ const translations: Record<Language, Record<string, string>> = {
     'promos.title': 'Codici Promo Esclusivi',
     'promos.subtitle': 'Bonus speciali disponibili solo tramite Betting SRL',
     'promos.viewAll': 'Vedi Tutte le Promozioni',
+    
+    'reviews.title': 'Ultime Recensioni',
+    'reviews.subtitle': 'Recensioni di esperti sui migliori casinò online italiani',
+    'reviews.viewAll': 'Vedi Tutte',
+    'reviews.empty': 'Nessuna recensione disponibile al momento',
     'promos.empty': 'Nessun codice promo disponibile',
     'promos.claim': 'Ottieni Ora',
     'promos.viewCasino': 'Vedi Casinò',
