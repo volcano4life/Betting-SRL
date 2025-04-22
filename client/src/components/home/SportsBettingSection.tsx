@@ -7,8 +7,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Trophy, TrendingUp } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { News } from "@shared/schema"; // We're temporarily using News until we update schema.ts
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SportsBettingSection() {
+  const { t } = useLanguage();
   const { data: sportsArticles, isLoading } = useQuery<News[]>({
     queryKey: ['/api/news/latest'],
   });
@@ -19,7 +21,7 @@ export default function SportsBettingSection() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-[#222236]">
-              Sports Betting Insights
+              {t('sports.title')}
             </h2>
             <p className="text-gray-500 mt-2">
               Expert predictions, odds analysis and betting tips
@@ -27,7 +29,7 @@ export default function SportsBettingSection() {
           </div>
           <Link href="/sports">
             <Button variant="outline" className="hidden md:inline-flex">
-              View All Articles
+              {t('sports.viewAll')}
             </Button>
           </Link>
         </div>
@@ -93,14 +95,14 @@ export default function SportsBettingSection() {
             ))
           ) : (
             <div className="col-span-3 text-center py-10">
-              <p className="text-gray-500">No sports articles available</p>
+              <p className="text-gray-500">{t('sports.empty')}</p>
             </div>
           )}
         </div>
         
         <div className="mt-8 text-center md:hidden">
           <Link href="/sports">
-            <Button variant="outline">View All Articles</Button>
+            <Button variant="outline">{t('sports.viewAll')}</Button>
           </Link>
         </div>
       </div>
