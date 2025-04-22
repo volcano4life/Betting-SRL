@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface GuideCardProps {
   id?: number;
@@ -28,6 +29,7 @@ export default function GuideCard({
   summary,
   isLoading = false,
 }: GuideCardProps) {
+  const { language } = useLanguage();
   if (isLoading) {
     return (
       <Card className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse h-[370px]">
