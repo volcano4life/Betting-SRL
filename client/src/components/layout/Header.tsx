@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Search, Menu, Globe, User, Settings, Shield } from "lucide-react";
+import { Search, Menu, Globe, User, Settings, Shield, KeyRound, LogOut } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -221,6 +221,15 @@ export default function Header() {
                             </li>
                           )}
                           <li>
+                            <Link 
+                              href="/change-password"
+                              className="w-full text-left flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                            >
+                              <KeyRound className="h-4 w-4" />
+                              {t('nav.changePassword')}
+                            </Link>
+                          </li>
+                          <li>
                             <button
                               onClick={handleLogout} 
                               className="w-full text-left flex items-center gap-2 p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
@@ -316,6 +325,13 @@ export default function Header() {
                           {t('nav.adminPanel')}
                         </Link>
                       )}
+                      <Link 
+                        href="/change-password"
+                        className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
+                      >
+                        <KeyRound className="h-5 w-5 mr-2" />
+                        {t('nav.changePassword')}
+                      </Link>
                       <button 
                         onClick={handleLogout}
                         className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
