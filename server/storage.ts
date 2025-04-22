@@ -12,6 +12,9 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  updateUserStatus(id: number, isBlocked: boolean): Promise<User>;
+  approveAdmin(id: number): Promise<User>;
   
   // Games
   getAllGames(): Promise<Game[]>;
@@ -103,9 +106,39 @@ export class MemStorage implements IStorage {
     const id = this.userId++;
     const createdAt = new Date();
     const isAdmin = user.isAdmin === true; // Ensure isAdmin is a boolean, default to false if undefined
-    const newUser: User = { ...user, id, createdAt, isAdmin };
+    // Set isBlocked to false by default for new users
+    const isBlocked = false;
+    const newUser: User = { ...user, id, createdAt, isAdmin, isBlocked };
     this.users.set(id, newUser);
     return newUser;
+  }
+  
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+  
+  async updateUserStatus(id: number, isBlocked: boolean): Promise<User> {
+    const user = await this.getUser(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    // Update the user's status
+    const updatedUser = { ...user, isBlocked };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+  
+  async approveAdmin(id: number): Promise<User> {
+    const user = await this.getUser(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    // Set isAdmin to true
+    const updatedUser = { ...user, isAdmin: true };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
   
   private initializeData() {
