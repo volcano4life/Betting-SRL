@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsContent as TabPanel, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -785,13 +786,16 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     description_en: '',
     description_it: '',
     slug: '',
-    rating: 0,
-    featured: false,
-    gameType: 'casino',
-    provider: '',
+    overallRating: 0,
+    featured: 0,
     releaseDate: new Date(),
-    logoUrl: '',
-    bannerUrl: ''
+    coverImage: '',
+    platforms: [],
+    genres: [],
+    gameplayRating: 0,
+    graphicsRating: 0,
+    storyRating: 0,
+    valueRating: 0
   });
   
   const { data: game, isLoading, isError } = useQuery<Game>({
@@ -1003,26 +1007,77 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="provider">{t('admin.provider')}</Label>
+                <Label htmlFor="overallRating">{t('admin.overallRating')}</Label>
                 <Input
-                  id="provider"
-                  name="provider"
-                  value={formData.provider || ''}
+                  id="overallRating"
+                  name="overallRating"
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={formData.overallRating || 0}
                   onChange={handleChange}
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="rating">{t('admin.rating')}</Label>
+                <Label htmlFor="gameplayRating">{t('admin.gameplayRating')}</Label>
                 <Input
-                  id="rating"
-                  name="rating"
+                  id="gameplayRating"
+                  name="gameplayRating"
                   type="number"
                   min="0"
                   max="5"
                   step="0.1"
-                  value={formData.rating || 0}
+                  value={formData.gameplayRating || 0}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="graphicsRating">{t('admin.graphicsRating')}</Label>
+                <Input
+                  id="graphicsRating"
+                  name="graphicsRating"
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={formData.graphicsRating || 0}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="storyRating">{t('admin.storyRating')}</Label>
+                <Input
+                  id="storyRating"
+                  name="storyRating"
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={formData.storyRating || 0}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="valueRating">{t('admin.valueRating')}</Label>
+                <Input
+                  id="valueRating"
+                  name="valueRating"
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={formData.valueRating || 0}
                   onChange={handleChange}
                   required
                 />
@@ -1045,57 +1100,26 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="gameType">{t('admin.gameType')}</Label>
-                <Select 
-                  name="gameType" 
-                  value={formData.gameType?.toString() || "casino"}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'gameType', value, type: 'select' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectGameType')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="casino">{t('admin.typeCasino')}</SelectItem>
-                    <SelectItem value="slot">{t('admin.typeSlot')}</SelectItem>
-                    <SelectItem value="table">{t('admin.typeTable')}</SelectItem>
-                    <SelectItem value="live">{t('admin.typeLive')}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+                <Input
+                  id="coverImage"
+                  name="coverImage"
+                  value={formData.coverImage || ''}
+                  onChange={handleChange}
+                  placeholder="https://example.com/image.png"
+                  required
+                />
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="logoUrl">{t('admin.logoUrl')}</Label>
-              <Input
-                id="logoUrl"
-                name="logoUrl"
-                value={formData.logoUrl || ''}
-                onChange={handleChange}
-                placeholder="https://example.com/logo.png"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="bannerUrl">{t('admin.bannerUrl')}</Label>
-              <Input
-                id="bannerUrl"
-                name="bannerUrl"
-                value={formData.bannerUrl || ''}
-                onChange={handleChange}
-                placeholder="https://example.com/banner.png"
-              />
             </div>
             
             <div className="flex items-center space-x-2">
               <Checkbox 
                 id="featured" 
-                checked={formData.featured || false}
+                checked={formData.featured ? true : false}
                 onCheckedChange={(checked) => {
                   setFormData(prev => ({
                     ...prev,
-                    featured: !!checked
+                    featured: checked ? 1 : 0
                   }))
                 }}
               />
@@ -1225,6 +1249,29 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
 function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState<Partial<Review>>({
+    title_en: '',
+    title_it: '',
+    summary_en: '',
+    summary_it: '',
+    content_en: '',
+    content_it: '',
+    slug: '',
+    rating: 0,
+    featured: 0,
+    gameId: 0,
+    coverImage: ''
+  });
+  
+  // Get games for game selection dropdown
+  const { data: games } = useQuery<Game[]>({
+    queryKey: ['/api/admin/games'],
+    meta: {
+      errorMessage: t('admin.gamesLoadError')
+    }
+  });
   
   const { data: review, isLoading, isError } = useQuery<Review>({
     queryKey: [`/api/admin/reviews/${id}`],
@@ -1234,6 +1281,85 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     },
     retry: false
   });
+  
+  // Initialize form with review data when loaded (editing mode)
+  React.useEffect(() => {
+    if (review) {
+      setFormData({
+        ...review,
+        publishDate: new Date(review.publishDate)
+      });
+    }
+  }, [review]);
+  
+  const saveMutation = useMutation({
+    mutationFn: async (data: Partial<Review>) => {
+      const dataToSend = {
+        ...data,
+        publishDate: data.publishDate instanceof Date 
+          ? data.publishDate 
+          : new Date(data.publishDate as string)
+      };
+      
+      if (id) {
+        // Update existing
+        await apiRequest('PUT', `/api/admin/reviews/${id}`, dataToSend);
+      } else {
+        // Create new
+        await apiRequest('POST', '/api/admin/reviews', dataToSend);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/reviews'] });
+      toast({
+        title: id ? t('admin.reviewUpdatedTitle') : t('admin.reviewCreatedTitle'),
+        description: id ? t('admin.reviewUpdatedDesc') : t('admin.reviewCreatedDesc'),
+      });
+      onSuccess();
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.savingErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Make sure slug is filled
+    if (!formData.slug) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en || '')
+      }));
+    }
+    
+    saveMutation.mutate(formData);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' || name === 'rating' || name === 'gameId'
+        ? parseFloat(value)
+        : value
+    }));
+  };
+  
+  // Auto-generate slug when title changes
+  useEffect(() => {
+    if (formData.title_en && !id) {
+      setFormData(prev => ({
+        ...prev,
+        slug: generateSlug(formData.title_en)
+      }));
+    }
+  }, [formData.title_en, id]);
   
   // Show loading spinner when loading data
   if (isLoading && id) {
@@ -1275,12 +1401,181 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-          <Button variant="outline" className="mt-4" onClick={onCancel}>
-            {t('admin.back')}
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* English Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.englishContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_en">{t('admin.title')} (EN)</Label>
+                <Input
+                  id="title_en"
+                  name="title_en"
+                  value={formData.title_en || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Textarea
+                  id="summary_en"
+                  name="summary_en"
+                  value={formData.summary_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_en">{t('admin.content')} (EN)</Label>
+                <Textarea
+                  id="content_en"
+                  name="content_en"
+                  value={formData.content_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+            
+            {/* Italian Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.italianContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="title_it">{t('admin.title')} (IT)</Label>
+                <Input
+                  id="title_it"
+                  name="title_it"
+                  value={formData.title_it || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Textarea
+                  id="summary_it"
+                  name="summary_it"
+                  value={formData.summary_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="content_it">{t('admin.content')} (IT)</Label>
+                <Textarea
+                  id="content_it"
+                  name="content_it"
+                  value={formData.content_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Common Fields */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="slug">{t('admin.slug')}</Label>
+                <Input
+                  id="slug"
+                  name="slug"
+                  value={formData.slug || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="gameId">{t('admin.game')}</Label>
+                <Select 
+                  name="gameId" 
+                  value={formData.gameId?.toString() || ""}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'gameId', value, type: 'number' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectGame')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {games?.map(game => (
+                      <SelectItem key={game.id} value={game.id.toString()}>
+                        {game.title_en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="rating">{t('admin.rating')}</Label>
+                <Input
+                  id="rating"
+                  name="rating"
+                  type="number"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={formData.rating || 0}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+              <Input
+                id="coverImage"
+                name="coverImage"
+                value={formData.coverImage || ''}
+                onChange={handleChange}
+                placeholder="https://example.com/image.png"
+                required
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="featured" 
+                checked={formData.featured ? true : false}
+                onCheckedChange={(checked) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    featured: checked ? 1 : 0
+                  }))
+                }}
+              />
+              <Label htmlFor="featured">{t('admin.featuredReview')}</Label>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" type="button" onClick={onCancel}>
+              {t('admin.cancel')}
+            </Button>
+            <Button type="submit" disabled={saveMutation.isPending}>
+              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Save className="mr-2 h-4 w-4" />
+              {t('admin.save')}
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );

@@ -227,13 +227,7 @@ export default function Header() {
                 </NavigationMenu>
               </div>
             ) : (
-              <Link 
-                href="/auth" 
-                className="flex items-center px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 text-sm font-medium"
-              >
-                <User className="h-4 w-4 mr-2" />
-                <span>{t('nav.login')}</span>
-              </Link>
+              <div></div>
             )}
             
             <Sheet>
@@ -300,26 +294,16 @@ export default function Header() {
                   </Link>
                   
                   {/* Authentication Links in Mobile Menu */}
-                  {user ? (
-                    <>
-                      <button 
-                        onClick={handleLogout}
-                        className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
-                      >
-                        <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        {t('nav.logout')}
-                      </button>
-                    </>
-                  ) : (
-                    <Link 
-                      href="/auth" 
-                      className="flex items-center text-[#222236] hover:text-primary font-semibold py-2"
+                  {user && (
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center text-[#222236] hover:text-primary font-semibold py-2 w-full text-left"
                     >
-                      <User className="h-5 w-5 mr-2" />
-                      {t('nav.login')}
-                    </Link>
+                      <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      {t('nav.logout')}
+                    </button>
                   )}
                   
                   <button 
