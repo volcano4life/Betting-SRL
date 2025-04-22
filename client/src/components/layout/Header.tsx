@@ -14,24 +14,25 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Search, Menu } from "lucide-react";
 
-const pcGamesCategories = [
-  { label: "Action", href: "/reviews?platform=pc&category=action" },
-  { label: "Adventure", href: "/reviews?platform=pc&category=adventure" },
-  { label: "RPG", href: "/reviews?platform=pc&category=rpg" },
-  { label: "Strategy", href: "/reviews?platform=pc&category=strategy" },
-  { label: "Simulation", href: "/reviews?platform=pc&category=simulation" },
+const casinoCategories = [
+  { label: "Slot Machines", href: "/casinos?category=slots" },
+  { label: "Roulette", href: "/casinos?category=roulette" },
+  { label: "Blackjack", href: "/casinos?category=blackjack" },
+  { label: "Poker", href: "/casinos?category=poker" },
+  { label: "Baccarat", href: "/casinos?category=baccarat" },
 ];
 
-const consoleGamesCategories = [
-  { label: "PlayStation", href: "/reviews?platform=playstation" },
-  { label: "Xbox", href: "/reviews?platform=xbox" },
-  { label: "Nintendo Switch", href: "/reviews?platform=nintendo-switch" },
+const promotionCategories = [
+  { label: "Welcome Bonuses", href: "/promos?type=welcome" },
+  { label: "No Deposit", href: "/promos?type=no-deposit" },
+  { label: "Free Spins", href: "/promos?type=free-spins" },
 ];
 
-const mobileGamesCategories = [
-  { label: "iOS", href: "/reviews?platform=ios" },
-  { label: "Android", href: "/reviews?platform=android" },
-  { label: "Cross-Platform", href: "/reviews?platform=cross-platform-mobile" },
+const sportsCategories = [
+  { label: "Football", href: "/sports?category=football" },
+  { label: "Basketball", href: "/sports?category=basketball" },
+  { label: "Tennis", href: "/sports?category=tennis" },
+  { label: "F1", href: "/sports?category=f1" },
 ];
 
 export default function Header() {
@@ -65,11 +66,11 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  PC Games
+                  Casino Games
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
-                    {pcGamesCategories.map((category) => (
+                    {casinoCategories.map((category) => (
                       <li key={category.href}>
                         <NavigationMenuLink asChild>
                           <Link
@@ -91,11 +92,11 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  Console Games
+                  Promotions
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
-                    {consoleGamesCategories.map((category) => (
+                    {promotionCategories.map((category) => (
                       <li key={category.href}>
                         <NavigationMenuLink asChild>
                           <Link
@@ -117,11 +118,11 @@ export default function Header() {
                     "text-[#222236] hover:text-primary font-semibold transition duration-200"
                   )}
                 >
-                  Mobile Games
+                  Sports
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[200px] gap-1 p-2">
-                    {mobileGamesCategories.map((category) => (
+                    {sportsCategories.map((category) => (
                       <li key={category.href}>
                         <NavigationMenuLink asChild>
                           <Link
@@ -138,27 +139,27 @@ export default function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/reviews">
+                <Link href="/casinos">
                   <NavigationMenuLink
                     className={cn(
                       "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                      isActive("/reviews") && "text-primary"
+                      isActive("/casinos") && "text-primary"
                     )}
                   >
-                    Reviews
+                    Casinos
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/news">
+                <Link href="/promos">
                   <NavigationMenuLink
                     className={cn(
                       "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                      isActive("/news") && "text-primary"
+                      isActive("/promos") && "text-primary"
                     )}
                   >
-                    News
+                    Promo Codes
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -187,9 +188,9 @@ export default function Header() {
                     Home
                   </Link>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">PC Games</h3>
+                    <h3 className="font-semibold mb-2">Casino Games</h3>
                     <div className="flex flex-col space-y-2 pl-2">
-                      {pcGamesCategories.map((category) => (
+                      {casinoCategories.map((category) => (
                         <Link 
                           key={category.href} 
                           href={category.href} 
@@ -201,9 +202,9 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">Console Games</h3>
+                    <h3 className="font-semibold mb-2">Promotions</h3>
                     <div className="flex flex-col space-y-2 pl-2">
-                      {consoleGamesCategories.map((category) => (
+                      {promotionCategories.map((category) => (
                         <Link 
                           key={category.href} 
                           href={category.href} 
@@ -215,9 +216,9 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="py-2">
-                    <h3 className="font-semibold mb-2">Mobile Games</h3>
+                    <h3 className="font-semibold mb-2">Sports</h3>
                     <div className="flex flex-col space-y-2 pl-2">
-                      {mobileGamesCategories.map((category) => (
+                      {sportsCategories.map((category) => (
                         <Link 
                           key={category.href} 
                           href={category.href} 
@@ -228,11 +229,14 @@ export default function Header() {
                       ))}
                     </div>
                   </div>
-                  <Link href="/reviews" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    Reviews
+                  <Link href="/casinos" className="text-[#222236] hover:text-primary font-semibold py-2">
+                    Casinos
                   </Link>
-                  <Link href="/news" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    News
+                  <Link href="/promos" className="text-[#222236] hover:text-primary font-semibold py-2">
+                    Promo Codes
+                  </Link>
+                  <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
+                    Sports
                   </Link>
                 </div>
               </SheetContent>
@@ -245,7 +249,7 @@ export default function Header() {
           <div className="py-4 border-t border-gray-100">
             <div className="flex gap-2 items-center">
               <Input 
-                placeholder="Search for games, reviews, news..." 
+                placeholder="Search for casinos, bonuses, sports articles..." 
                 className="flex-grow"
               />
               <Button>
