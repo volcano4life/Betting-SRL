@@ -305,7 +305,7 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
               {promoCodes?.length ? (
                 promoCodes.map((promoCode) => (
                   <TableRow key={promoCode.id}>
-                    <TableCell>{promoCode.casino_name_en}</TableCell>
+                    <TableCell>{getLocalizedField(promoCode, 'casino_name')}</TableCell>
                     <TableCell>{promoCode.code}</TableCell>
                     <TableCell>{format(new Date(promoCode.validUntil), 'dd/MM/yyyy')}</TableCell>
                     <TableCell className="flex items-center gap-2">
