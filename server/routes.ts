@@ -573,6 +573,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/admin/users/:id/approve', requireSiteOwner, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      const { role } = req.body;
       
       // Check if target user exists
       const targetUser = await storage.getUser(id);
@@ -585,8 +586,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'User is already an administrator' });
       }
       
-      // Approve admin
-      const updatedUser = await storage.approveAdmin(id);
+      // Approve admin with role
+      const updatedUser = await storage.approveAdmin(id, role);
       
       // Remove password from response
       const { password, ...userWithoutPassword } = updatedUser;
