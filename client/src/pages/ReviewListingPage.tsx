@@ -86,9 +86,9 @@ export default function ReviewListingPage() {
               <ChevronRight className="h-4 w-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink>
+              <span className="cursor-default">
                 Reviews
-              </BreadcrumbLink>
+              </span>
             </BreadcrumbItem>
             {platform && (
               <>
@@ -96,9 +96,9 @@ export default function ReviewListingPage() {
                   <ChevronRight className="h-4 w-4" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbLink>
+                  <span className="cursor-default">
                     {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                  </BreadcrumbLink>
+                  </span>
                 </BreadcrumbItem>
               </>
             )}
@@ -108,9 +108,9 @@ export default function ReviewListingPage() {
                   <ChevronRight className="h-4 w-4" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbLink>
+                  <span className="cursor-default">
                     {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </BreadcrumbLink>
+                  </span>
                 </BreadcrumbItem>
               </>
             )}
