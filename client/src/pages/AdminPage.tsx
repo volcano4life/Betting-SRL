@@ -2547,13 +2547,13 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       toast({
-        title: t('admin.userStatusUpdatedTitle'),
-        description: t('admin.userStatusUpdatedDesc'),
+        title: t('admin.statusUpdatedTitle'),
+        description: t('admin.statusUpdatedDesc'),
       });
     },
     onError: (error) => {
       toast({
-        title: t('admin.userStatusErrorTitle'),
+        title: t('admin.statusUpdatedTitle'),
         description: error.message,
         variant: 'destructive'
       });
