@@ -2069,7 +2069,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
                     <TableCell>
                       {getLocalizedField(guide, 'title')}
                     </TableCell>
-                    <TableCell>{t(`admin.difficulty.${guide.difficulty}`)}</TableCell>
+                    <TableCell>{t(`admin.difficulty.${guide.difficulty.toLowerCase()}`)}</TableCell>
                     <TableCell>{format(new Date(guide.publishDate), 'dd/MM/yyyy')}</TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
@@ -2141,7 +2141,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
     content_it: '',
     slug: '',
     category: '',
-    difficulty: 'beginner',
+    difficulty: 'BEGINNER',
     coverImage: ''
   });
   
@@ -2413,7 +2413,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                 <Label htmlFor="difficulty">{t('admin.difficulty')}</Label>
                 <Select 
                   name="difficulty" 
-                  value={formData.difficulty || "beginner"}
+                  value={formData.difficulty || "BEGINNER"}
                   onValueChange={(value) => handleChange({
                     target: { name: 'difficulty', value, type: 'select' }
                   } as any)}
@@ -2423,7 +2423,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {difficultyLevels.map(level => (
-                      <SelectItem key={level} value={level}>
+                      <SelectItem key={level} value={level.toUpperCase()}>
                         {t(`admin.difficulty.${level}`)}
                       </SelectItem>
                     ))}
