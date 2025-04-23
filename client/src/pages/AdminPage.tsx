@@ -716,7 +716,7 @@ function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.titleColumn')}</TableHead>
                 <TableHead>{t('admin.slug')}</TableHead>
                 <TableHead>{t('admin.featured')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
@@ -1185,7 +1185,7 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.titleColumn')}</TableHead>
                 <TableHead>{t('admin.gameId')}</TableHead>
                 <TableHead>{t('admin.rating')}</TableHead>
                 <TableHead>{t('admin.featured')}</TableHead>
