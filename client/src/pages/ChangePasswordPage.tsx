@@ -73,66 +73,73 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="container max-w-md mx-auto p-4 py-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('changePassword.title')}</CardTitle>
-          <CardDescription>{t('changePassword.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('changePassword.currentPassword')}</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('changePassword.newPassword')}</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('changePassword.confirmPassword')}</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? t('common.loading') : t('changePassword.submit')}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button variant="ghost" onClick={() => setLocation("/")} disabled={isLoading}>
-            {t('common.cancel')}
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+    <>
+      <Helmet>
+        <title>Change Password - Betting SRL</title>
+        <meta name="description" content="Update your account password securely on Betting SRL." />
+      </Helmet>
+      
+      <div className="container max-w-md mx-auto p-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('changePassword.title')}</CardTitle>
+            <CardDescription>{t('changePassword.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="currentPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('changePassword.currentPassword')}</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('changePassword.newPassword')}</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('changePassword.confirmPassword')}</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? t('common.loading') : t('changePassword.submit')}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Button variant="ghost" onClick={() => setLocation("/")} disabled={isLoading}>
+              {t('common.cancel')}
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   );
 }
