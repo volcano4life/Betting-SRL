@@ -2789,10 +2789,11 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
                               <Button 
                                 size="sm" 
                                 variant="outline"
+                                className="text-xs px-2 sm:text-sm"
                                 onClick={() => handleApproveClick(admin.id)}
                               >
-                                <ShieldCheck className="h-4 w-4 mr-2" />
-                                {t('admin.approve')}
+                                <ShieldCheck className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
+                                <span className="truncate">{t('admin.approve')}</span>
                               </Button>
                             )}
                             
@@ -2801,6 +2802,7 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
                                 <Button 
                                   size="sm" 
                                   variant={admin.isBlocked ? 'outline' : 'destructive'}
+                                  className="text-xs px-2 sm:text-sm"
                                   onClick={() => toggleBlockMutation.mutate({ 
                                     id: admin.id, 
                                     isBlocked: !admin.isBlocked 
@@ -2808,13 +2810,13 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
                                 >
                                   {admin.isBlocked ? (
                                     <>
-                                      <ShieldCheck className="h-4 w-4 mr-2" />
-                                      {t('admin.unblock')}
+                                      <ShieldCheck className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
+                                      <span className="truncate">{t('admin.unblock')}</span>
                                     </>
                                   ) : (
                                     <>
-                                      <Lock className="h-4 w-4 mr-2" />
-                                      {t('admin.block')}
+                                      <Lock className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
+                                      <span className="truncate">{t('admin.block')}</span>
                                     </>
                                   )}
                                 </Button>
@@ -2827,11 +2829,11 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100"
+                                    className="border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100 text-xs px-2 truncate max-w-[130px] sm:max-w-none sm:text-sm"
                                     onClick={() => handleTransferClick(admin.id)}
                                   >
-                                    <Crown className="h-4 w-4 mr-2" />
-                                    {t('admin.transferOwnership')}
+                                    <Crown className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
+                                    <span className="truncate">{t('admin.transferOwnership')}</span>
                                   </Button>
                                 )}
                               </>
@@ -3034,13 +3036,17 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
             <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={inviteMutation.isPending}>
+            <Button 
+              type="submit" 
+              disabled={inviteMutation.isPending}
+              className="text-xs sm:text-sm"
+            >
               {inviteMutation.isPending ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0 animate-spin" />
               ) : (
-                <UserPlus className="h-4 w-4 mr-2" />
+                <UserPlus className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
               )}
-              {t('admin.sendInvite')}
+              <span className="truncate">{t('admin.sendInvite')}</span>
             </Button>
           </div>
         </form>
