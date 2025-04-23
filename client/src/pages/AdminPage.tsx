@@ -2966,6 +2966,7 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
+    email: '',
     isAdmin: true
   });
   
@@ -3037,6 +3038,21 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
                 {t('admin.passwordRequirements')}
               </p>
             </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">{t('admin.email')}</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email || ''}
+                onChange={handleChange}
+                placeholder={t('admin.emailOptional')}
+              />
+              <p className="text-sm text-muted-foreground">
+                {t('admin.emailDescription')}
+              </p>
+            </div>
           </div>
           
           <div className="flex justify-end gap-4 pt-4">
@@ -3046,16 +3062,9 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
             <Button 
               type="submit" 
               disabled={inviteMutation.isPending}
-              size="icon"
-              title={t('admin.sendInvite')}
-              className="h-7 w-7"
             >
-              {inviteMutation.isPending ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : (
-                <UserPlus className="h-3 w-3" />
-              )}
-              <span className="sr-only">{t('admin.sendInvite')}</span>
+              {inviteMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('admin.sendInvite')}
             </Button>
           </div>
         </form>
