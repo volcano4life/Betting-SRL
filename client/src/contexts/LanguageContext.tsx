@@ -241,6 +241,9 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.promoCodes': 'Promo Codes',
     'nav.guides': 'Guides',
     'nav.language': 'Italiano',
+    'nav.adminPanel': 'Admin Panel',
+    'nav.changePassword': 'Change Password',
+    'nav.logout': 'Logout',
 
     // Homepage Sections
     'hero.title': 'Find the Best Italian Online Casinos',
@@ -537,6 +540,9 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.promoCodes': 'Codici Promo',
     'nav.guides': 'Guide',
     'nav.language': 'English',
+    'nav.adminPanel': 'Pannello Admin',
+    'nav.changePassword': 'Cambia Password',
+    'nav.logout': 'Disconnetti',
 
     // Homepage Sections
     'hero.title': 'Trova i Migliori Casinò Online Italiani',
