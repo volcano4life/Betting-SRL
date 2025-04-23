@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import GameCard from "@/components/common/GameCard";
 import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 export default function ReviewListingPage() {
   const [location] = useLocation();
@@ -52,7 +53,7 @@ export default function ReviewListingPage() {
   }, [reviews, platform, category, sortOption]);
   
   // Construct the page title based on filters
-  const getPageTitle = () => {
+  const getPageHeading = () => {
     let title = "Game Reviews";
     
     if (platform && category) {

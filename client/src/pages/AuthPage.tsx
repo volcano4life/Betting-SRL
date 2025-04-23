@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Helmet } from "react-helmet";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 // Form schemas
 const loginSchema = z.object({
@@ -72,8 +73,8 @@ export default function AuthPage() {
   return (
     <>
       <Helmet>
-        <title>Login or Register - Betting SRL</title>
-        <meta name="description" content="Sign in to your account or register to access exclusive content and features on Betting SRL." />
+        <title>{getPageTitle('auth')}</title>
+        <meta name="description" content={`Sign in to your account or register to access exclusive content and features on ${siteConfig.name}.`} />
       </Helmet>
       
       <div className="min-h-screen bg-background flex flex-col md:flex-row">
