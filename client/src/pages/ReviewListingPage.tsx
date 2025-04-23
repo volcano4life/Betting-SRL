@@ -3,6 +3,7 @@ import { useLocation, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Review } from "@shared/schema";
 import { Separator } from "@/components/ui/separator";
+import { Helmet } from "react-helmet";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,12 +14,14 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import GameCard from "@/components/common/GameCard";
 import { ChevronRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ReviewListingPage() {
   const [location] = useLocation();
   const [searchParams] = useState(() => new URLSearchParams(location.split("?")[1] || ""));
   const platform = searchParams.get("platform") || "";
   const category = searchParams.get("category") || "";
+  const { getLocalizedField } = useLanguage();
   
   const { data: reviews, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/reviews'],
@@ -64,8 +67,14 @@ export default function ReviewListingPage() {
   };
 
   return (
-    <div className="bg-[#F7F7FA] py-8">
-      <div className="container mx-auto px-4">
+    <>
+      <Helmet>
+        <title>{`${getPageTitle()} - Betting SRL`}</title>
+        <meta name="description" content={`Browse our collection of ${getPageTitle().toLowerCase()}. Find the best casino reviews, tips, and expert insights.`} />
+      </Helmet>
+      
+      <div className="bg-[#F7F7FA] py-8">
+        <div className="container mx-auto px-4">
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -77,7 +86,7 @@ export default function ReviewListingPage() {
               <ChevronRight className="h-4 w-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink isCurrentPage>
+              <BreadcrumbLink>
                 Reviews
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -87,7 +96,7 @@ export default function ReviewListingPage() {
                   <ChevronRight className="h-4 w-4" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbLink isCurrentPage>
+                  <BreadcrumbLink>
                     {platform.charAt(0).toUpperCase() + platform.slice(1)}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -99,7 +108,7 @@ export default function ReviewListingPage() {
                   <ChevronRight className="h-4 w-4" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbLink isCurrentPage>
+                  <BreadcrumbLink>
                     {category.charAt(0).toUpperCase() + category.slice(1)}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -142,11 +151,11 @@ export default function ReviewListingPage() {
               <GameCard
                 key={review.id}
                 id={review.id}
-                title={review.title}
+                title={getLocalizedField(review, 'title')}
                 slug={review.slug}
                 coverImage={review.coverImage}
                 rating={review.rating}
-                summary={review.summary}
+                summary={getLocalizedField(review, 'summary')}
                 categoryInfo={{
                   platforms: ["PC"], // This would come from game data in a real implementation
                   genres: ["RPG"],   // This would come from game data in a real implementation
@@ -163,5 +172,6 @@ export default function ReviewListingPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
