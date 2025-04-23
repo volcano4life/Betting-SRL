@@ -16,6 +16,7 @@ import CookieConsent from "@/components/common/CookieConsent";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import PageTransition from "@/components/ui/page-transition";
 
 function Router() {
   const [location] = useLocation();
@@ -29,16 +30,18 @@ function Router() {
     <>
       {showHeaderFooter && <Header />}
       <main className={`flex-grow ${!showHeaderFooter ? 'min-h-screen' : ''}`}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/reviews" component={ReviewListingPage} />
-          <Route path="/reviews/:slug" component={ReviewDetailPage} />
-          <Route path="/auth" component={AuthPage} />
-          <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
-          <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
-          {/* Fallback to 404 */}
-          <Route component={NotFound} />
-        </Switch>
+        <PageTransition location={location}>
+          <Switch>
+            <Route path="/" component={HomePage} />
+            <Route path="/reviews" component={ReviewListingPage} />
+            <Route path="/reviews/:slug" component={ReviewDetailPage} />
+            <Route path="/auth" component={AuthPage} />
+            <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
+            <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
+            {/* Fallback to 404 */}
+            <Route component={NotFound} />
+          </Switch>
+        </PageTransition>
       </main>
       {showHeaderFooter && <Footer />}
     </>
