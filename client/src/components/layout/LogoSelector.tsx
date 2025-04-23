@@ -35,8 +35,8 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
             onClick={() => handleSelectLogo('poker-chip')}>
             <BettingLogo className="w-16 h-16" />
             <div className="text-center">
-              <h3 className="font-medium">Poker Chip</h3>
-              <p className="text-sm text-muted-foreground">Classic casino poker chip with "B" and card accents</p>
+              <h3 className="font-medium">Card Table</h3>
+              <p className="text-sm text-muted-foreground">Poker table with playing cards and casino chips</p>
             </div>
             {selectedLogo === 'poker-chip' && (
               <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
@@ -49,8 +49,8 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
             onClick={() => handleSelectLogo('sports-shield')}>
             <SportsBettingLogo className="w-16 h-16" />
             <div className="text-center">
-              <h3 className="font-medium">Sports Shield</h3>
-              <p className="text-sm text-muted-foreground">Sports betting themed shield with "B" and odds display</p>
+              <h3 className="font-medium">Sports Field</h3>
+              <p className="text-sm text-muted-foreground">Sports jersey with football field and trophy</p>
             </div>
             {selectedLogo === 'sports-shield' && (
               <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
@@ -63,8 +63,8 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
             onClick={() => handleSelectLogo('casino-chip')}>
             <CasinoChipLogo className="w-16 h-16" />
             <div className="text-center">
-              <h3 className="font-medium">Casino Chip</h3>
-              <p className="text-sm text-muted-foreground">Elegant casino chip with card suits and centered "B"</p>
+              <h3 className="font-medium">Vegas Night</h3>
+              <p className="text-sm text-muted-foreground">Las Vegas-styled slot machine with dice and skyline</p>
             </div>
             {selectedLogo === 'casino-chip' && (
               <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
