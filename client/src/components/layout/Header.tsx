@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Search, Menu, Globe, User, Settings, Shield, KeyRound, LogOut } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
+import BettingLogo from "./BettingLogo";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -60,9 +61,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-xl">B</span>
-              </div>
+              <BettingLogo className="w-10 h-10 mr-2" />
               <span className="text-xl font-bold text-[#222236] font-medium">
                 Betting <span className="text-primary">SRL</span>
               </span>
