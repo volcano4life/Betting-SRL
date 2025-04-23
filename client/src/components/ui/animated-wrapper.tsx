@@ -188,11 +188,10 @@ const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
   };
   
   // Modify the variants for staggered children if needed
-  if (staggerChildren) {
+  if (staggerChildren && combinedVariants.visible && typeof combinedVariants.visible === 'object') {
     combinedVariants.visible = {
       ...combinedVariants.visible,
       transition: {
-        ...combinedVariants.visible?.transition,
         staggerChildren: staggerDelay
       }
     };
@@ -205,8 +204,8 @@ const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
       whileHover={hoverAnimation !== 'none' ? "hover" : undefined}
       whileTap={hoverAnimation !== 'none' ? "tap" : undefined}
       viewport={{ 
-        once, 
-        threshold,
+        once,
+        amount: threshold,
         margin
       }}
       variants={combinedVariants}
