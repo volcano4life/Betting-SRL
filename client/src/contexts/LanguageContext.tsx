@@ -431,22 +431,7 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.rolePromptDesc': 'Seleziona un ruolo per questo utente',
     'admin.inviteAdmin': 'Invita Amministratore',
     'admin.approvalPending': 'Approvazione in Attesa',
-    'admin.username': 'Nome Utente',
-    'admin.status': 'Stato',
-    'admin.createdAt': 'Creato il',
-    'admin.actions': 'Azioni',
-    'admin.role': 'Ruolo',
-    'admin.active': 'Attivo',
-    'admin.blocked': 'Bloccato',
-    'admin.transferOwnership': 'Trasferisci Proprietà',
-    'admin.promoCodeDeletedTitle': 'Codice Promo Eliminato',
-    'admin.promoCodeDeletedDesc': 'Il codice promo è stato eliminato con successo',
-    'admin.promoCodeDeleteErrorTitle': 'Errore di Eliminazione',
-    'admin.savingErrorTitle': 'Errore',
-    'admin.promoCodeUpdatedTitle': 'Codice Promo Aggiornato',
-    'admin.promoCodeUpdatedDesc': 'Il codice promo è stato aggiornato con successo',
-    'admin.promoCodeCreatedTitle': 'Codice Promo Creato',
-    'admin.promoCodeCreatedDesc': 'Il codice promo è stato creato con successo',
+    // All admin table headers and notifications are defined in the English section
 
     // Navigation
     'nav.home': 'Home',
