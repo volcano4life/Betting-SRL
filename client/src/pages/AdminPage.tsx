@@ -2726,132 +2726,139 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[600px]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('admin.username')}</TableHead>
-                  <TableHead>{t('admin.status')}</TableHead>
-                  <TableHead>{t('admin.createdAt')}</TableHead>
-                  <TableHead>{t('admin.actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {admins?.length ? (
-                  admins.map((admin) => (
-                    <TableRow key={admin.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center">
-                          {admin.username}
-                          {admin.username === 'admin' && (
-                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
-                              {t('admin.siteOwner')}
+            <div className="w-full overflow-auto">
+              <Table className="min-w-[650px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[25%]">{t('admin.username')}</TableHead>
+                    <TableHead className="w-[15%]">{t('admin.status')}</TableHead>
+                    <TableHead className="w-[15%]">{t('admin.createdAt')}</TableHead>
+                    <TableHead className="w-[45%]">{t('admin.actions')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {admins?.length ? (
+                    admins.map((admin) => (
+                      <TableRow key={admin.id}>
+                        <TableCell className="font-medium">
+                          <div className="flex flex-col xs:flex-row xs:items-center gap-1">
+                            <span>{admin.username}</span>
+                            <div className="flex flex-wrap gap-1 mt-1 xs:mt-0">
+                              {admin.username === 'admin' && (
+                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
+                                  {t('admin.siteOwner')}
+                                </span>
+                              )}
+                              {admin.username === 'superadmin' && (
+                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
+                                  {t('admin.superAdmin')}
+                                </span>
+                              )}
+                              {!admin.isAdmin && (
+                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
+                                  {t('admin.pendingApproval')}
+                                </span>
+                              )}
+                              
+                              {/* Show indicator if this is the user with pending ownership transfer */}
+                              {transferPendingUserId === admin.id && (
+                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-amber-100 text-amber-700 animate-pulse">
+                                  <Clock className="inline-block h-3 w-3 mr-1" />
+                                  {t('admin.pendingTransfer')}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {admin.isBlocked ? (
+                            <span className="inline-flex items-center text-destructive text-xs whitespace-nowrap">
+                              <Lock className="h-3 w-3 mr-1 flex-shrink-0" />
+                              {t('admin.blocked')}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center text-green-600 text-xs whitespace-nowrap">
+                              <ShieldCheck className="h-3 w-3 mr-1 flex-shrink-0" />
+                              {t('admin.active')}
                             </span>
                           )}
-                          {admin.username === 'superadmin' && (
-                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
-                              {t('admin.superAdmin')}
-                            </span>
-                          )}
-                          {!admin.isAdmin && (
-                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
-                              {t('admin.pendingApproval')}
-                            </span>
-                          )}
-                          
-                          {/* Show indicator if this is the user with pending ownership transfer */}
-                          {transferPendingUserId === admin.id && (
-                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-amber-100 text-amber-700 animate-pulse">
-                              <Clock className="inline-block h-3 w-3 mr-1" />
-                              {t('admin.pendingTransfer')}
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {admin.isBlocked ? (
-                          <span className="inline-flex items-center text-destructive">
-                            <Lock className="h-4 w-4 mr-1" />
-                            {t('admin.blocked')}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center text-green-600">
-                            <ShieldCheck className="h-4 w-4 mr-1" />
-                            {t('admin.active')}
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>{format(new Date(admin.createdAt), 'dd/MM/yyyy')}</TableCell>
-                      <TableCell className="flex items-center gap-2">
-                        {/* Don't show action buttons for site owner or for current user */}
-                        {admin.username !== 'admin' && admin.id !== user?.id && (
-                          <>
-                            {!admin.isAdmin && isSiteOwner && (
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                className="text-xs px-2 sm:text-sm"
-                                onClick={() => handleApproveClick(admin.id)}
-                              >
-                                <ShieldCheck className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
-                                <span className="truncate">{t('admin.approve')}</span>
-                              </Button>
-                            )}
-                            
-                            {admin.isAdmin && isSiteOwner && (
-                              <>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-xs">
+                          {format(new Date(admin.createdAt), 'dd/MM/yyyy')}
+                        </TableCell>
+                        <TableCell>
+                          {/* Don't show action buttons for site owner or for current user */}
+                          {admin.username !== 'admin' && admin.id !== user?.id ? (
+                            <div className="flex flex-wrap gap-2">
+                              {!admin.isAdmin && isSiteOwner && (
                                 <Button 
                                   size="sm" 
-                                  variant={admin.isBlocked ? 'outline' : 'destructive'}
-                                  className="text-xs px-2 sm:text-sm"
-                                  onClick={() => toggleBlockMutation.mutate({ 
-                                    id: admin.id, 
-                                    isBlocked: !admin.isBlocked 
-                                  })}
+                                  variant="outline"
+                                  className="h-7 text-xs px-2"
+                                  onClick={() => handleApproveClick(admin.id)}
                                 >
-                                  {admin.isBlocked ? (
-                                    <>
-                                      <ShieldCheck className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
-                                      <span className="truncate">{t('admin.unblock')}</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Lock className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
-                                      <span className="truncate">{t('admin.block')}</span>
-                                    </>
-                                  )}
+                                  <ShieldCheck className="h-3 w-3 mr-1 flex-shrink-0" />
+                                  <span className="truncate">{t('admin.approve')}</span>
                                 </Button>
-                                
-                                {/* Transfer ownership button (only for active Super Admins) */}
-                                {isSiteOwner && 
-                                 !admin.isBlocked && 
-                                 admin.username === 'superadmin' && 
-                                 !transferPendingUserId && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100 text-xs px-2 truncate max-w-[130px] sm:max-w-none sm:text-sm"
-                                    onClick={() => handleTransferClick(admin.id)}
+                              )}
+                              
+                              {admin.isAdmin && isSiteOwner && (
+                                <>
+                                  <Button 
+                                    size="icon" 
+                                    variant={admin.isBlocked ? 'outline' : 'destructive'}
+                                    className="h-7 w-7"
+                                    onClick={() => toggleBlockMutation.mutate({ 
+                                      id: admin.id, 
+                                      isBlocked: !admin.isBlocked 
+                                    })}
+                                    title={admin.isBlocked ? t('admin.unblock') : t('admin.block')}
                                   >
-                                    <Crown className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
-                                    <span className="truncate">{t('admin.transferOwnership')}</span>
+                                    {admin.isBlocked ? (
+                                      <ShieldCheck className="h-3 w-3 flex-shrink-0" />
+                                    ) : (
+                                      <Lock className="h-3 w-3 flex-shrink-0" />
+                                    )}
+                                    <span className="sr-only">
+                                      {admin.isBlocked ? t('admin.unblock') : t('admin.block')}
+                                    </span>
                                   </Button>
-                                )}
-                              </>
-                            )}
-                          </>
-                        )}
+                                  
+                                  {/* Transfer ownership button (only for active Super Admins) */}
+                                  {isSiteOwner && 
+                                   !admin.isBlocked && 
+                                   admin.username === 'superadmin' && 
+                                   !transferPendingUserId && (
+                                    <Button
+                                      size="icon"
+                                      variant="outline"
+                                      className="h-7 w-7 border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100"
+                                      onClick={() => handleTransferClick(admin.id)}
+                                      title={t('admin.transferOwnership')}
+                                    >
+                                      <Crown className="h-3 w-3 flex-shrink-0" />
+                                      <span className="sr-only">{t('admin.transferOwnership')}</span>
+                                    </Button>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-6">
+                        {t('admin.noAdministrators')}
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center py-6">
-                      {t('admin.noAdministrators')}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </ScrollArea>
         </CardContent>
       </Card>
