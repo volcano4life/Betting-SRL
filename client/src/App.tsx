@@ -12,6 +12,7 @@ import AdminPage from "@/pages/AdminPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import CookieConsent from "@/components/common/CookieConsent";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -53,6 +54,7 @@ function App() {
             <Toaster />
             <div className="min-h-screen flex flex-col">
               <Router />
+              <CookieConsent />
             </div>
           </TooltipProvider>
         </LanguageProvider>
