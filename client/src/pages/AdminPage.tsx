@@ -3046,14 +3046,16 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
             <Button 
               type="submit" 
               disabled={inviteMutation.isPending}
-              className="text-xs sm:text-sm"
+              size="icon"
+              title={t('admin.sendInvite')}
+              className="h-7 w-7"
             >
               {inviteMutation.isPending ? (
-                <Loader2 className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0 animate-spin" />
+                <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <UserPlus className="h-3 w-3 mr-1 sm:h-4 sm:w-4 sm:mr-2 flex-shrink-0" />
+                <UserPlus className="h-3 w-3" />
               )}
-              <span className="truncate">{t('admin.sendInvite')}</span>
+              <span className="sr-only">{t('admin.sendInvite')}</span>
             </Button>
           </div>
         </form>
