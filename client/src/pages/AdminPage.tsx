@@ -13,7 +13,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { PromoCode, Game, News, Review, Guide, User } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock } from "lucide-react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
 import {
   Table,
