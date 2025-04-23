@@ -16,6 +16,9 @@ import { Search, Menu, Globe, User, Settings, Shield, KeyRound, LogOut } from "l
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import BettingLogo from "./BettingLogo";
+import SportsBettingLogo from "./SportsBettingLogo";
+import CasinoChipLogo from "./CasinoChipLogo";
+import LogoSelector from "./LogoSelector";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -43,6 +46,7 @@ export default function Header() {
   const [location] = useLocation();
   const { language, setLanguage, t } = useLanguage();
   const { user, logoutMutation } = useAuth();
+  const [selectedLogo, setSelectedLogo] = useState<string>('poker-chip');
 
   const isActive = (path: string) => location === path;
   
@@ -53,6 +57,18 @@ export default function Header() {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+  
+  const getLogo = () => {
+    switch (selectedLogo) {
+      case 'sports-shield':
+        return <SportsBettingLogo className="w-10 h-10 mr-2" />;
+      case 'casino-chip':
+        return <CasinoChipLogo className="w-10 h-10 mr-2" />;
+      case 'poker-chip':
+      default:
+        return <BettingLogo className="w-10 h-10 mr-2" />;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
@@ -61,11 +77,19 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <BettingLogo className="w-10 h-10 mr-2" />
+              {getLogo()}
               <span className="text-xl font-bold text-[#222236] font-medium">
                 Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
+            {user?.isAdmin && (
+              <div className="ml-2">
+                <LogoSelector 
+                  selectedLogo={selectedLogo} 
+                  onSelectLogo={setSelectedLogo} 
+                />
+              </div>
+            )}
           </div>
 
           {/* Desktop Navigation */}
