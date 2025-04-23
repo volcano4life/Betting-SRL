@@ -13,6 +13,13 @@ import { setupAuth, seedAdminUser } from "./auth";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import { games, reviews, news, guides, promoCodes } from "@shared/schema";
+import { 
+  sendWelcomeEmail, 
+  sendSubscriptionConfirmation, 
+  sendPromoCodeNotification,
+  sendPasswordResetEmail,
+  sendAdminInvitationEmail 
+} from "./services/email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
