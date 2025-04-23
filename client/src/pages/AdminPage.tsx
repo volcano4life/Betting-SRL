@@ -688,7 +688,7 @@ function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 // which would follow the same pattern as the PromoCode components above
 
 function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   
   const { data: games, isLoading } = useQuery<Game[]>({
     queryKey: ['/api/admin/games'],
@@ -727,7 +727,7 @@ function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
                 games.map((game) => (
                   <TableRow key={game.id}>
                     <TableCell>
-                      {game.title_en} / {game.title_it}
+                      {getLocalizedField(game, 'title')}
                     </TableCell>
                     <TableCell>{game.slug}</TableCell>
                     <TableCell>{game.featured ? '✓' : '–'}</TableCell>
@@ -1157,7 +1157,7 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 
 // ===== REVIEWS =====
 function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   
   const { data: reviews, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/admin/reviews'],
@@ -1197,7 +1197,7 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
                 reviews.map((review) => (
                   <TableRow key={review.id}>
                     <TableCell>
-                      {review.title_en} / {review.title_it}
+                      {getLocalizedField(review, 'title')}
                     </TableCell>
                     <TableCell>{review.gameId}</TableCell>
                     <TableCell>{review.rating}/10</TableCell>

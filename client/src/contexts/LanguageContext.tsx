@@ -487,11 +487,6 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.approvalPending': 'Approvazione in Attesa',
     // All admin table headers and notifications are defined in the English section
     'admin.titleColumn': 'Titolo',
-    'admin.slug': 'Slug',
-    'admin.publishDate': 'Data di Pubblicazione',
-    'admin.category': 'Categoria',
-    'admin.featured': 'In Evidenza',
-    'admin.actions': 'Azioni',
 
     // Navigation
     'nav.home': 'Home',
