@@ -57,6 +57,13 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.actions': 'Actions',
     'admin.edit': 'Edit',
     'admin.delete': 'Delete',
+    
+    // Cookies
+    'cookies.title': 'Cookie Policy',
+    'cookies.description': 'We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept", you consent to our use of cookies.',
+    'cookies.accept': 'Accept All',
+    'cookies.reject': 'Reject All',
+    'cookies.settings': 'Cookie Settings',
     'admin.confirmDeleteTitle': 'Confirm Deletion',
     'admin.confirmDeletePromoCode': 'Are you sure you want to delete this promo code? This action cannot be undone.',
     'admin.cancel': 'Cancel',
@@ -403,6 +410,13 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.actions': 'Azioni',
     'admin.edit': 'Modifica',
     'admin.delete': 'Elimina',
+    
+    // Cookies
+    'cookies.title': 'Politica dei Cookie',
+    'cookies.description': 'Utilizziamo i cookie per migliorare la tua esperienza di navigazione, offrire contenuti personalizzati e analizzare il nostro traffico. Facendo clic su "Accetta", acconsenti al nostro utilizzo dei cookie.',
+    'cookies.accept': 'Accetta Tutti',
+    'cookies.reject': 'Rifiuta Tutti',
+    'cookies.settings': 'Impostazioni Cookie',
     'admin.confirmDeleteTitle': 'Conferma Eliminazione',
     'admin.confirmDeletePromoCode': 'Sei sicuro di voler eliminare questo codice promo? Questa azione non può essere annullata.',
     'admin.cancel': 'Annulla',
