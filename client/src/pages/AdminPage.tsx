@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users } from "lucide-react";
 import { Link } from "wouter";
+import { Helmet } from "react-helmet";
 import {
   Table,
   TableBody,
@@ -60,7 +61,13 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <Helmet>
+        <title>Admin Dashboard - Betting SRL</title>
+        <meta name="description" content="Administrator control panel for managing content on Betting SRL." />
+      </Helmet>
+      
+      <div className="min-h-screen bg-background">
       {/* Admin header */}
       <header className="border-b bg-card">
         <div className="container flex h-16 items-center justify-between px-4">
@@ -240,6 +247,7 @@ export default function AdminPage() {
         </Tabs>
       </main>
     </div>
+    </>
   );
 }
 
