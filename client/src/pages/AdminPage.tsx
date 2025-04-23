@@ -2543,9 +2543,21 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   const toggleBlockMutation = useMutation({
     mutationFn: async ({ id, isBlocked }: { id: number; isBlocked: boolean }) => {
       await apiRequest('PUT', `/api/admin/users/${id}/status`, { isBlocked });
+      return { id, isBlocked };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+    onSuccess: (data) => {
+      // Update the cached data directly to ensure the UI reflects the change
+      const previousData = queryClient.getQueryData<User[]>(['/api/admin/users']);
+      if (previousData) {
+        const updatedData = previousData.map(user => 
+          user.id === data.id ? { ...user, isBlocked: data.isBlocked } : user
+        );
+        queryClient.setQueryData(['/api/admin/users'], updatedData);
+      } else {
+        // If there's no cached data yet, invalidate to fetch fresh data
+        queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      }
+      
       toast({
         title: t('admin.statusUpdatedTitle'),
         description: t('admin.statusUpdatedDesc'),
@@ -2553,7 +2565,7 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
     },
     onError: (error) => {
       toast({
-        title: t('admin.statusUpdatedTitle'),
+        title: t('admin.error'),
         description: error.message,
         variant: 'destructive'
       });
