@@ -1,4 +1,5 @@
 import { MailService } from '@sendgrid/mail';
+import type { MailDataRequired } from '@sendgrid/mail';
 import { log } from '../vite';
 
 // Initialize the mail service
@@ -33,6 +34,27 @@ export function initializeEmailService() {
   }
 }
 
+// Convert our EmailOptions to SendGrid's required format
+function convertToMailData(options: EmailOptions): MailDataRequired {
+  const mailData: MailDataRequired = {
+    to: options.to,
+    from: options.from,
+    subject: options.subject,
+    // SendGrid requires either text, html, or content
+    ...(options.html ? { html: options.html } : {}),
+    ...(options.text ? { text: options.text } : {}),
+    ...(options.templateId ? { templateId: options.templateId } : {}),
+    ...(options.dynamicTemplateData ? { dynamicTemplateData: options.dynamicTemplateData } : {})
+  };
+
+  // If neither text nor html is provided, add empty content
+  if (!options.text && !options.html && !options.templateId) {
+    mailData.content = [{ type: 'text/plain', value: '' }];
+  }
+
+  return mailData;
+}
+
 // Send an email using SendGrid
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
@@ -43,7 +65,8 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
       }
     }
 
-    await mailService!.send(options);
+    const mailData = convertToMailData(options);
+    await mailService!.send(mailData);
     log(`Email sent to ${options.to}`, 'email');
     return true;
   } catch (error) {

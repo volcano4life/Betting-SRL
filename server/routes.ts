@@ -13,6 +13,7 @@ import { setupAuth, seedAdminUser } from "./auth";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import { games, reviews, news, guides, promoCodes } from "@shared/schema";
+import { log } from "./vite";
 import { 
   sendWelcomeEmail, 
   sendSubscriptionConfirmation, 
@@ -146,6 +147,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const parsedData = insertSubscriberSchema.parse(req.body);
       const subscriber = await storage.addSubscriber(parsedData);
+      
+      // Send confirmation email if email is provided
+      if (subscriber.email) {
+        const language = req.query.lang as string || 'en';
+        sendSubscriptionConfirmation(subscriber.email, language)
+          .then(sent => {
+            if (sent) {
+              log(`Subscription confirmation email sent to ${subscriber.email}`, 'email');
+            } else {
+              log(`Failed to send subscription confirmation email to ${subscriber.email}`, 'email');
+            }
+          })
+          .catch(err => {
+            log(`Error sending subscription confirmation: ${err}`, 'email');
+          });
+      }
+      
       res.status(201).json({ message: 'Successfully subscribed', subscriber });
     } catch (error) {
       res.status(400).json({ message: 'Invalid subscriber data', error });
@@ -540,6 +558,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(usersWithoutPasswords);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching users', error });
+    }
+  });
+  
+  // Invite a new administrator (only site owner can invite)
+  app.post('/api/admin/users/invite', requireSiteOwner, async (req, res) => {
+    try {
+      const { username, password, email } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+      }
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: 'Username already exists' });
+      }
+      
+      // Create the new administrator (pending approval)
+      const newAdmin = await storage.createUser({
+        username,
+        password,
+        isAdmin: false, // Will be approved later
+        pendingApproval: true
+      });
+      
+      // Remove password from response
+      const { password: _, ...adminWithoutPassword } = newAdmin;
+      
+      // Send invitation email if email provided
+      if (email) {
+        const language = req.query.lang as string || 'en';
+        sendAdminInvitationEmail(email, username, password, language)
+          .then(sent => {
+            if (sent) {
+              log(`Admin invitation email sent to ${email}`, 'email');
+            } else {
+              log(`Failed to send admin invitation email to ${email}`, 'email');
+            }
+          })
+          .catch(err => {
+            log(`Error sending admin invitation: ${err}`, 'email');
+          });
+      }
+      
+      res.status(201).json(adminWithoutPassword);
+    } catch (error) {
+      console.error('Error inviting admin:', error);
+      res.status(500).json({ message: 'Error inviting administrator', error });
     }
   });
   
