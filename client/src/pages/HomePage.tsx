@@ -6,13 +6,14 @@ import ResponsibleGamblingSection from "@/components/home/ResponsibleGamblingSec
 import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
 import { Helmet } from "react-helmet";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Betting SRL - Italian Casino Affiliates & Sport Betting</title>
-        <meta name="description" content="Find the best Italian casino bonuses, exclusive promo codes, and expert sports betting insights for a premium gambling experience." />
+        <title>{siteConfig.defaultTitle}</title>
+        <meta name="description" content={siteConfig.defaultDescription} />
       </Helmet>
 
       <HeroSection />
