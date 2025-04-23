@@ -1,13 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 import { Helmet } from "react-helmet";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 export default function NotFound() {
   return (
     <>
       <Helmet>
-        <title>Page Not Found - Betting SRL</title>
-        <meta name="description" content="The page you're looking for could not be found." />
+        <title>{getPageTitle('notFound')}</title>
+        <meta name="description" content={`The page you're looking for could not be found on ${siteConfig.name}.`} />
       </Helmet>
       
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
