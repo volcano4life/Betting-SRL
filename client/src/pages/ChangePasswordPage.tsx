@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Helmet } from "react-helmet";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 const passwordSchema = z.object({
   currentPassword: z.string().min(6, "Password must be at least 6 characters"),
@@ -75,8 +76,8 @@ export default function ChangePasswordPage() {
   return (
     <>
       <Helmet>
-        <title>Change Password - Betting SRL</title>
-        <meta name="description" content="Update your account password securely on Betting SRL." />
+        <title>{getPageTitle('changePassword')}</title>
+        <meta name="description" content={`Update your account password securely on ${siteConfig.name}.`} />
       </Helmet>
       
       <div className="container max-w-md mx-auto p-4 py-8">

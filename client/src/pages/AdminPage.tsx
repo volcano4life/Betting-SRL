@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users } from "lucide-react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 import {
   Table,
   TableBody,
@@ -63,8 +64,8 @@ export default function AdminPage() {
   return (
     <>
       <Helmet>
-        <title>Admin Dashboard - Betting SRL</title>
-        <meta name="description" content="Administrator control panel for managing content on Betting SRL." />
+        <title>{getPageTitle('admin')}</title>
+        <meta name="description" content={`Administrator control panel for managing content on ${siteConfig.name}.`} />
       </Helmet>
       
       <div className="min-h-screen bg-background">
