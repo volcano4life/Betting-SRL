@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsContent as TabPanel, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { PromoCode, Game, News, Review, Guide, User } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle } from "lucide-react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users } from "lucide-react";
 import { Link } from "wouter";
 import {
   Table,
@@ -87,14 +88,25 @@ export default function AdminPage() {
       <main className="container p-4 space-y-6">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <div className="flex items-center justify-between mb-4">
-            <TabsList>
-              <TabsTrigger value="promo-codes">{t('admin.promoCodes')}</TabsTrigger>
-              <TabsTrigger value="games">{t('admin.games')}</TabsTrigger>
-              <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
-              <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
-              <TabsTrigger value="guides">{t('admin.guides')}</TabsTrigger>
-              <TabsTrigger value="administrators">{t('admin.administrators')}</TabsTrigger>
-            </TabsList>
+            <div className="flex items-center">
+              <TabsList className="mr-4">
+                <TabsTrigger value="promo-codes">{t('admin.promoCodes')}</TabsTrigger>
+                <TabsTrigger value="games">{t('admin.games')}</TabsTrigger>
+                <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
+                <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
+                <TabsTrigger value="guides">{t('admin.guides')}</TabsTrigger>
+              </TabsList>
+              
+              <Separator orientation="vertical" className="h-8 mx-2" />
+              
+              <TabsList>
+                <TabsTrigger value="administrators" className="bg-secondary/30">
+                  <Users className="h-4 w-4 mr-2" />
+                  {t('admin.administrators')}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            
             {activeTab !== 'administrators' ? (
               <Button onClick={() => {
                 setIsAdding(true);
@@ -114,7 +126,7 @@ export default function AdminPage() {
           </div>
 
           {/* Promo Codes Management */}
-          <TabPanel value="promo-codes">
+          <TabsContent value="promo-codes">
             {isAdding ? (
               <PromoCodeForm 
                 id={null} 
@@ -130,10 +142,10 @@ export default function AdminPage() {
             ) : (
               <PromoCodesList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
           
           {/* Games Management */}
-          <TabPanel value="games">
+          <TabsContent value="games">
             {isAdding ? (
               <GameForm 
                 id={null} 
@@ -149,10 +161,10 @@ export default function AdminPage() {
             ) : (
               <GamesList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
           
           {/* Reviews Management */}
-          <TabPanel value="reviews">
+          <TabsContent value="reviews">
             {isAdding ? (
               <ReviewForm 
                 id={null} 
@@ -168,10 +180,10 @@ export default function AdminPage() {
             ) : (
               <ReviewsList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
           
           {/* News Management */}
-          <TabPanel value="news">
+          <TabsContent value="news">
             {isAdding ? (
               <NewsForm 
                 id={null} 
@@ -187,10 +199,10 @@ export default function AdminPage() {
             ) : (
               <NewsList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
           
           {/* Guides Management */}
-          <TabPanel value="guides">
+          <TabsContent value="guides">
             {isAdding ? (
               <GuideForm 
                 id={null} 
@@ -206,10 +218,10 @@ export default function AdminPage() {
             ) : (
               <GuidesList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
           
           {/* Administrators Management */}
-          <TabPanel value="administrators">
+          <TabsContent value="administrators">
             {isAdding ? (
               <AdminInviteForm 
                 onCancel={() => setIsAdding(false)} 
@@ -224,7 +236,7 @@ export default function AdminPage() {
             ) : (
               <AdminsList onEdit={setEditingItemId} />
             )}
-          </TabPanel>
+          </TabsContent>
         </Tabs>
       </main>
     </div>
