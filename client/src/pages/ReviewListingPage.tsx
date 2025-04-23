@@ -70,8 +70,8 @@ export default function ReviewListingPage() {
   return (
     <>
       <Helmet>
-        <title>{`${getPageTitle()} - Betting SRL`}</title>
-        <meta name="description" content={`Browse our collection of ${getPageTitle().toLowerCase()}. Find the best casino reviews, tips, and expert insights.`} />
+        <title>{getPageTitle(getPageHeading())}</title>
+        <meta name="description" content={`Browse our collection of ${getPageHeading().toLowerCase()}. Find the best casino reviews, tips, and expert insights on ${siteConfig.name}.`} />
       </Helmet>
       
       <div className="bg-[#F7F7FA] py-8">
@@ -118,7 +118,7 @@ export default function ReviewListingPage() {
           </BreadcrumbList>
         </Breadcrumb>
         
-        <h1 className="text-3xl font-bold mb-6">{getPageTitle()}</h1>
+        <h1 className="text-3xl font-bold mb-6">{getPageHeading()}</h1>
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <p className="text-gray-600 mb-4 md:mb-0">
