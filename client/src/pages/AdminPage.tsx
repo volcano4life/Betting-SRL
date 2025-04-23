@@ -118,8 +118,8 @@ export default function AdminPage() {
               <Button onClick={() => {
                 setIsAdding(true);
                 setEditingItemId(null);
-              }} className="px-4 h-10">
-                <UserPlus className="h-4 w-4 mr-2" />
+              }} size="sm" variant="outline" className="h-8 px-3 text-xs">
+                <UserPlus className="h-3 w-3 mr-1" />
                 {t('admin.inviteAdmin')}
               </Button>
             )}
