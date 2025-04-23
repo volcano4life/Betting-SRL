@@ -25,12 +25,22 @@ function Router() {
   
   // Don't show header/footer on admin page
   const showHeaderFooter = !isAdminRoute && !isAuthRoute;
+
+  // Determine the appropriate transition type based on the route
+  const getTransitionType = () => {
+    if (isAdminRoute) return 'fade';
+    if (isAuthRoute) return 'scale';
+    if (location.includes('/reviews/')) return 'slideDown';
+    if (location === '/reviews') return 'slideUp';
+    if (location === '/change-password') return 'slide';
+    return 'slideUp';
+  };
   
   return (
     <>
       {showHeaderFooter && <Header />}
       <main className={`flex-grow ${!showHeaderFooter ? 'min-h-screen' : ''}`}>
-        <PageTransition location={location}>
+        <PageTransition location={location} type={getTransitionType()} duration={0.4}>
           <Switch>
             <Route path="/" component={HomePage} />
             <Route path="/reviews" component={ReviewListingPage} />
