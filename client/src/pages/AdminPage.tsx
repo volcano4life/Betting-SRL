@@ -2069,7 +2069,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
                     <TableCell>
                       {getLocalizedField(guide, 'title')}
                     </TableCell>
-                    <TableCell>{guide.difficulty}</TableCell>
+                    <TableCell>{t(`admin.difficulty.${guide.difficulty}`)}</TableCell>
                     <TableCell>{format(new Date(guide.publishDate), 'dd/MM/yyyy')}</TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
