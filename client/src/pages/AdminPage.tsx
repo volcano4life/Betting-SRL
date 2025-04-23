@@ -2475,7 +2475,53 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   // Check if current user is site owner (username: 'admin')
   const isSiteOwner = user?.username === 'admin';
   
-  const { data: admins, isLoading } = useQuery<User[]>({
+  // State for role selection dialog
+  const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string>('superadmin');
+  
+  // State for ownership transfer
+  const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
+  const [transferTargetId, setTransferTargetId] = useState<number | null>(null);
+  const [transferPendingUserId, setTransferPendingUserId] = useState<number | null>(null);
+  const [transferDeadline, setTransferDeadline] = useState<Date | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
+  
+  // Check for any pending transfers on component mount
+  useEffect(() => {
+    const storedTransfer = localStorage.getItem('ownershipTransfer');
+    if (storedTransfer) {
+      try {
+        const { userId, deadline } = JSON.parse(storedTransfer);
+        setTransferPendingUserId(userId);
+        setTransferDeadline(new Date(deadline));
+      } catch (e) {
+        console.error('Error parsing stored transfer', e);
+        localStorage.removeItem('ownershipTransfer');
+      }
+    }
+  }, []);
+  
+  // Effect to check if transfer deadline has passed
+  useEffect(() => {
+    if (transferDeadline && transferPendingUserId) {
+      const checkDeadline = () => {
+        const now = new Date();
+        if (now >= transferDeadline) {
+          // Transfer is complete
+          completeOwnershipTransfer();
+        }
+      };
+      
+      // Check now and set interval
+      checkDeadline();
+      const interval = setInterval(checkDeadline, 30000); // Check every 30 seconds
+      
+      return () => clearInterval(interval);
+    }
+  }, [transferDeadline, transferPendingUserId]);
+  
+  const { data: admins, isLoading, error } = useQuery<User[]>({
     queryKey: ['/api/admin/users'],
     meta: {
       errorMessage: t('admin.usersLoadError')
@@ -2503,8 +2549,9 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   });
   
   const approveAdminMutation = useMutation({
-    mutationFn: async (id: number) => {
-      await apiRequest('PUT', `/api/admin/users/${id}/approve`, {});
+    mutationFn: async ({ id, role }: { id: number; role: string }) => {
+      // In a real implementation, you would send the role to the backend
+      await apiRequest('PUT', `/api/admin/users/${id}/approve`, { role });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
@@ -2512,6 +2559,7 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
         title: t('admin.adminApprovedTitle'),
         description: t('admin.adminApprovedDesc'),
       });
+      setIsRoleDialogOpen(false);
     },
     onError: (error) => {
       toast({
@@ -2522,6 +2570,89 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
     }
   });
   
+  // Handle opening the role selection dialog
+  const handleApproveClick = (userId: number) => {
+    setSelectedUserId(userId);
+    setIsRoleDialogOpen(true);
+  };
+  
+  // Handle role selection and admin approval
+  const handleRoleConfirm = () => {
+    if (selectedUserId) {
+      approveAdminMutation.mutate({ id: selectedUserId, role: selectedRole });
+    }
+  };
+  
+  // Handle opening the transfer ownership dialog
+  const handleTransferClick = (userId: number) => {
+    setTransferTargetId(userId);
+    setIsTransferDialogOpen(true);
+  };
+  
+  // Initialize ownership transfer
+  const initializeOwnershipTransfer = () => {
+    if (transferTargetId) {
+      // Set 24 hour deadline
+      const deadline = new Date();
+      deadline.setHours(deadline.getHours() + 24);
+      
+      // Save to state and localStorage
+      setTransferPendingUserId(transferTargetId);
+      setTransferDeadline(deadline);
+      localStorage.setItem('ownershipTransfer', JSON.stringify({
+        userId: transferTargetId,
+        deadline: deadline.toISOString()
+      }));
+      
+      setIsTransferDialogOpen(false);
+      
+      toast({
+        title: t('admin.transferOwnershipPending'),
+        description: t('admin.transferOwnershipTimer').replace('{hours}', '24').replace('{minutes}', '00'),
+      });
+    }
+  };
+  
+  // Cancel ownership transfer
+  const cancelOwnershipTransfer = () => {
+    localStorage.removeItem('ownershipTransfer');
+    setTransferPendingUserId(null);
+    setTransferDeadline(null);
+    
+    toast({
+      title: t('admin.transferCancelled'),
+    });
+  };
+  
+  // Complete ownership transfer (would need backend implementation)
+  const completeOwnershipTransfer = () => {
+    // In real implementation, make API call to transfer ownership
+    localStorage.removeItem('ownershipTransfer');
+    setTransferPendingUserId(null);
+    setTransferDeadline(null);
+    
+    toast({
+      title: t('admin.transferCompleted'),
+    });
+  };
+  
+  // Format remaining time for display
+  const formatRemainingTime = () => {
+    if (!transferDeadline) return '';
+    
+    const now = new Date();
+    const diff = transferDeadline.getTime() - now.getTime();
+    
+    if (diff <= 0) return '';
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return t('admin.transferOwnershipTimer')
+      .replace('{hours}', hours.toString())
+      .replace('{minutes}', minutes.toString());
+  };
+  
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -2531,114 +2662,260 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   }
   
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t('admin.administrators')}</CardTitle>
-        <CardDescription>{t('admin.administratorsDesc')}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[600px]">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('admin.username')}</TableHead>
-                <TableHead>{t('admin.status')}</TableHead>
-                <TableHead>{t('admin.createdAt')}</TableHead>
-                <TableHead>{t('admin.actions')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {admins?.length ? (
-                admins.map((admin) => (
-                  <TableRow key={admin.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center">
-                        {admin.username}
-                        {admin.username === 'admin' && (
-                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
-                            {t('admin.siteOwner')}
-                          </span>
-                        )}
-                        {admin.username === 'superadmin' && (
-                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
-                            {t('admin.superAdmin')}
-                          </span>
-                        )}
-                        {!admin.isAdmin && (
-                          <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
-                            {t('admin.pendingApproval')}
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {admin.isBlocked ? (
-                        <span className="inline-flex items-center text-destructive">
-                          <Lock className="h-4 w-4 mr-1" />
-                          {t('admin.blocked')}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center text-green-600">
-                          <ShieldCheck className="h-4 w-4 mr-1" />
-                          {t('admin.active')}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>{format(new Date(admin.createdAt), 'dd/MM/yyyy')}</TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      {/* Don't show action buttons for site owner or for current user */}
-                      {admin.username !== 'admin' && admin.id !== user?.id && (
-                        <>
-                          {!admin.isAdmin && isSiteOwner && (
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => approveAdminMutation.mutate(admin.id)}
-                            >
-                              <ShieldCheck className="h-4 w-4 mr-2" />
-                              {t('admin.approve')}
-                            </Button>
+    <>
+      {/* Ownership transfer banner (if transfer is in progress) */}
+      {transferPendingUserId && transferDeadline && isSiteOwner && (
+        <div 
+          className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md relative"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          <div className="flex items-center">
+            <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
+            <div>
+              <h3 className="text-sm font-medium text-yellow-800">
+                {t('admin.transferInProgress')}
+              </h3>
+              <p className="text-sm text-yellow-700 mt-1">
+                {formatRemainingTime()}
+              </p>
+            </div>
+          </div>
+          
+          {isHovering && (
+            <Button 
+              className="absolute right-2 top-2" 
+              size="sm" 
+              variant="destructive"
+              onClick={cancelOwnershipTransfer}
+            >
+              {t('admin.cancelTransfer')}
+            </Button>
+          )}
+        </div>
+      )}
+    
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.administrators')}</CardTitle>
+          <CardDescription>{t('admin.administratorsDesc')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[600px]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('admin.username')}</TableHead>
+                  <TableHead>{t('admin.status')}</TableHead>
+                  <TableHead>{t('admin.createdAt')}</TableHead>
+                  <TableHead>{t('admin.actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {admins?.length ? (
+                  admins.map((admin) => (
+                    <TableRow key={admin.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center">
+                          {admin.username}
+                          {admin.username === 'admin' && (
+                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
+                              {t('admin.siteOwner')}
+                            </span>
+                          )}
+                          {admin.username === 'superadmin' && (
+                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
+                              {t('admin.superAdmin')}
+                            </span>
+                          )}
+                          {!admin.isAdmin && (
+                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
+                              {t('admin.pendingApproval')}
+                            </span>
                           )}
                           
-                          {admin.isAdmin && isSiteOwner && (
-                            <Button 
-                              size="sm" 
-                              variant={admin.isBlocked ? 'outline' : 'destructive'}
-                              onClick={() => toggleBlockMutation.mutate({ 
-                                id: admin.id, 
-                                isBlocked: !admin.isBlocked 
-                              })}
-                            >
-                              {admin.isBlocked ? (
-                                <>
-                                  <ShieldCheck className="h-4 w-4 mr-2" />
-                                  {t('admin.unblock')}
-                                </>
-                              ) : (
-                                <>
-                                  <Lock className="h-4 w-4 mr-2" />
-                                  {t('admin.block')}
-                                </>
-                              )}
-                            </Button>
+                          {/* Show indicator if this is the user with pending ownership transfer */}
+                          {transferPendingUserId === admin.id && (
+                            <span className="ml-2 text-xs font-normal px-2 py-1 rounded-md bg-amber-100 text-amber-700 animate-pulse">
+                              <Clock className="inline-block h-3 w-3 mr-1" />
+                              {t('admin.pendingTransfer')}
+                            </span>
                           )}
-                        </>
-                      )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {admin.isBlocked ? (
+                          <span className="inline-flex items-center text-destructive">
+                            <Lock className="h-4 w-4 mr-1" />
+                            {t('admin.blocked')}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center text-green-600">
+                            <ShieldCheck className="h-4 w-4 mr-1" />
+                            {t('admin.active')}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell>{format(new Date(admin.createdAt), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell className="flex items-center gap-2">
+                        {/* Don't show action buttons for site owner or for current user */}
+                        {admin.username !== 'admin' && admin.id !== user?.id && (
+                          <>
+                            {!admin.isAdmin && isSiteOwner && (
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleApproveClick(admin.id)}
+                              >
+                                <ShieldCheck className="h-4 w-4 mr-2" />
+                                {t('admin.approve')}
+                              </Button>
+                            )}
+                            
+                            {admin.isAdmin && isSiteOwner && (
+                              <>
+                                <Button 
+                                  size="sm" 
+                                  variant={admin.isBlocked ? 'outline' : 'destructive'}
+                                  onClick={() => toggleBlockMutation.mutate({ 
+                                    id: admin.id, 
+                                    isBlocked: !admin.isBlocked 
+                                  })}
+                                >
+                                  {admin.isBlocked ? (
+                                    <>
+                                      <ShieldCheck className="h-4 w-4 mr-2" />
+                                      {t('admin.unblock')}
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Lock className="h-4 w-4 mr-2" />
+                                      {t('admin.block')}
+                                    </>
+                                  )}
+                                </Button>
+                                
+                                {/* Transfer ownership button (only for active Super Admins) */}
+                                {isSiteOwner && 
+                                 !admin.isBlocked && 
+                                 admin.username === 'superadmin' && 
+                                 !transferPendingUserId && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100"
+                                    onClick={() => handleTransferClick(admin.id)}
+                                  >
+                                    <Crown className="h-4 w-4 mr-2" />
+                                    {t('admin.transferOwnership')}
+                                  </Button>
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-6">
+                      {t('admin.noAdministrators')}
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-6">
-                    {t('admin.noAdministrators')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+                )}
+              </TableBody>
+            </Table>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+      
+      {/* Role Selection Dialog */}
+      <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('admin.selectRoleTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('admin.selectRoleDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <Select
+              value={selectedRole}
+              onValueChange={setSelectedRole}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t('admin.selectRole')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">{t('admin.regularAdmin')}</SelectItem>
+                <SelectItem value="superadmin">{t('admin.superAdmin')}</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <div className="mt-4">
+              <p className="text-sm text-muted-foreground">
+                {selectedRole === 'superadmin' 
+                  ? t('admin.superAdminDescription')
+                  : t('admin.regularAdminDescription')}
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsRoleDialogOpen(false)}>
+              {t('admin.cancel')}
+            </Button>
+            <Button onClick={handleRoleConfirm} disabled={approveAdminMutation.isPending}>
+              {approveAdminMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('admin.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Ownership Transfer Dialog */}
+      <Dialog open={isTransferDialogOpen} onOpenChange={setIsTransferDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('admin.transferOwnershipTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('admin.transferOwnershipDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4 space-y-4">
+            <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
+              <AlertTriangle className="h-5 w-5 text-yellow-600 mb-2" />
+              <p className="text-sm font-medium text-yellow-800">
+                {t('admin.transferWarningTitle')}
+              </p>
+              <p className="text-sm text-yellow-700 mt-1">
+                {t('admin.transferWarningDesc')}
+              </p>
+            </div>
+            
+            <p className="text-sm font-medium">
+              {t('admin.transferTimerExplanation')}
+            </p>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTransferDialogOpen(false)}>
+              {t('admin.cancel')}
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={initializeOwnershipTransfer}
+            >
+              <Crown className="mr-2 h-4 w-4" />
+              {t('admin.initiateTransfer')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
