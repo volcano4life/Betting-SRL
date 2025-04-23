@@ -3014,7 +3014,7 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">{t('admin.username')}</Label>
+              <Label htmlFor="username">{t('admin.administratorName')}</Label>
               <Input
                 id="username"
                 name="username"
