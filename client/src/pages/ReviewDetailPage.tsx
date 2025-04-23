@@ -18,6 +18,7 @@ import RatingStars from "@/components/common/RatingStars";
 import { ChevronRight, Facebook, Twitter, Link as LinkIcon } from "lucide-react";
 import { formatDate, getRatingText } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getPageTitle, siteConfig } from "@/config/siteConfig";
 
 export default function ReviewDetailPage() {
   const { slug } = useParams();
@@ -109,7 +110,7 @@ export default function ReviewDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${getLocalizedField(review, 'title')} - Betting SRL`}</title>
+        <title>{getPageTitle('reviewDetail', getLocalizedField(review, 'title'))}</title>
         <meta name="description" content={getLocalizedField(review, 'summary')} />
       </Helmet>
       
@@ -134,9 +135,9 @@ export default function ReviewDetailPage() {
                 <ChevronRight className="h-4 w-4" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbLink isCurrentPage>
+                <span className="cursor-default">
                   {getLocalizedField(review, 'title')}
-                </BreadcrumbLink>
+                </span>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

@@ -44,13 +44,27 @@ export const siteConfig = {
 /**
  * Helper function to generate consistent page titles
  * @param pageTitle The specific page title or key from pageTitles
+ * @param customValue Optional custom value to append to the pageTitle (e.g. for review or product titles)
  * @returns Formatted page title with brand name
  */
-export function getPageTitle(pageTitle: string | keyof typeof siteConfig.pageTitles): string {
+export function getPageTitle(pageTitle: string | keyof typeof siteConfig.pageTitles, customValue?: string): string {
+  let titleText: string;
+  
   // If the pageTitle is a key in pageTitles, use that value
   if (typeof pageTitle === 'string' && pageTitle in siteConfig.pageTitles) {
-    pageTitle = siteConfig.pageTitles[pageTitle as keyof typeof siteConfig.pageTitles];
+    titleText = siteConfig.pageTitles[pageTitle as keyof typeof siteConfig.pageTitles];
+  } else {
+    titleText = pageTitle as string;
   }
   
-  return `${pageTitle} - ${siteConfig.name}`;
+  // If a custom value is provided, append it to the title
+  if (customValue && customValue.trim() !== '') {
+    if (pageTitle === 'reviewDetail') {
+      // For review details, use the custom value as the main title
+      return `${customValue} - ${siteConfig.name}`;
+    }
+    titleText = `${titleText}: ${customValue}`;
+  }
+  
+  return `${titleText} - ${siteConfig.name}`;
 }
