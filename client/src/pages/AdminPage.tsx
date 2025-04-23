@@ -2730,7 +2730,7 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
               <Table className="min-w-[650px]">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[25%]">{t('admin.username')}</TableHead>
+                    <TableHead className="w-[25%]">{t('admin.administratorName')}</TableHead>
                     <TableHead className="w-[15%]">{t('admin.status')}</TableHead>
                     <TableHead className="w-[15%]">{t('admin.createdAt')}</TableHead>
                     <TableHead className="w-[45%]">{t('admin.actions')}</TableHead>
