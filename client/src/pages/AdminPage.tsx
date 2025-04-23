@@ -245,7 +245,7 @@ export default function AdminPage() {
 
 // ===== PROMO CODES =====
 function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -1595,7 +1595,7 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 
 // ===== NEWS =====
 function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   
   const { data: news, isLoading } = useQuery<News[]>({
     queryKey: ['/api/admin/news'],
@@ -1634,7 +1634,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
                 news.map((newsItem) => (
                   <TableRow key={newsItem.id}>
                     <TableCell>
-                      {newsItem.title_en} / {newsItem.title_it}
+                      {getLocalizedField(newsItem, 'title')}
                     </TableCell>
                     <TableCell>{newsItem.category}</TableCell>
                     <TableCell>{format(new Date(newsItem.publishDate), 'dd/MM/yyyy')}</TableCell>
@@ -2028,7 +2028,7 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 
 // ===== GUIDES =====
 function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   
   const { data: guides, isLoading } = useQuery<Guide[]>({
     queryKey: ['/api/admin/guides'],
@@ -2067,7 +2067,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
                 guides.map((guide) => (
                   <TableRow key={guide.id}>
                     <TableCell>
-                      {guide.title_en} / {guide.title_it}
+                      {getLocalizedField(guide, 'title')}
                     </TableCell>
                     <TableCell>{guide.difficulty}</TableCell>
                     <TableCell>{format(new Date(guide.publishDate), 'dd/MM/yyyy')}</TableCell>
