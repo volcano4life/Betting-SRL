@@ -70,7 +70,7 @@ export default function ReviewListingPage() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle(getPageHeading())}</title>
+        <title>{getPageTitle('reviewListing', platform || category ? getPageHeading() : undefined)}</title>
         <meta name="description" content={`Browse our collection of ${getPageHeading().toLowerCase()}. Find the best casino reviews, tips, and expert insights on ${siteConfig.name}.`} />
       </Helmet>
       
