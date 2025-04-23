@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CasinoCard from "../common/CasinoCard";
 import { Game } from "@shared/schema"; // We're temporarily using Game until we update schema.ts
 import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 export default function FeaturedCasinosSection() {
   const { t, getLocalizedField } = useLanguage();
