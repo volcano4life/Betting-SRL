@@ -1623,7 +1623,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.titleColumn')}</TableHead>
                 <TableHead>{t('admin.category')}</TableHead>
                 <TableHead>{t('admin.publishDate')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
@@ -2056,7 +2056,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.titleColumn')}</TableHead>
                 <TableHead>{t('admin.difficulty')}</TableHead>
                 <TableHead>{t('admin.publishDate')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
