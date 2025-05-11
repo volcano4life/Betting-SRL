@@ -17,7 +17,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './card';
-import { X, Star } from 'lucide-react';
+import { X, Star, Plus } from 'lucide-react';
 import { Button } from './button';
 import { Input } from './input';
 
@@ -270,6 +270,44 @@ export function DragDropImageGallery({
           >
             {labels.addImage}
           </Button>
+        </div>
+        
+        {/* Quick image selection grid */}
+        <div className="mt-3">
+          <p className="text-sm text-muted-foreground mb-2">Or click an image to add it quickly:</p>
+          <div className="grid grid-cols-5 gap-2">
+            {['redmoon1', 'redmoon2', 'redmoon3', 'redmoon4', 'redmoon5'].map(imgName => (
+              <div 
+                key={imgName}
+                className="relative group cursor-pointer border rounded-md overflow-hidden h-14"
+                onClick={() => {
+                  onAddImage(imgName);
+                  
+                  // Add to local state
+                  setItems(prev => [...prev, {
+                    id: `image-${prev.length}`,
+                    url: imgName,
+                  }]);
+                }}
+              >
+                <img 
+                  src={`/assets/${imgName}.jpg`} 
+                  alt={imgName}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = `/assets/outlets/${imgName}.jpg`;
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Plus size={16} className="text-white" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] py-0.5 px-1 text-center">
+                  {imgName}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       
