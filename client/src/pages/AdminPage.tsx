@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DragDropImageGallery } from "@/components/ui/drag-drop-image-gallery";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
 
@@ -2916,35 +2917,17 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               />
             </div>
             
-            {/* Primary Image */}
+            {/* Image Management */}
             <div className="space-y-2">
-              <Label htmlFor="imageUrl">
-                {language === 'it' ? 'Immagine Principale' : 'Primary Image'}
+              <Label htmlFor="imageManagement">
+                {language === 'it' ? 'Gestione Immagini' : 'Image Management'}
                 <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={handleChange}
-                required
-                placeholder="redmoon1"
-              />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground mb-2">
                 {language === 'it' 
-                  ? 'Nome del file dell\'immagine principale (es. redmoon1, redmoon2, ecc.)'
-                  : 'Primary image filename (e.g., redmoon1, redmoon2, etc.)'}
+                  ? 'Aggiungi e gestisci le immagini della galleria. La prima immagine è quella principale.'
+                  : 'Add and manage gallery images. The first image is used as the primary image.'}
               </p>
-              {formData.imageUrl && (
-                <div className="mt-2 border rounded-md p-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">
-                      {language === 'it' ? 'Immagine selezionata:' : 'Selected image:'}
-                    </span>
-                    <span className="text-sm font-medium text-primary">{formData.imageUrl}</span>
-                  </div>
-                </div>
-              )}
             </div>
             
             {/* Order */}
