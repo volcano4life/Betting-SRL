@@ -64,7 +64,7 @@ export default function AdminPage() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle('admin')}</title>
+        <title translate="no">{getPageTitle('admin')}</title>
         <meta name="description" content={`Administrator control panel for managing content on ${siteConfig.name}.`} />
       </Helmet>
       
