@@ -365,31 +365,31 @@ export class MemStorage implements IStorage {
     
     // Initialize outlets
     const outlet1: InsertOutlet = {
-      title_en: "Betting SRL Milano",
-      title_it: "Betting SRL Milano",
-      description_en: "Our flagship betting outlet in the heart of Milan, offering a premium betting experience with state-of-the-art facilities.",
-      description_it: "Il nostro punto vendita principale nel cuore di Milano, che offre un'esperienza di scommesse premium con strutture all'avanguardia.",
-      imageUrl: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      title_en: "Redmoon Aversa",
+      title_it: "Redmoon Aversa",
+      description_en: "Our premium betting outlet in Aversa, featuring live sports betting, virtual games, and a welcoming atmosphere for all betting enthusiasts.",
+      description_it: "Il nostro punto vendita premium ad Aversa, con scommesse sportive live, giochi virtuali e un'atmosfera accogliente per tutti gli appassionati di scommesse.",
+      imageUrl: "/assets/outlets/redmoon-1.jpg",
       order: 1,
       isActive: true
     };
     
     const outlet2: InsertOutlet = {
-      title_en: "Betting SRL Roma",
-      title_it: "Betting SRL Roma",
-      description_en: "Experience the thrill of betting in our elegant Roman outlet, featuring multiple screens and a dedicated sports bar.",
-      description_it: "Vivi l'emozione delle scommesse nel nostro elegante punto vendita romano, con numerosi schermi e un bar sportivo dedicato.",
-      imageUrl: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      title_en: "Redmoon Gaming Area",
+      title_it: "Redmoon Area Giochi",
+      description_en: "Our dedicated gaming area features virtual sports, live betting terminals, and multiple screens for following all the sports action.",
+      description_it: "La nostra area giochi dedicata offre sport virtuali, terminali per scommesse live e multipli schermi per seguire tutta l'azione sportiva.",
+      imageUrl: "/assets/outlets/redmoon-3.jpg",
       order: 2,
       isActive: true
     };
     
     const outlet3: InsertOutlet = {
-      title_en: "Betting SRL Napoli",
-      title_it: "Betting SRL Napoli",
-      description_en: "Our Naples location offers a vibrant atmosphere for sports enthusiasts with the latest odds and promotions.",
-      description_it: "La nostra sede di Napoli offre un'atmosfera vivace per gli appassionati di sport con le quote e le promozioni più recenti.",
-      imageUrl: "https://images.unsplash.com/photo-1534198730836-5dcab9c435f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      title_en: "Redmoon Event Center",
+      title_it: "Redmoon Centro Eventi",
+      description_en: "Join us at our event center where we host special betting events, tournament viewings, and exclusive promotional nights.",
+      description_it: "Unisciti a noi nel nostro centro eventi dove ospitiamo eventi speciali di scommesse, visioni di tornei e serate promozionali esclusive.",
+      imageUrl: "/assets/outlets/redmoon-2.jpg",
       order: 3,
       isActive: true
     };
