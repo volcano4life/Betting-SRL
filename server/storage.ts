@@ -369,7 +369,7 @@ export class MemStorage implements IStorage {
       title_it: "Redmoon Aversa",
       description_en: "Our premium betting outlet in Aversa, featuring live sports betting, virtual games, and a welcoming atmosphere for all betting enthusiasts.",
       description_it: "Il nostro punto vendita premium ad Aversa, con scommesse sportive live, giochi virtuali e un'atmosfera accogliente per tutti gli appassionati di scommesse.",
-      imageUrl: "/assets/redmoon1.jpg",
+      imageUrl: "redmoon1.jpg", // We'll handle the path in the client component
       order: 1,
       isActive: true
     };
@@ -379,7 +379,7 @@ export class MemStorage implements IStorage {
       title_it: "Wincity Trentola-Ducenta",
       description_en: "Our Wincity location in Trentola-Ducenta offers a modern betting experience with state-of-the-art facilities and a wide range of gaming options.",
       description_it: "La nostra sede Wincity a Trentola-Ducenta offre un'esperienza di scommesse moderna con strutture all'avanguardia e un'ampia gamma di opzioni di gioco.",
-      imageUrl: "/assets/redmoon2.jpg",
+      imageUrl: "redmoon2.jpg", // We'll handle the path in the client component
       order: 2,
       isActive: true
     };
@@ -389,7 +389,7 @@ export class MemStorage implements IStorage {
       title_it: "Matchpoint Trentola-Ducenta",
       description_en: "Visit our Matchpoint location in Trentola-Ducenta for a premium sports betting experience with real-time odds and expert staff to guide you.",
       description_it: "Visita la nostra sede Matchpoint a Trentola-Ducenta per un'esperienza di scommesse sportive premium con quote in tempo reale e personale esperto per guidarti.",
-      imageUrl: "/assets/redmoon3.jpg",
+      imageUrl: "redmoon3.jpg", // We'll handle the path in the client component
       order: 3,
       isActive: true
     };
