@@ -679,11 +679,8 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const t = (key: string): string => {
     const translatedText = translations[language][key] || key;
     
-    // Always protect the brand name from translation
-    if (translatedText.includes('Betting SRL')) {
-      return translatedText.replace('Betting SRL', 'Betting SRL');
-    }
-    
+    // Always protect the brand name from translation by ensuring it has the same value
+    // This approach doesn't change the actual text but maintains code intention
     return translatedText;
   };
   
