@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Outlet {
   id: number;
@@ -24,6 +26,10 @@ export function OutletSlideshow() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const outletsPerPage = 3; // Number of outlets to show per page
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -51,8 +57,20 @@ export function OutletSlideshow() {
     return null;
   }
 
-  // Only show the first 3 outlets
-  const displayOutlets = outlets.slice(0, 3);
+  // Calculate pagination values
+  const totalPages = Math.ceil(outlets.length / outletsPerPage);
+  const startIndex = currentPage * outletsPerPage;
+  const endIndex = startIndex + outletsPerPage;
+  const displayOutlets = outlets.slice(startIndex, endIndex);
+  
+  // Navigation functions
+  const goToNextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const goToPrevPage = () => {
+    setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
+  };
 
   // Helper function to get the right image path
   const getImagePath = (imageName: string): string => {
@@ -116,59 +134,128 @@ export function OutletSlideshow() {
           </h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-6xl mx-auto">
-          {displayOutlets.map((outlet) => (
-            <AnimatedWrapper
-              key={outlet.id}
-              animation="fade" 
-              duration={0.5} 
-              delay={0.1}
-              className="w-full"
-            >
-              <div 
-                className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
-                onMouseEnter={() => setHoveredId(outlet.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                onClick={() => handleOutletClick(outlet)}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Navigation buttons for larger screens */}
+          {outlets.length > outletsPerPage && (
+            <>
+              <button 
+                onClick={goToPrevPage}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex"
+                aria-label="Previous outlets"
               >
-                <img 
-                  src={getOutletImage(outlet)}
-                  alt={getLocalizedField(outlet, 'title')} 
-                  className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
-                    hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
-                  }`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    const currentSrc = target.src;
-                    
-                    // Log error for debugging
-                    console.log('Image failed to load in slider:', currentSrc);
-                    
-                    // Simple fallback to known working image
-                    target.src = '/assets/redmoon1.jpg';
-                  }}
-                />
-                <div className={`absolute inset-0 transition-all duration-300 ${
-                  hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
-                  : 'bg-gradient-to-t from-black/80 to-transparent'
-                } flex flex-col justify-end p-4`}>
-                  <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
-                    {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              
+              <button 
+                onClick={goToNextPage}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -mr-4 hidden sm:flex"
+                aria-label="Next outlets"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
+        
+          {/* Outlets grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {displayOutlets.map((outlet) => (
+              <AnimatedWrapper
+                key={outlet.id}
+                animation="fade" 
+                duration={0.5} 
+                delay={0.1}
+                className="w-full"
+              >
+                <div 
+                  className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
+                  onMouseEnter={() => setHoveredId(outlet.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => handleOutletClick(outlet)}
+                >
+                  <img 
+                    src={getOutletImage(outlet)}
+                    alt={getLocalizedField(outlet, 'title')} 
+                    className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
+                      hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
+                    }`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      const currentSrc = target.src;
+                      
+                      // Log error for debugging
+                      console.log('Image failed to load in slider:', currentSrc);
+                      
+                      // Simple fallback to known working image
+                      target.src = '/assets/redmoon1.jpg';
+                    }}
+                  />
+                  <div className={`absolute inset-0 transition-all duration-300 ${
+                    hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
+                    : 'bg-gradient-to-t from-black/80 to-transparent'
+                  } flex flex-col justify-end p-4`}>
+                    <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
+                      {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
+                    </div>
+                    <h3 className={`text-white font-bold transition-all duration-300 ${
+                      hoveredId === outlet.id ? 'text-lg mb-2' : 'text-base mb-0'
+                    }`}>
+                      {getLocalizedField(outlet, 'title')}
+                    </h3>
+                    {hoveredId === outlet.id && (
+                      <p className="text-white/90 text-sm line-clamp-2 opacity-100 transform transition-all duration-300">
+                        {getLocalizedField(outlet, 'description')}
+                      </p>
+                    )}
                   </div>
-                  <h3 className={`text-white font-bold transition-all duration-300 ${
-                    hoveredId === outlet.id ? 'text-lg mb-2' : 'text-base mb-0'
-                  }`}>
-                    {getLocalizedField(outlet, 'title')}
-                  </h3>
-                  {hoveredId === outlet.id && (
-                    <p className="text-white/90 text-sm line-clamp-2 opacity-100 transform transition-all duration-300">
-                      {getLocalizedField(outlet, 'description')}
-                    </p>
-                  )}
                 </div>
+              </AnimatedWrapper>
+            ))}
+          </div>
+          
+          {/* Mobile pagination controls */}
+          {outlets.length > outletsPerPage && (
+            <div className="flex justify-center items-center mt-4 sm:hidden">
+              <Button 
+                onClick={goToPrevPage}
+                variant="outline"
+                size="sm"
+                className="mr-2 bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                {language === 'it' ? 'Prec' : 'Prev'}
+              </Button>
+              
+              <div className="text-xs text-white mx-2">
+                {currentPage + 1}/{totalPages}
               </div>
-            </AnimatedWrapper>
-          ))}
+              
+              <Button 
+                onClick={goToNextPage}
+                variant="outline"
+                size="sm"
+                className="ml-2 bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white"
+              >
+                {language === 'it' ? 'Succ' : 'Next'}
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          )}
+          
+          {/* Desktop pagination indicators */}
+          {outlets.length > outletsPerPage && (
+            <div className="hidden sm:flex justify-center mt-4">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index)}
+                  className={`h-2 mx-1 rounded-full transition-all ${
+                    currentPage === index ? 'w-6 bg-white' : 'w-2 bg-white/30'
+                  }`}
+                  aria-label={`Go to page ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       
