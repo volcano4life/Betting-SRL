@@ -3005,27 +3005,87 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                       size="sm" 
                       variant="outline"
                       onClick={() => {
-                        const newImage = prompt("Enter image name (e.g., redmoon1):");
-                        if (newImage && newImage.trim()) {
-                          if (!formData.imageUrl) {
-                            setFormData(prev => ({
-                              ...prev,
-                              imageUrl: newImage.trim()
-                            }));
-                          } else {
-                            setFormData(prev => ({
-                              ...prev,
-                              additionalImages: [...prev.additionalImages, newImage.trim()]
-                            }));
+                        // Create a hidden file input element
+                        const fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.accept = 'image/*';
+                        fileInput.style.display = 'none';
+                        document.body.appendChild(fileInput);
+                        
+                        // Handle file selection
+                        fileInput.onchange = async (e) => {
+                          const files = fileInput.files;
+                          if (!files || files.length === 0) return;
+                          
+                          // Create a FormData object
+                          const uploadData = new FormData();
+                          uploadData.append('image', files[0]);
+                          
+                          try {
+                            // Show loading state
+                            toast({
+                              title: "Uploading image...",
+                              description: "Please wait while your image is being uploaded.",
+                            });
+                            
+                            // Upload the file
+                            const response = await fetch('/api/upload', {
+                              method: 'POST',
+                              body: uploadData,
+                              credentials: 'include'
+                            });
+                            
+                            if (!response.ok) {
+                              throw new Error('Failed to upload image');
+                            }
+                            
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                              // Add the image to the form data
+                              const newImageId = result.filename;
+                              
+                              if (!formData.imageUrl || formData.imageUrl === '') {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  imageUrl: newImageId
+                                }));
+                              } else {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  additionalImages: [...prev.additionalImages, newImageId]
+                                }));
+                              }
+                              
+                              toast({
+                                title: "Image uploaded",
+                                description: "Your image has been uploaded successfully.",
+                              });
+                            } else {
+                              throw new Error(result.message || 'Failed to upload image');
+                            }
+                          } catch (error) {
+                            console.error('Error uploading image:', error);
+                            toast({
+                              title: "Upload failed",
+                              description: error.message || "There was an error uploading your image.",
+                              variant: "destructive",
+                            });
+                          } finally {
+                            // Clean up the input element
+                            document.body.removeChild(fileInput);
                           }
-                        }
+                        };
+                        
+                        // Trigger the file input
+                        fileInput.click();
                       }}
                     >
-                      <Plus size={14} className="mr-1" /> Add Image
+                      <Plus size={14} className="mr-1" /> Upload New Image
                     </Button>
                   </div>
                   
-                  <p className="mb-2">Available images: redmoon1, redmoon2, redmoon3, redmoon4, redmoon5</p>
+                  <p className="mb-2">Use the Upload button to add new images or enter predefined image names: redmoon1, redmoon2, redmoon3, redmoon4, redmoon5</p>
                   
                   {/* Primary Image */}
                   <div className="mb-4">
@@ -3033,12 +3093,28 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                     {formData.imageUrl ? (
                       <div className="relative w-full max-w-[200px] h-40 border rounded-md overflow-hidden">
                         <img 
-                          src={`/assets/${formData.imageUrl}.jpg`} 
+                          src={formData.imageUrl.startsWith('http') ? formData.imageUrl : 
+                               formData.imageUrl.includes('/uploads/') ? formData.imageUrl :
+                               `/uploads/${formData.imageUrl}`} 
                           alt="Primary" 
                           className="w-full h-full object-cover"
                           onError={(e) => {
+                            // Try different paths if the image fails to load
                             const target = e.target as HTMLImageElement;
-                            target.src = `/assets/outlets/${formData.imageUrl}.jpg`;
+                            const currentSrc = target.src;
+                            
+                            // If we already tried uploads path, try assets
+                            if (currentSrc.includes('/uploads/')) {
+                              target.src = `/assets/${formData.imageUrl}.jpg`;
+                            } 
+                            // If we already tried assets, try assets/outlets
+                            else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
+                              target.src = `/assets/outlets/${formData.imageUrl}.jpg`;
+                            }
+                            // If all else fails, show a placeholder
+                            else {
+                              target.src = 'https://placehold.co/200x160?text=Image+Not+Found';
+                            }
                           }}
                         />
                         <Button
@@ -3086,12 +3162,28 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                         {formData.additionalImages.map((img, index) => (
                           <div key={index} className="relative border rounded-md overflow-hidden h-32">
                             <img 
-                              src={`/assets/${img}.jpg`} 
+                              src={img.startsWith('http') ? img : 
+                                   img.includes('/uploads/') ? img :
+                                   `/uploads/${img}`} 
                               alt={`Image ${index + 1}`} 
                               className="w-full h-full object-cover"
                               onError={(e) => {
+                                // Try different paths if the image fails to load
                                 const target = e.target as HTMLImageElement;
-                                target.src = `/assets/outlets/${img}.jpg`;
+                                const currentSrc = target.src;
+                                
+                                // If we already tried uploads path, try assets
+                                if (currentSrc.includes('/uploads/')) {
+                                  target.src = `/assets/${img}.jpg`;
+                                } 
+                                // If we already tried assets, try assets/outlets
+                                else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
+                                  target.src = `/assets/outlets/${img}.jpg`;
+                                }
+                                // If all else fails, show a placeholder
+                                else {
+                                  target.src = 'https://placehold.co/200x160?text=Image+Not+Found';
+                                }
                               }}
                             />
                             {/* Top-right buttons */}
