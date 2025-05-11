@@ -852,24 +852,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'No file uploaded' });
       }
       
-      // Just the filename without extension
-      const fileNameWithoutExt = path.basename(req.file.filename, path.extname(req.file.filename));
+      // Return the full filename WITH extension to ensure proper rendering
+      const fullFileName = req.file.filename;
+      
+      // For backwards compatibility, also provide filename without extension
+      const fileNameWithoutExt = path.basename(fullFileName, path.extname(fullFileName));
       
       res.json({ 
         success: true, 
-        filename: fileNameWithoutExt,
-        url: `/uploads/${req.file.filename}`
+        filename: fileNameWithoutExt,  // Keep this for backwards compatibility
+        fullFilename: fullFileName,    // Add this for improved image handling
+        url: `/uploads/${fullFileName}`
       });
       
-      // Log a friendly message to help with debugging
-      console.log(`Files in the public directory are served at the root path.`);
-      console.log(`Instead of /public/uploads/${req.file.filename}, use /uploads/${req.file.filename}.`);
+      // Log detailed information for debugging
+      console.log('File uploaded successfully:');
+      console.log(`- Full filename: ${fullFileName}`);
+      console.log(`- Without extension: ${fileNameWithoutExt}`);
+      console.log(`- Access URL: /uploads/${fullFileName}`);
     } catch (error) {
       console.error('File upload error:', error);
       res.status(500).json({ 
         success: false, 
         message: 'Error uploading file', 
-        error: error.message 
+        error: String(error)
       });
     }
   });
