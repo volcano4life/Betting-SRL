@@ -3006,6 +3006,15 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                     }));
                   }
                 }}
+                labels={{
+                  addImage: language === 'it' ? 'Aggiungi Immagine' : 'Add Image',
+                  noImages: language === 'it' 
+                    ? 'Nessuna immagine. Aggiungi la tua prima immagine usando il campo sopra.' 
+                    : 'No images yet. Add your first image using the field above.',
+                  placeholder: language === 'it' 
+                    ? 'Inserisci il nome dell\'immagine (es. redmoon1)' 
+                    : 'Enter image name (e.g., redmoon1)'
+                }}
               />
             </div>
           </div>
