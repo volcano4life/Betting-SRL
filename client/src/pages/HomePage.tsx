@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>{siteConfig.defaultTitle}</title>
+        <title translate="no">{siteConfig.defaultTitle}</title>
         <meta name="description" content={siteConfig.defaultDescription} />
       </Helmet>
 

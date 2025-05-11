@@ -2,14 +2,18 @@
  * Site-wide configuration for consistent branding and settings
  */
 
+// Define our brand name in a way that won't be translated
+// This value should be used throughout the application 
+const BRAND_NAME = "Betting SRL";
+
 export const siteConfig = {
   // Site branding
-  name: "Betting SRL",
+  name: BRAND_NAME,
   tagline: "Best Casino Games & Sports Betting in Italy",
   
   // SEO defaults
-  defaultTitle: "Betting SRL | Italian Casino Games & Sports Betting",
-  defaultDescription: "Find the best casino games, sports betting options, and exclusive promotions for Italian players. Powered by Betting SRL.",
+  defaultTitle: `${BRAND_NAME} | Italian Casino Games & Sports Betting`,
+  defaultDescription: `Find the best casino games, sports betting options, and exclusive promotions for Italian players. Powered by ${BRAND_NAME}.`,
   
   // Social media
   social: {
@@ -25,7 +29,7 @@ export const siteConfig = {
   },
   
   // Copyright
-  copyright: `© ${new Date().getFullYear()} Betting SRL. All rights reserved.`,
+  copyright: `© ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.`,
   
   // Page titles
   pageTitles: {
@@ -43,6 +47,8 @@ export const siteConfig = {
 
 /**
  * Helper function to generate consistent page titles
+ * The implementation ensures the brand name is properly isolated for non-translation
+ * 
  * @param pageTitle The specific page title or key from pageTitles
  * @param customValue Optional custom value to append to the pageTitle (e.g. for review or product titles)
  * @returns Formatted page title with brand name
@@ -66,5 +72,6 @@ export function getPageTitle(pageTitle: string | keyof typeof siteConfig.pageTit
     titleText = `${titleText}: ${customValue}`;
   }
   
+  // Return with the brand name, preserving its non-translatable status
   return `${titleText} - ${siteConfig.name}`;
 }
