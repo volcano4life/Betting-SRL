@@ -4,6 +4,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
 
+// Import the images
+import redmoon1 from '@/assets/redmoon1.jpg';
+import redmoon2 from '@/assets/redmoon2.jpg';
+import redmoon3 from '@/assets/redmoon3.jpg';
+import redmoon4 from '@/assets/redmoon4.jpg';
+import redmoon5 from '@/assets/redmoon5.jpg';
+
 interface Outlet {
   id: number;
   title_en: string;
@@ -44,9 +51,9 @@ export function OutletSlideshow() {
   // Define a map of outlet IDs to their slideshow images
   // Each outlet has its own dedicated set of images
   const outletImageSets: { [key: number]: string[] } = {
-    1: ['/assets/redmoon1.jpg', '/assets/redmoon2.jpg', '/assets/redmoon3.jpg', '/assets/redmoon4.jpg', '/assets/redmoon5.jpg'], // Redmoon Aversa
-    2: ['/assets/redmoon2.jpg', '/assets/redmoon3.jpg', '/assets/redmoon4.jpg'], // Wincity Trentola-Ducenta
-    3: ['/assets/redmoon3.jpg', '/assets/redmoon4.jpg', '/assets/redmoon5.jpg'], // Matchpoint Trentola-Ducenta
+    1: [redmoon1, redmoon2, redmoon3, redmoon4, redmoon5], // Redmoon Aversa
+    2: [redmoon2, redmoon3, redmoon4], // Wincity Trentola-Ducenta
+    3: [redmoon3, redmoon4, redmoon5], // Matchpoint Trentola-Ducenta
   };
   
   const handleOutletClick = (outlet: Outlet) => {
@@ -83,7 +90,10 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={outlet.imageUrl} 
+                  src={outlet.imageUrl === 'redmoon1.jpg' ? redmoon1 : 
+                       outlet.imageUrl === 'redmoon2.jpg' ? redmoon2 : 
+                       outlet.imageUrl === 'redmoon3.jpg' ? redmoon3 : 
+                       outlet.imageUrl === 'redmoon4.jpg' ? redmoon4 : redmoon5}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
