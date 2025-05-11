@@ -3042,8 +3042,11 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                             const result = await response.json();
                             
                             if (result.success) {
-                              // Add the image to the form data
-                              const newImageId = result.filename;
+                              // Log successful upload for debugging
+                              console.log('Upload successful:', result);
+                              
+                              // Use fullFilename if available, fallback to filename for backwards compatibility
+                              const newImageId = result.fullFilename || result.filename;
                               
                               if (!formData.imageUrl || formData.imageUrl === '') {
                                 setFormData(prev => ({
@@ -3059,7 +3062,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                               
                               toast({
                                 title: "Image uploaded",
-                                description: "Your image has been uploaded successfully.",
+                                description: `Image ${newImageId} uploaded successfully.`,
                               });
                             } else {
                               throw new Error(result.message || 'Failed to upload image');
@@ -3096,7 +3099,8 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                           src={
                             // Handle various image path cases
                             formData.imageUrl.startsWith('http') ? formData.imageUrl : // External URL
-                            formData.imageUrl.includes('-') ? `/uploads/${formData.imageUrl}` : // UUID filename (uploaded)
+                            formData.imageUrl.includes('-') ? 
+                              formData.imageUrl.includes('.') ? `/uploads/${formData.imageUrl}` : `/uploads/${formData.imageUrl}.jpg` : // Handle both with and without extension
                             `/assets/${formData.imageUrl}.jpg` // Default asset path
                           } 
                           alt="Primary" 
@@ -3180,7 +3184,8 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                               src={
                                 // Handle various image path cases
                                 img.startsWith('http') ? img : // External URL
-                                img.includes('-') ? `/uploads/${img}` : // UUID filename (uploaded)
+                                img.includes('-') ? 
+                                  img.includes('.') ? `/uploads/${img}` : `/uploads/${img}.jpg` : // Handle both with and without extension
                                 `/assets/${img}.jpg` // Default asset path
                               } 
                               alt={`Image ${index + 1}`} 

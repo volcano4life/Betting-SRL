@@ -63,7 +63,10 @@ export function OutletSlideshow() {
     
     // Check if this is an uploaded image (UUID format with dashes)
     if (imageName.includes('-')) {
-      return `/uploads/${imageName}`;
+      // If it's an uploaded image, check if it already has an extension
+      return imageName.includes('.') ? 
+        `/uploads/${imageName}` : 
+        `/uploads/${imageName}.jpg`;
     }
     
     // Otherwise, assume it's a predefined asset
