@@ -1,15 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
-
-// Import the images
-import redmoon1 from '@/assets/redmoon1.jpg';
-import redmoon2 from '@/assets/redmoon2.jpg';
-import redmoon3 from '@/assets/redmoon3.jpg';
-import redmoon4 from '@/assets/redmoon4.jpg';
-import redmoon5 from '@/assets/redmoon5.jpg';
 
 interface Outlet {
   id: number;
@@ -48,13 +41,37 @@ export function OutletSlideshow() {
   // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
   
-  // Define a map of outlet IDs to their slideshow images
-  // Each outlet has its own dedicated set of images with the correct images for each outlet
-  const outletImageSets: { [key: number]: string[] } = {
-    1: [redmoon1, redmoon2, redmoon3, redmoon4, redmoon5], // Redmoon Aversa - the first outlet gets all 5 images
-    2: [redmoon3, redmoon4, redmoon5], // Wincity Trentola-Ducenta
-    3: [redmoon2, redmoon4, redmoon5], // Matchpoint Trentola-Ducenta
+  // Generate image sets for each outlet
+  const getOutletImageSet = (outletId: number): string[] => {
+    // Define base image names
+    const baseImages = ['redmoon1', 'redmoon2', 'redmoon3', 'redmoon4', 'redmoon5'];
+    
+    // Use different subsets for different outlets for variety
+    switch(outletId) {
+      case 1: // Redmoon Aversa
+        return baseImages.map(img => `/assets/outlets/${img}.jpg`); // All images
+      case 2: // Wincity
+        return ['redmoon3', 'redmoon4', 'redmoon5'].map(img => `/assets/outlets/${img}.jpg`);
+      case 3: // Matchpoint
+        return ['redmoon2', 'redmoon4', 'redmoon5'].map(img => `/assets/outlets/${img}.jpg`);
+      default:
+        return baseImages.slice(0, 3).map(img => `/assets/outlets/${img}.jpg`);
+    }
   };
+  
+  // Create outlet image sets map
+  const [outletImageSets, setOutletImageSets] = useState<{ [key: number]: string[] }>({});
+  
+  // Initialize outlet image sets
+  useEffect(() => {
+    if (outlets && outlets.length > 0) {
+      const imageSets: { [key: number]: string[] } = {};
+      outlets.forEach(outlet => {
+        imageSets[outlet.id] = getOutletImageSet(outlet.id);
+      });
+      setOutletImageSets(imageSets);
+    }
+  }, [outlets]);
   
   // Function to get the primary image for an outlet (the first image in its slideshow)
   const getPrimaryImage = (outletId: number): string => {
@@ -100,6 +117,27 @@ export function OutletSlideshow() {
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
                   }`}
+                  onError={(e) => {
+                    // Try alternative paths in sequence if the primary image fails to load
+                    const target = e.target as HTMLImageElement;
+                    const originalSrc = target.src;
+                    
+                    // First try without the outlets folder
+                    if (originalSrc.includes('/outlets/')) {
+                      target.src = originalSrc.replace('/outlets/', '/');
+                      
+                      // Set error handler for this attempt
+                      target.onerror = () => {
+                        // If that fails, try a general fallback for the outlet
+                        target.src = `/assets/outlets/redmoon${outlet.id}.jpg`;
+                        
+                        // Final fallback
+                        target.onerror = () => {
+                          target.src = `/assets/redmoon${outlet.id}.jpg`;
+                        };
+                      };
+                    }
+                  }}
                 />
                 <div className={`absolute inset-0 transition-all duration-300 ${
                   hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
