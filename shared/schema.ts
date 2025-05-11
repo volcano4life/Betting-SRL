@@ -117,7 +117,10 @@ export const outlets = pgTable("outlets", {
   title_it: text("title_it").notNull(),
   description_en: text("description_en"),
   description_it: text("description_it"),
+  address_en: text("address_en"),
+  address_it: text("address_it"),
   imageUrl: text("image_url").notNull(),
+  additionalImages: text("additional_images").array(), // Array of image paths for the slideshow
   order: integer("order").default(0),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
