@@ -287,7 +287,10 @@ export function DragDropImageGallery({
   
   function removeImage(id: string) {
     const index = items.findIndex(item => item.id === id);
-    if (index === -1) return;
+    if (index === -1) {
+      console.error("Cannot remove image - ID not found:", id);
+      return;
+    }
     
     const imageToRemove = items[index].url;
     console.log("Removing image:", imageToRemove, "at index:", index);
@@ -297,23 +300,49 @@ export function DragDropImageGallery({
     
     // If removing the primary image, set the first remaining image as primary
     if (imageToRemove === primaryImage && newItems.length > 0) {
+      console.log("Primary image was removed, setting new primary to:", newItems[0].url);
       onPrimaryChange(newItems[0].url);
     } else if (imageToRemove === primaryImage && newItems.length === 0) {
       // If removing the last image, set primary to empty
+      console.log("Last image was removed, setting primary to empty string");
       onPrimaryChange('');
     }
     
     const newImageUrls = newItems.map(item => item.url);
-    console.log("New images array:", newImageUrls);
+    console.log("After removal - New images array:", newImageUrls);
     
+    // Update local state and parent state
     setItems(newItems);
     onImagesChange(newImageUrls);
+    
+    // Log the current state after updating
+    setTimeout(() => {
+      console.log("State after image removal - items:", newItems.map(i => i.url));
+      console.log("State after image removal - primaryImage:", primaryImage);
+    }, 100);
   }
   
   function setPrimaryImage(id: string) {
     const item = items.find(item => item.id === id);
     if (item) {
+      console.log("Setting primary image to:", item.url);
       onPrimaryChange(item.url);
+      
+      // Reorder items to put the primary image first
+      const newItems = [...items];
+      const itemIndex = newItems.findIndex(i => i.id === id);
+      
+      if (itemIndex > 0) {
+        // Move the selected item to the beginning of the array
+        const [selectedItem] = newItems.splice(itemIndex, 1);
+        newItems.unshift(selectedItem);
+        
+        // Update the images order
+        const newImageUrls = newItems.map(item => item.url);
+        console.log("After setting primary - New images array:", newImageUrls);
+        setItems(newItems);
+        onImagesChange(newImageUrls);
+      }
     }
   }
 

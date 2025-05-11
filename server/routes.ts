@@ -760,6 +760,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isActive 
       } = req.body;
       
+      // Debug log to see what's coming in from the client
+      console.log('[DEBUG] Outlet update request:', {
+        id,
+        imageUrl,
+        additionalImages
+      });
+      
+      // Always ensure additionalImages is an array, not null
+      const safeAdditionalImages = Array.isArray(additionalImages) ? additionalImages : [];
+      
       const outlet = await storage.updateOutlet(id, {
         title_en,
         title_it,
@@ -768,13 +778,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         address_en,
         address_it,
         imageUrl,
-        additionalImages,
+        additionalImages: safeAdditionalImages,
         order,
         isActive
       });
       
+      console.log('[DEBUG] Updated outlet:', {
+        id: outlet.id,
+        imageUrl: outlet.imageUrl,
+        additionalImages: outlet.additionalImages
+      });
+      
       res.json(outlet);
     } catch (error) {
+      console.error('[DEBUG] Error updating outlet:', error);
       if (error.message && error.message.includes('not found')) {
         return res.status(404).json({ message: 'Outlet not found' });
       }
