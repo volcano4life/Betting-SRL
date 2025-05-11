@@ -286,6 +286,7 @@ export function DragDropImageGallery({
   }
   
   function removeImage(id: string) {
+    // This is the critical function for image removal
     const index = items.findIndex(item => item.id === id);
     if (index === -1) {
       console.error("Cannot remove image - ID not found:", id);
@@ -295,31 +296,33 @@ export function DragDropImageGallery({
     const imageToRemove = items[index].url;
     console.log("Removing image:", imageToRemove, "at index:", index);
     
-    const newItems = [...items];
-    newItems.splice(index, 1);
+    // Create a new items array without the removed image
+    const newItems = items.filter((_, i) => i !== index);
     
-    // If removing the primary image, set the first remaining image as primary
-    if (imageToRemove === primaryImage && newItems.length > 0) {
-      console.log("Primary image was removed, setting new primary to:", newItems[0].url);
-      onPrimaryChange(newItems[0].url);
-    } else if (imageToRemove === primaryImage && newItems.length === 0) {
-      // If removing the last image, set primary to empty
-      console.log("Last image was removed, setting primary to empty string");
-      onPrimaryChange('');
-    }
-    
+    // Create the new array of image URLs (this is what gets passed to the parent)
     const newImageUrls = newItems.map(item => item.url);
     console.log("After removal - New images array:", newImageUrls);
     
+    // Update primary image if needed
+    const wasPrimary = imageToRemove === primaryImage;
+    if (wasPrimary) {
+      if (newItems.length > 0) {
+        // Set first remaining image as primary
+        const newPrimaryUrl = newItems[0].url;
+        console.log("Primary image was removed, setting new primary to:", newPrimaryUrl);
+        onPrimaryChange(newPrimaryUrl);
+      } else {
+        // No images left, clear primary
+        console.log("Last image was removed, setting primary to empty string");
+        onPrimaryChange('');
+      }
+    }
+    
     // Update local state and parent state
     setItems(newItems);
-    onImagesChange(newImageUrls);
     
-    // Log the current state after updating
-    setTimeout(() => {
-      console.log("State after image removal - items:", newItems.map(i => i.url));
-      console.log("State after image removal - primaryImage:", primaryImage);
-    }, 100);
+    // Important - must call this to update parent form state
+    onImagesChange(newImageUrls);
   }
   
   function setPrimaryImage(id: string) {
