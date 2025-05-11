@@ -11,10 +11,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { PromoCode, Game, News, Review, Guide, User } from "@shared/schema";
+import { PromoCode, Game, News, Review, Guide, User, Outlet } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users } from "lucide-react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin } from "lucide-react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet";
 import { getPageTitle, siteConfig } from "@/config/siteConfig";
@@ -31,7 +31,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
 
-type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides" | "administrators";
+type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides" | "administrators" | "outlets";
 
 export default function AdminPage() {
   const { t, language, setLanguage } = useLanguage();
@@ -103,6 +103,10 @@ export default function AdminPage() {
                 <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
                 <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
                 <TabsTrigger value="guides">{t('admin.guides')}</TabsTrigger>
+                <TabsTrigger value="outlets">
+                  <Store className="h-4 w-4 mr-2" />
+                  {language === 'it' ? 'Punti Vendita' : 'Outlets'}
+                </TabsTrigger>
               </TabsList>
               
               <Separator orientation="vertical" className="h-8 mx-2" />
@@ -243,6 +247,25 @@ export default function AdminPage() {
               />
             ) : (
               <AdminsList onEdit={setEditingItemId} />
+            )}
+          </TabsContent>
+
+          {/* Outlets Management */}
+          <TabsContent value="outlets">
+            {isAdding ? (
+              <OutletForm 
+                id={null} 
+                onCancel={() => setIsAdding(false)} 
+                onSuccess={() => setIsAdding(false)} 
+              />
+            ) : editingItemId ? (
+              <OutletForm 
+                id={editingItemId} 
+                onCancel={() => setEditingItemId(null)} 
+                onSuccess={() => setEditingItemId(null)} 
+              />
+            ) : (
+              <OutletsList onEdit={setEditingItemId} />
             )}
           </TabsContent>
         </Tabs>
