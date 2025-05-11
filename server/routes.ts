@@ -7,12 +7,13 @@ import {
   insertReviewSchema, 
   insertNewsSchema,
   insertGuideSchema,
-  insertPromoCodeSchema
+  insertPromoCodeSchema,
+  insertOutletSchema
 } from "@shared/schema";
 import { setupAuth, seedAdminUser } from "./auth";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { games, reviews, news, guides, promoCodes } from "@shared/schema";
+import { games, reviews, news, guides, promoCodes, outlets } from "@shared/schema";
 import { log } from "./vite";
 import { 
   sendWelcomeEmail, 
@@ -668,6 +669,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(userWithoutPassword);
     } catch (error) {
       res.status(500).json({ message: 'Error approving administrator', error });
+    }
+  });
+
+  // ====== BETTING OUTLETS ROUTES ======
+
+  // Get all active outlets for the public slideshow
+  app.get('/api/outlets', async (req, res) => {
+    try {
+      const outlets = await storage.getActiveOutlets();
+      res.json(outlets);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching outlets', error });
+    }
+  });
+
+  // Admin outlet management endpoints
+  app.get('/api/admin/outlets', requireAdmin, async (req, res) => {
+    try {
+      const outlets = await storage.getAllOutlets();
+      res.json(outlets);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching outlets', error });
+    }
+  });
+
+  app.get('/api/admin/outlets/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const outlet = await storage.getOutletById(id);
+      
+      if (!outlet) {
+        return res.status(404).json({ message: 'Outlet not found' });
+      }
+      
+      res.json(outlet);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching outlet', error });
+    }
+  });
+
+  app.post('/api/admin/outlets', requireAdmin, async (req, res) => {
+    try {
+      const { title_en, title_it, description_en, description_it, imageUrl, order, isActive } = req.body;
+      
+      const outlet = await storage.createOutlet({
+        title_en,
+        title_it,
+        description_en,
+        description_it,
+        imageUrl,
+        order,
+        isActive
+      });
+      
+      res.status(201).json(outlet);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid outlet data', error });
+    }
+  });
+
+  app.put('/api/admin/outlets/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { title_en, title_it, description_en, description_it, imageUrl, order, isActive } = req.body;
+      
+      const outlet = await storage.updateOutlet(id, {
+        title_en,
+        title_it,
+        description_en,
+        description_it,
+        imageUrl,
+        order,
+        isActive
+      });
+      
+      res.json(outlet);
+    } catch (error) {
+      if (error.message && error.message.includes('not found')) {
+        return res.status(404).json({ message: 'Outlet not found' });
+      }
+      res.status(400).json({ message: 'Invalid outlet data', error });
+    }
+  });
+
+  app.delete('/api/admin/outlets/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteOutlet(id);
+      res.json({ message: 'Outlet deleted successfully' });
+    } catch (error) {
+      if (error.message && error.message.includes('not found')) {
+        return res.status(404).json({ message: 'Outlet not found' });
+      }
+      res.status(500).json({ message: 'Error deleting outlet', error });
     }
   });
 

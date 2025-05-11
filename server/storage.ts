@@ -652,7 +652,7 @@ export class MemStorage implements IStorage {
   }
 
   async getActiveOutlets(): Promise<Outlet[]> {
-    return Array.from(this.outlets.values()).filter(outlet => outlet.active);
+    return Array.from(this.outlets.values()).filter(outlet => outlet.isActive);
   }
 
   async getOutletById(id: number): Promise<Outlet | undefined> {
