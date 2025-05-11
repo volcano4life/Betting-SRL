@@ -2509,6 +2509,433 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   );
 }
 
+// ===== OUTLETS =====
+function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
+  const { language, t, getLocalizedField } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const { data: outlets, isLoading } = useQuery<Outlet[]>({
+    queryKey: ['/api/outlets'],
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('DELETE', `/api/outlets/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      toast({
+        title: language === 'it' ? 'Punto Vendita Eliminato' : 'Outlet Deleted',
+        description: language === 'it' 
+          ? 'Il punto vendita è stato eliminato con successo.'
+          : 'The outlet has been successfully deleted.',
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: language === 'it' ? 'Errore' : 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const toggleStatusMutation = useMutation({
+    mutationFn: async ({ id, isActive }: { id: number, isActive: boolean }) => {
+      await apiRequest('PATCH', `/api/outlets/${id}`, { isActive });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      toast({
+        title: language === 'it' ? 'Stato Aggiornato' : 'Status Updated',
+        description: language === 'it' 
+          ? 'Lo stato del punto vendita è stato aggiornato con successo.'
+          : 'The outlet status has been successfully updated.',
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: language === 'it' ? 'Errore' : 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{language === 'it' ? 'Gestione Punti Vendita' : 'Outlets Management'}</CardTitle>
+        <CardDescription>
+          {language === 'it' 
+            ? 'Gestisci i punti vendita visualizzati sul sito.'
+            : 'Manage the outlets displayed on the website.'}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="h-[calc(100vh-300px)]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{language === 'it' ? 'Nome' : 'Name'}</TableHead>
+                <TableHead>{language === 'it' ? 'Indirizzo' : 'Address'}</TableHead>
+                <TableHead>{language === 'it' ? 'Stato' : 'Status'}</TableHead>
+                <TableHead>{language === 'it' ? 'Ordine' : 'Order'}</TableHead>
+                <TableHead className="text-right">{language === 'it' ? 'Azioni' : 'Actions'}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {outlets && outlets.length > 0 ? (
+                outlets
+                  .sort((a, b) => (a.order || 0) - (b.order || 0))
+                  .map((outlet) => (
+                    <TableRow key={outlet.id}>
+                      <TableCell className="font-medium">{getLocalizedField(outlet, 'title')}</TableCell>
+                      <TableCell>{getLocalizedField(outlet, 'address') || '-'}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className={`h-2.5 w-2.5 rounded-full mr-2 ${outlet.isActive ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                          {outlet.isActive 
+                            ? (language === 'it' ? 'Attivo' : 'Active') 
+                            : (language === 'it' ? 'Inattivo' : 'Inactive')}
+                        </div>
+                      </TableCell>
+                      <TableCell>{outlet.order}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleStatusMutation.mutate({ id: outlet.id, isActive: !outlet.isActive })}
+                          >
+                            {outlet.isActive 
+                              ? (language === 'it' ? 'Disattiva' : 'Deactivate') 
+                              : (language === 'it' ? 'Attiva' : 'Activate')}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEdit(outlet.id)}
+                          >
+                            {language === 'it' ? 'Modifica' : 'Edit'}
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => {
+                              if (window.confirm(language === 'it' 
+                                ? 'Sei sicuro di voler eliminare questo punto vendita?' 
+                                : 'Are you sure you want to delete this outlet?')) {
+                                deleteMutation.mutate(outlet.id);
+                              }
+                            }}
+                          >
+                            {language === 'it' ? 'Elimina' : 'Delete'}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-24 text-center">
+                    {language === 'it' ? 'Nessun punto vendita trovato.' : 'No outlets found.'}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  );
+}
+
+type OutletFormProps = {
+  id: number | null;
+  onCancel: () => void;
+  onSuccess: () => void;
+};
+
+function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
+  const { language, t } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState({
+    title_en: '',
+    title_it: '',
+    description_en: '',
+    description_it: '',
+    address_en: '',
+    address_it: '',
+    imageUrl: '',
+    order: 0,
+    isActive: true
+  });
+  
+  // Fetch outlet data if editing
+  const { isLoading } = useQuery<Outlet>({
+    queryKey: [`/api/outlets/${id}`],
+    enabled: id !== null,
+    onSuccess: (data) => {
+      setFormData({
+        title_en: data.title_en,
+        title_it: data.title_it,
+        description_en: data.description_en || '',
+        description_it: data.description_it || '',
+        address_en: data.address_en || '',
+        address_it: data.address_it || '',
+        imageUrl: data.imageUrl,
+        order: data.order || 0,
+        isActive: data.isActive
+      });
+    }
+  });
+  
+  const saveMutation = useMutation({
+    mutationFn: async (data: any) => {
+      if (id === null) {
+        // Create new outlet
+        await apiRequest('POST', '/api/outlets', data);
+      } else {
+        // Update existing outlet
+        await apiRequest('PUT', `/api/outlets/${id}`, data);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      toast({
+        title: id === null
+          ? (language === 'it' ? 'Punto Vendita Creato' : 'Outlet Created')
+          : (language === 'it' ? 'Punto Vendita Aggiornato' : 'Outlet Updated'),
+        description: id === null
+          ? (language === 'it' ? 'Il punto vendita è stato creato con successo.' : 'The outlet has been successfully created.')
+          : (language === 'it' ? 'Il punto vendita è stato aggiornato con successo.' : 'The outlet has been successfully updated.'),
+      });
+      onSuccess();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: language === 'it' ? 'Errore' : 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  });
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
+  
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
+  };
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveMutation.mutate(formData);
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {id === null 
+            ? (language === 'it' ? 'Aggiungi Punto Vendita' : 'Add Outlet')
+            : (language === 'it' ? 'Modifica Punto Vendita' : 'Edit Outlet')}
+        </CardTitle>
+        <CardDescription>
+          {id === null 
+            ? (language === 'it' ? 'Inserisci i dettagli del nuovo punto vendita.' : 'Enter the details for the new outlet.')
+            : (language === 'it' ? 'Modifica i dettagli del punto vendita esistente.' : 'Edit the details of the existing outlet.')}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Italian Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title_it">
+                {language === 'it' ? 'Nome (Italiano)' : 'Name (Italian)'}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="title_it"
+                name="title_it"
+                value={formData.title_it}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            {/* English Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title_en">
+                {language === 'it' ? 'Nome (Inglese)' : 'Name (English)'}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="title_en"
+                name="title_en"
+                value={formData.title_en}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            {/* Italian Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description_it">
+                {language === 'it' ? 'Descrizione (Italiano)' : 'Description (Italian)'}
+              </Label>
+              <Textarea
+                id="description_it"
+                name="description_it"
+                value={formData.description_it}
+                onChange={handleChange}
+                rows={3}
+              />
+            </div>
+            
+            {/* English Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description_en">
+                {language === 'it' ? 'Descrizione (Inglese)' : 'Description (English)'}
+              </Label>
+              <Textarea
+                id="description_en"
+                name="description_en"
+                value={formData.description_en}
+                onChange={handleChange}
+                rows={3}
+              />
+            </div>
+            
+            {/* Italian Address */}
+            <div className="space-y-2">
+              <Label htmlFor="address_it">
+                {language === 'it' ? 'Indirizzo (Italiano)' : 'Address (Italian)'}
+              </Label>
+              <Input
+                id="address_it"
+                name="address_it"
+                value={formData.address_it}
+                onChange={handleChange}
+              />
+            </div>
+            
+            {/* English Address */}
+            <div className="space-y-2">
+              <Label htmlFor="address_en">
+                {language === 'it' ? 'Indirizzo (Inglese)' : 'Address (English)'}
+              </Label>
+              <Input
+                id="address_en"
+                name="address_en"
+                value={formData.address_en}
+                onChange={handleChange}
+              />
+            </div>
+            
+            {/* Image URL */}
+            <div className="space-y-2">
+              <Label htmlFor="imageUrl">
+                {language === 'it' ? 'URL Immagine' : 'Image URL'}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="imageUrl"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
+                required
+                placeholder="redmoon1"
+              />
+              <p className="text-xs text-muted-foreground">
+                {language === 'it' 
+                  ? 'Nome del file dell\'immagine (es. redmoon1, redmoon2, ecc.)'
+                  : 'Image filename (e.g., redmoon1, redmoon2, etc.)'}
+              </p>
+            </div>
+            
+            {/* Order */}
+            <div className="space-y-2">
+              <Label htmlFor="order">
+                {language === 'it' ? 'Ordine di Visualizzazione' : 'Display Order'}
+              </Label>
+              <Input
+                id="order"
+                name="order"
+                type="number"
+                min="0"
+                value={formData.order}
+                onChange={handleNumberChange}
+              />
+              <p className="text-xs text-muted-foreground">
+                {language === 'it' 
+                  ? 'I punti vendita vengono visualizzati in ordine crescente (0, 1, 2, ...)'
+                  : 'Outlets are displayed in ascending order (0, 1, 2, ...)'}
+              </p>
+            </div>
+          </div>
+          
+          {/* Active Status */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="isActive"
+              name="isActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) => 
+                setFormData((prev) => ({ ...prev, isActive: checked === true }))
+              }
+            />
+            <Label htmlFor="isActive" className="font-normal">
+              {language === 'it' ? 'Attivo' : 'Active'}
+            </Label>
+          </div>
+          
+          {/* Form Actions */}
+          <div className="flex justify-end space-x-2">
+            <Button type="button" variant="outline" onClick={onCancel}>
+              {language === 'it' ? 'Annulla' : 'Cancel'}
+            </Button>
+            <Button type="submit" disabled={saveMutation.isPending}>
+              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Save className="mr-2 h-4 w-4" />
+              {language === 'it' ? 'Salva' : 'Save'}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
 // ===== ADMINISTRATORS =====
 function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t } = useLanguage();
