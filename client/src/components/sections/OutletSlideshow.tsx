@@ -63,7 +63,7 @@ export function OutletSlideshow() {
             {outlets.map((outlet) => (
               <CarouselItem key={outlet.id} className="md:basis-1/2 lg:basis-1/3">
                 <AnimatedWrapper
-                  type="fade-in-up" 
+                  animation="slideUp" 
                   duration={0.5} 
                   delay={0.1}
                   className="h-full"
@@ -85,9 +85,11 @@ export function OutletSlideshow() {
                         {getLocalizedField(outlet, 'description')}
                       </p>
                       
-                      <Button variant="outline" className="w-full">
-                        {language === 'it' ? 'Maggiori informazioni' : 'More information'}
-                      </Button>
+                      <div className="w-full">
+                        <Button variant="outline" className="w-full">
+                          {language === 'it' ? 'Maggiori informazioni' : 'More information'}
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </AnimatedWrapper>

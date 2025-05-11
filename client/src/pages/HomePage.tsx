@@ -18,6 +18,7 @@ export default function HomePage() {
       </Helmet>
 
       <HeroSection />
+      <OutletSlideshow />
       <FeaturedCasinosSection />
       <PromoCodesSection />
       <SportsBettingSection />
