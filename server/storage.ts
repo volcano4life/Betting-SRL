@@ -362,6 +362,41 @@ export class MemStorage implements IStorage {
       featured: 1
     };
     this.createPromoCode(promoCode2);
+    
+    // Initialize outlets
+    const outlet1: InsertOutlet = {
+      title_en: "Betting SRL Milano",
+      title_it: "Betting SRL Milano",
+      description_en: "Our flagship betting outlet in the heart of Milan, offering a premium betting experience with state-of-the-art facilities.",
+      description_it: "Il nostro punto vendita principale nel cuore di Milano, che offre un'esperienza di scommesse premium con strutture all'avanguardia.",
+      imageUrl: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      order: 1,
+      isActive: true
+    };
+    
+    const outlet2: InsertOutlet = {
+      title_en: "Betting SRL Roma",
+      title_it: "Betting SRL Roma",
+      description_en: "Experience the thrill of betting in our elegant Roman outlet, featuring multiple screens and a dedicated sports bar.",
+      description_it: "Vivi l'emozione delle scommesse nel nostro elegante punto vendita romano, con numerosi schermi e un bar sportivo dedicato.",
+      imageUrl: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      order: 2,
+      isActive: true
+    };
+    
+    const outlet3: InsertOutlet = {
+      title_en: "Betting SRL Napoli",
+      title_it: "Betting SRL Napoli",
+      description_en: "Our Naples location offers a vibrant atmosphere for sports enthusiasts with the latest odds and promotions.",
+      description_it: "La nostra sede di Napoli offre un'atmosfera vivace per gli appassionati di sport con le quote e le promozioni più recenti.",
+      imageUrl: "https://images.unsplash.com/photo-1534198730836-5dcab9c435f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      order: 3,
+      isActive: true
+    };
+
+    this.createOutlet(outlet1);
+    this.createOutlet(outlet2);
+    this.createOutlet(outlet3);
   }
   
   // Games methods
@@ -609,6 +644,48 @@ export class MemStorage implements IStorage {
     );
     
     return { games, reviews, news, guides };
+  }
+  
+  // Outlet methods
+  async getAllOutlets(): Promise<Outlet[]> {
+    return Array.from(this.outlets.values());
+  }
+
+  async getActiveOutlets(): Promise<Outlet[]> {
+    return Array.from(this.outlets.values()).filter(outlet => outlet.active);
+  }
+
+  async getOutletById(id: number): Promise<Outlet | undefined> {
+    return this.outlets.get(id);
+  }
+
+  async createOutlet(outlet: InsertOutlet): Promise<Outlet> {
+    const id = this.outletId++;
+    const createdAt = new Date();
+    const newOutlet: Outlet = { ...outlet, id, createdAt };
+    this.outlets.set(id, newOutlet);
+    return newOutlet;
+  }
+
+  async updateOutlet(id: number, outlet: Partial<InsertOutlet>): Promise<Outlet> {
+    const existingOutlet = this.outlets.get(id);
+    if (!existingOutlet) {
+      throw new Error(`Outlet with id ${id} not found.`);
+    }
+    
+    const updatedOutlet: Outlet = { ...existingOutlet, ...outlet };
+    this.outlets.set(id, updatedOutlet);
+    return updatedOutlet;
+  }
+
+  async deleteOutlet(id: number): Promise<Outlet> {
+    const outlet = this.outlets.get(id);
+    if (!outlet) {
+      throw new Error(`Outlet with id ${id} not found.`);
+    }
+    
+    this.outlets.delete(id);
+    return outlet;
   }
 }
 
