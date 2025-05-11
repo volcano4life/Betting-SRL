@@ -65,15 +65,32 @@ function DraggableImage({
           alt={`Gallery image ${index + 1}`} 
           className="w-full h-full object-cover" 
           onError={(e) => {
-            // Try alternative path
+            // Try alternative paths in sequence
             const target = e.target as HTMLImageElement;
-            target.src = `/assets/${url}.jpg`;
             
-            // Add another error handler for the alternative path
-            target.onerror = () => {
-              target.src = 'https://placehold.co/96?text=Not+Found';
-              target.className = 'w-full h-full object-contain bg-gray-100';
+            // Define all possible paths to try in order
+            const possiblePaths = [
+              `/assets/${url}.jpg`,
+              `/assets/outlets/${url.replace(/\-/g, '')}.jpg`,  // Try without hyphens
+              `/assets/outlets/redmoon-${url.replace('redmoon', '')}.jpg`, // Try with hyphen format
+              `/assets/outlets/${url.replace(/[0-9]/g, '-$&')}.jpg` // Try with hyphen before numbers
+            ];
+            
+            let pathIndex = 0;
+            
+            const tryNextPath = () => {
+              if (pathIndex < possiblePaths.length) {
+                target.src = possiblePaths[pathIndex];
+                pathIndex++;
+              } else {
+                // If all paths fail, show placeholder
+                target.src = 'https://placehold.co/96?text=Not+Found';
+                target.className = 'w-full h-full object-contain bg-gray-100';
+              }
             };
+            
+            target.onerror = tryNextPath;
+            tryNextPath();
           }}
         />
       </div>
@@ -233,25 +250,30 @@ export function DragDropImageGallery({
 
   return (
     <div className="space-y-4">
-      <div className="flex space-x-2">
-        <Input
-          placeholder={labels.placeholder}
-          value={newImageUrl}
-          onChange={(e) => setNewImageUrl(e.target.value)}
-          className="flex-grow"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && newImageUrl.trim()) {
-              e.preventDefault();
-              addImage();
-            }
-          }}
-        />
-        <Button 
-          onClick={addImage}
-          disabled={!newImageUrl.trim()}
-        >
-          {labels.addImage}
-        </Button>
+      <div className="space-y-2">
+        <div className="text-sm text-muted-foreground">
+          You can add images by name (like 'redmoon1') or provide a full URL. Supported image names include redmoon1, redmoon2, redmoon3, etc.
+        </div>
+        <div className="flex space-x-2">
+          <Input
+            placeholder={labels.placeholder}
+            value={newImageUrl}
+            onChange={(e) => setNewImageUrl(e.target.value)}
+            className="flex-grow"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && newImageUrl.trim()) {
+                e.preventDefault();
+                addImage();
+              }
+            }}
+          />
+          <Button 
+            onClick={addImage}
+            disabled={!newImageUrl.trim()}
+          >
+            {labels.addImage}
+          </Button>
+        </div>
       </div>
       
       <Card className="p-4">
@@ -268,7 +290,7 @@ export function DragDropImageGallery({
             items={items.map(item => item.id)}
             strategy={rectSortingStrategy}
           >
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {items.length > 0 ? (
                 items.map((item, index) => (
                   <DraggableImage
@@ -282,7 +304,7 @@ export function DragDropImageGallery({
                   />
                 ))
               ) : (
-                <div className="text-center py-8 w-full text-muted-foreground">
+                <div className="col-span-full text-center py-8 bg-muted/20 rounded-md border border-dashed text-muted-foreground">
                   {labels.noImages}
                 </div>
               )}
