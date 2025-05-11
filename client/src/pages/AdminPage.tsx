@@ -2808,12 +2808,19 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
     // Debug log to see what data we're submitting
     console.log("Submitting outlet form data:", formData);
     
-    // Ensure additionalImages is always an array
+    // Make a deep copy of the form data
     const dataToSubmit = {
       ...formData,
-      // If additionalImages is null or undefined, convert to empty array
-      additionalImages: formData.additionalImages || []
+      // Ensure imageUrl is a string (not undefined/null)
+      imageUrl: formData.imageUrl || '',
+      // Ensure additionalImages is always an array
+      additionalImages: Array.isArray(formData.additionalImages) ? [...formData.additionalImages] : []
     };
+    
+    console.log("Processed data to submit:", {
+      imageUrl: dataToSubmit.imageUrl,
+      additionalImages: dataToSubmit.additionalImages
+    });
     
     saveMutation.mutate(dataToSubmit);
   };
