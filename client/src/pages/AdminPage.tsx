@@ -2543,7 +2543,15 @@ function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
 
   const toggleStatusMutation = useMutation({
     mutationFn: async ({ id, isActive }: { id: number, isActive: boolean }) => {
-      await apiRequest('PUT', `/api/admin/outlets/${id}`, { isActive });
+      // First get the full outlet data
+      const response = await apiRequest('GET', `/api/admin/outlets/${id}`);
+      const outletData = await response.json();
+      
+      // Then update only the status
+      await apiRequest('PUT', `/api/admin/outlets/${id}`, { 
+        ...outletData,
+        isActive 
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
@@ -2899,10 +2907,10 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               />
             </div>
             
-            {/* Image URL */}
+            {/* Primary Image */}
             <div className="space-y-2">
               <Label htmlFor="imageUrl">
-                {language === 'it' ? 'URL Immagine' : 'Image URL'}
+                {language === 'it' ? 'Immagine Principale' : 'Primary Image'}
                 <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -2915,9 +2923,19 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               />
               <p className="text-xs text-muted-foreground">
                 {language === 'it' 
-                  ? 'Nome del file dell\'immagine (es. redmoon1, redmoon2, ecc.)'
-                  : 'Image filename (e.g., redmoon1, redmoon2, etc.)'}
+                  ? 'Nome del file dell\'immagine principale (es. redmoon1, redmoon2, ecc.)'
+                  : 'Primary image filename (e.g., redmoon1, redmoon2, etc.)'}
               </p>
+              {formData.imageUrl && (
+                <div className="mt-2 border rounded-md p-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">
+                      {language === 'it' ? 'Immagine selezionata:' : 'Selected image:'}
+                    </span>
+                    <span className="text-sm font-medium text-primary">{formData.imageUrl}</span>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Order */}
@@ -2925,29 +2943,50 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               <Label htmlFor="order">
                 {language === 'it' ? 'Ordine di Visualizzazione' : 'Display Order'}
               </Label>
-              <Input
-                id="order"
-                name="order"
-                type="number"
-                min="0"
-                value={formData.order}
-                onChange={handleNumberChange}
-              />
-              <p className="text-xs text-muted-foreground">
+              <div className="flex items-center space-x-4">
+                <Input
+                  id="order"
+                  name="order"
+                  type="number"
+                  min="0"
+                  value={formData.order}
+                  onChange={handleNumberChange}
+                  className="w-24"
+                />
+                <div className="flex-1">
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary" 
+                      style={{ width: `${Math.min(100, (formData.order / 10) * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>0 ({language === 'it' ? 'Primo' : 'First'})</span>
+                <span>5</span>
+                <span>10+ ({language === 'it' ? 'Ultimo' : 'Last'})</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
                 {language === 'it' 
-                  ? 'I punti vendita vengono visualizzati in ordine crescente (0, 1, 2, ...)'
-                  : 'Outlets are displayed in ascending order (0, 1, 2, ...)'}
+                  ? 'I punti vendita vengono visualizzati in ordine crescente (0 appare per primo)'
+                  : 'Outlets are displayed in ascending order (0 appears first)'}
               </p>
             </div>
           </div>
           
           {/* Additional Images */}
-          <div className="space-y-4">
+          <div className="space-y-4 border-t pt-6 mt-4">
             <div className="flex flex-col space-y-2">
-              <Label>
-                {language === 'it' ? 'Immagini Aggiuntive' : 'Additional Images'}
+              <Label className="text-lg font-medium">
+                {language === 'it' ? 'Immagini Aggiuntive della Galleria' : 'Additional Gallery Images'}
               </Label>
-              <div className="flex space-x-2">
+              <p className="text-sm text-muted-foreground">
+                {language === 'it' 
+                  ? 'Aggiungi immagini aggiuntive che appariranno nella galleria del punto vendita.'
+                  : 'Add additional images that will appear in the outlet gallery slideshow.'}
+              </p>
+              <div className="flex space-x-2 mt-2">
                 <Input
                   placeholder={language === 'it' ? 'Nome del file immagine' : 'Image filename'}
                   value={additionalImageInput}
@@ -2963,26 +3002,43 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               </div>
             </div>
             
-            {formData.additionalImages.length > 0 && (
-              <div className="border rounded-md p-4">
-                <h4 className="text-sm font-medium mb-2">
-                  {language === 'it' ? 'Immagini Aggiunte:' : 'Added Images:'}
-                </h4>
-                <ul className="space-y-2">
+            {formData.additionalImages && formData.additionalImages.length > 0 ? (
+              <div className="border rounded-md p-4 bg-muted/30">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-sm font-medium">
+                    {language === 'it' ? 'Immagini nella Galleria:' : 'Gallery Images:'}
+                  </h4>
+                  <span className="text-xs text-muted-foreground">
+                    {formData.additionalImages.length} {language === 'it' ? 'immagini' : 'images'}
+                  </span>
+                </div>
+                <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
                   {formData.additionalImages.map((img, index) => (
-                    <li key={index} className="flex justify-between items-center text-sm">
-                      <span>{img}</span>
+                    <li key={index} className="flex justify-between items-center text-sm bg-background p-2 rounded-md">
+                      <div className="flex items-center">
+                        <span className="text-primary-foreground bg-primary h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2">
+                          {index + 1}
+                        </span>
+                        <span>{img}</span>
+                      </div>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeAdditionalImage(index)}
+                        className="hover:bg-destructive/10"
                       >
                         <Trash className="h-4 w-4 text-destructive" />
                       </Button>
                     </li>
                   ))}
                 </ul>
+              </div>
+            ) : (
+              <div className="border rounded-md p-4 bg-muted/30 flex items-center justify-center h-20 text-muted-foreground">
+                {language === 'it' 
+                  ? 'Nessuna immagine aggiuntiva. Aggiungi la prima immagine della galleria.' 
+                  : 'No additional images. Add the first gallery image.'}
               </div>
             )}
           </div>
