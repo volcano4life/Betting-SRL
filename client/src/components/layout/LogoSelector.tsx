@@ -65,10 +65,10 @@ const LogoSelector: React.FC<LogoSelectorProps> = () => {
         <div className="flex flex-col gap-4 py-4">
           <div className="flex flex-col items-center gap-2 p-4 border rounded-md hover:bg-muted/50 cursor-pointer transition-colors" 
             onClick={() => handleSelectLogo('poker-chip' as LogoType)}>
-            <BettingLogo className="w-16 h-16" />
+            <BettingLogo className="h-16" />
             <div className="text-center">
-              <h3 className="font-medium">Card Table</h3>
-              <p className="text-sm text-muted-foreground">Poker table with playing cards and casino chips</p>
+              <h3 className="font-medium">Betting SRL</h3>
+              <p className="text-sm text-muted-foreground">Official Betting SRL logo with green background</p>
             </div>
             {selectedLogo === 'poker-chip' && (
               <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
@@ -111,7 +111,12 @@ const LogoSelector: React.FC<LogoSelectorProps> = () => {
               onClick={handleUploadClick}
             >
               {previewUrl ? (
-                <img src={previewUrl} alt="Custom logo preview" className="w-14 h-14 object-contain" />
+                <img 
+                  src={previewUrl} 
+                  alt="Custom logo preview" 
+                  className="h-14 object-contain" 
+                  style={{ maxWidth: "100%", aspectRatio: "auto" }}
+                />
               ) : (
                 <Upload className="w-8 h-8 text-muted-foreground" />
               )}
