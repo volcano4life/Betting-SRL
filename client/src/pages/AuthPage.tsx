@@ -73,7 +73,7 @@ export default function AuthPage() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle('auth')}</title>
+        <title translate="no">{getPageTitle('auth')}</title>
         <meta name="description" content={`Sign in to your account or register to access exclusive content and features on ${siteConfig.name}.`} />
       </Helmet>
       

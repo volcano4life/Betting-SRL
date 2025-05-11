@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle('notFound')}</title>
+        <title translate="no">{getPageTitle('notFound')}</title>
         <meta name="description" content={`The page you're looking for could not be found on ${siteConfig.name}.`} />
       </Helmet>
       
