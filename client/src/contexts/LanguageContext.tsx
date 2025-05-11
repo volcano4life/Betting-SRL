@@ -29,7 +29,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.confirmPassword': 'Confirm Password',
     'auth.confirmPasswordPlaceholder': 'Confirm your password',
     'auth.registerButton': 'Register',
-    'auth.heroTitle': 'Welcome to Betting SRL',
+    'auth.heroTitle': 'Welcome to <span translate="no">Betting SRL</span>',
     'auth.heroDescription': 'Your trusted source for Italian casino reviews, exclusive promo codes, and sports betting insights.',
     'auth.feature1Title': 'Exclusive Bonuses',
     'auth.feature1Desc': 'Get access to special promotions and bonus codes not available anywhere else.',
@@ -269,7 +269,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.visitCasino': 'Visit Casino',
     
     'promos.title': 'Exclusive Promo Codes',
-    'promos.subtitle': 'Special bonuses only available through Betting SRL',
+    'promos.subtitle': 'Special bonuses only available through <span translate="no">Betting SRL</span>',
     'promos.viewAll': 'View All Promotions',
     
     'reviews.title': 'Latest Reviews',
@@ -335,7 +335,7 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.terms': 'Terms & Conditions',
     'footer.privacy': 'Privacy Policy',
     'footer.contact': 'Contact Us',
-    'footer.copyright': '© {year} Betting SRL. All rights reserved. All trademarks are property of their respective owners.',
+    'footer.copyright': '© {year} <span translate="no">Betting SRL</span>. All rights reserved. All trademarks are property of their respective owners.',
     'footer.disclaimer': 'Gambling involves risk. Please gamble responsibly.',
     'footer.tagline': 'Your trusted source for Italian casino reviews, exclusive promo codes, and sports betting insights.',
     'footer.casinoGames': 'Casino Games',
@@ -386,7 +386,7 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.confirmPassword': 'Conferma Password',
     'auth.confirmPasswordPlaceholder': 'Conferma la tua password',
     'auth.registerButton': 'Registrati',
-    'auth.heroTitle': 'Benvenuto su Betting SRL',
+    'auth.heroTitle': 'Benvenuto su <span translate="no">Betting SRL</span>',
     'auth.heroDescription': 'La tua fonte affidabile per recensioni di casinò italiani, codici promozionali esclusivi e approfondimenti sulle scommesse sportive.',
     'auth.feature1Title': 'Bonus Esclusivi',
     'auth.feature1Desc': 'Accedi a promozioni speciali e codici bonus non disponibili altrove.',
@@ -568,7 +568,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.visitCasino': 'Visita il Casinò',
     
     'promos.title': 'Codici Promo Esclusivi',
-    'promos.subtitle': 'Bonus speciali disponibili solo tramite Betting SRL',
+    'promos.subtitle': 'Bonus speciali disponibili solo tramite <span translate="no">Betting SRL</span>',
     'promos.viewAll': 'Vedi Tutte le Promozioni',
     
     'reviews.title': 'Ultime Recensioni',
