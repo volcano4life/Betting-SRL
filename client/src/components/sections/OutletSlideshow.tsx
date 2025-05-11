@@ -1,14 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 
 interface Outlet {
   id: number;
@@ -24,6 +17,7 @@ interface Outlet {
 
 export function OutletSlideshow() {
   const { language, t, getLocalizedField } = useLanguage();
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -41,42 +35,58 @@ export function OutletSlideshow() {
     return null;
   }
 
+  // Only show the first 3 outlets
+  const displayOutlets = outlets.slice(0, 3);
+
   return (
-    <section className="py-2 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
+    <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
       <div className="container px-2">
-        <div className="mb-3 pt-2 text-center">
+        <div className="mb-4 pt-2 text-center">
           <h2 className="text-xl font-bold text-white">
             {language === 'it' ? 'Scopri I nostri punti vendita' : 'Check out our betting outlets'}
           </h2>
         </div>
-        <Carousel className="w-full" opts={{ loop: true, align: "start", dragFree: true }}>
-          <CarouselContent>
-            {outlets.map((outlet) => (
-              <CarouselItem key={outlet.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-1 pr-1">
-                <AnimatedWrapper
-                  animation="fade" 
-                  duration={0.5} 
-                  delay={0.1}
-                >
-                  <div className="relative overflow-hidden rounded-md group h-20 sm:h-24 md:h-32">
-                    <img 
-                      src={outlet.imageUrl} 
-                      alt={getLocalizedField(outlet, 'title')} 
-                      className="w-full h-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-2">
-                      <p className="text-white text-sm font-medium truncate">
-                        {getLocalizedField(outlet, 'title')}
-                      </p>
-                    </div>
-                  </div>
-                </AnimatedWrapper>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="-left-3 h-8 w-8 bg-[#222236]/80 border-accent/20 text-white hover:bg-accent/20 hover:text-white" />
-          <CarouselNext className="-right-3 h-8 w-8 bg-[#222236]/80 border-accent/20 text-white hover:bg-accent/20 hover:text-white" />
-        </Carousel>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {displayOutlets.map((outlet) => (
+            <AnimatedWrapper
+              key={outlet.id}
+              animation="fade" 
+              duration={0.5} 
+              delay={0.1}
+              className="w-full"
+            >
+              <div 
+                className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
+                onMouseEnter={() => setHoveredId(outlet.id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <img 
+                  src={outlet.imageUrl} 
+                  alt={getLocalizedField(outlet, 'title')} 
+                  className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
+                    hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
+                  }`}
+                />
+                <div className={`absolute inset-0 transition-opacity duration-300 ${
+                  hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
+                  : 'bg-gradient-to-t from-black/80 to-transparent'
+                } flex flex-col justify-end p-4`}>
+                  <h3 className={`text-white font-bold transition-all duration-300 ${
+                    hoveredId === outlet.id ? 'text-lg mb-2' : 'text-base mb-0'
+                  }`}>
+                    {getLocalizedField(outlet, 'title')}
+                  </h3>
+                  {hoveredId === outlet.id && (
+                    <p className="text-white/90 text-sm line-clamp-2 opacity-100 transform transition-all duration-300">
+                      {getLocalizedField(outlet, 'description')}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </AnimatedWrapper>
+          ))}
+        </div>
       </div>
     </section>
   );
