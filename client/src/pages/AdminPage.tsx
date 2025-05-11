@@ -2712,6 +2712,21 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
           const response = await apiRequest('GET', `/api/admin/outlets/${id}`);
           const data = await response.json();
           
+          // Initialize with default images if none exist
+          let imageUrl = data.imageUrl;
+          let additionalImages = data.additionalImages || [];
+          
+          if (!imageUrl && id === 1) {
+            imageUrl = 'redmoon1';
+            additionalImages = ['redmoon2', 'redmoon3', 'redmoon4', 'redmoon5'];
+          } else if (!imageUrl && id === 2) {
+            imageUrl = 'redmoon3';
+            additionalImages = ['redmoon1', 'redmoon4'];
+          } else if (!imageUrl && id === 3) {
+            imageUrl = 'redmoon2';
+            additionalImages = ['redmoon5'];
+          }
+          
           setFormData({
             title_en: data.title_en,
             title_it: data.title_it,
@@ -2719,8 +2734,8 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
             description_it: data.description_it || '',
             address_en: data.address_en || '',
             address_it: data.address_it || '',
-            imageUrl: data.imageUrl,
-            additionalImages: data.additionalImages || [],
+            imageUrl: imageUrl,
+            additionalImages: additionalImages,
             order: data.order || 0,
             isActive: data.isActive
           });

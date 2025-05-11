@@ -369,7 +369,10 @@ export class MemStorage implements IStorage {
       title_it: "Redmoon Aversa",
       description_en: "Our premium betting outlet in Aversa, featuring live sports betting, virtual games, and a welcoming atmosphere for all betting enthusiasts.",
       description_it: "Il nostro punto vendita premium ad Aversa, con scommesse sportive live, giochi virtuali e un'atmosfera accogliente per tutti gli appassionati di scommesse.",
-      imageUrl: "redmoon1", // Reference to the first image
+      address_en: "Via Roma 123, Aversa (CE)",
+      address_it: "Via Roma 123, Aversa (CE)",
+      imageUrl: "redmoon1",
+      additionalImages: ["redmoon2", "redmoon3", "redmoon4", "redmoon5"],
       order: 1,
       isActive: true
     };
@@ -379,7 +382,10 @@ export class MemStorage implements IStorage {
       title_it: "Wincity Trentola-Ducenta",
       description_en: "Our Wincity location in Trentola-Ducenta offers a modern betting experience with state-of-the-art facilities and a wide range of gaming options.",
       description_it: "La nostra sede Wincity a Trentola-Ducenta offre un'esperienza di scommesse moderna con strutture all'avanguardia e un'ampia gamma di opzioni di gioco.",
-      imageUrl: "redmoon3", // Reference to the third image
+      address_en: "Via Nazionale 45, Trentola-Ducenta (CE)",
+      address_it: "Via Nazionale 45, Trentola-Ducenta (CE)",
+      imageUrl: "redmoon3",
+      additionalImages: ["redmoon1", "redmoon4"],
       order: 2,
       isActive: true
     };
@@ -389,7 +395,10 @@ export class MemStorage implements IStorage {
       title_it: "Matchpoint Trentola-Ducenta",
       description_en: "Visit our Matchpoint location in Trentola-Ducenta for a premium sports betting experience with real-time odds and expert staff to guide you.",
       description_it: "Visita la nostra sede Matchpoint a Trentola-Ducenta per un'esperienza di scommesse sportive premium con quote in tempo reale e personale esperto per guidarti.",
-      imageUrl: "redmoon2", // Reference to the second image
+      address_en: "Via Napoli 78, Trentola-Ducenta (CE)",
+      address_it: "Via Napoli 78, Trentola-Ducenta (CE)",
+      imageUrl: "redmoon2",
+      additionalImages: ["redmoon5"],
       order: 3,
       isActive: true
     };
