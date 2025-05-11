@@ -10,7 +10,10 @@ interface Outlet {
   title_it: string;
   description_en: string | null;
   description_it: string | null;
+  address_en: string | null;
+  address_it: string | null;
   imageUrl: string;
+  additionalImages: string[] | null;
   order: number | null;
   isActive: boolean;
   createdAt: Date;
@@ -51,30 +54,33 @@ export function OutletSlideshow() {
   // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
 
-  // Simple image by outlet id function
-  const getOutletImage = (outletId: number): string => {
-    if (outletId === 1) return '/assets/redmoon1.jpg';
-    if (outletId === 2) return '/assets/redmoon3.jpg';
-    if (outletId === 3) return '/assets/redmoon2.jpg';
-    return '/assets/redmoon1.jpg';
+  // Get outlet image from data
+  const getOutletImage = (outlet: Outlet): string => {
+    if (!outlet.imageUrl) return '/assets/redmoon1.jpg';
+    return `/assets/${outlet.imageUrl}.jpg`;
   };
 
-  // Simple slideshow images by outlet id function
-  const getOutletSlideshow = (outletId: number): string[] => {
-    if (outletId === 1) return [
-      '/assets/redmoon1.jpg',
-      '/assets/redmoon2.jpg',
-      '/assets/redmoon3.jpg'
-    ];
-    if (outletId === 2) return [
-      '/assets/redmoon3.jpg',
-      '/assets/redmoon4.jpg'
-    ];
-    if (outletId === 3) return [
-      '/assets/redmoon2.jpg',
-      '/assets/redmoon5.jpg'
-    ];
-    return ['/assets/redmoon1.jpg'];
+  // Get outlet slideshow images from data
+  const getOutletSlideshow = (outlet: Outlet): string[] => {
+    const images: string[] = [];
+    
+    // Add primary image
+    if (outlet.imageUrl) {
+      images.push(`/assets/${outlet.imageUrl}.jpg`);
+    }
+    
+    // Add additional images if available
+    if (outlet.additionalImages && outlet.additionalImages.length > 0) {
+      const additionalImages = outlet.additionalImages.map(img => `/assets/${img}.jpg`);
+      images.push(...additionalImages);
+    }
+    
+    // Fallback if no images
+    if (images.length === 0) {
+      images.push('/assets/redmoon1.jpg');
+    }
+    
+    return images;
   };
 
   return (
@@ -102,11 +108,16 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={getOutletImage(outlet.id)}
+                  src={getOutletImage(outlet)}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
                   }`}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    // Try fallback image path
+                    target.src = `/assets/outlets/${outlet.imageUrl || 'redmoon1'}.jpg`;
+                  }}
                 />
                 <div className={`absolute inset-0 transition-all duration-300 ${
                   hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
