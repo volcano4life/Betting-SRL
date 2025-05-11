@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
+import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
 import redmoon1 from '@/assets/redmoon1.jpg';
 import redmoon2 from '@/assets/redmoon2.jpg';
 import redmoon3 from '@/assets/redmoon3.jpg';
@@ -21,6 +22,8 @@ interface Outlet {
 export function OutletSlideshow() {
   const { language, t, getLocalizedField } = useLanguage();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [selectedOutlet, setSelectedOutlet] = useState<Outlet | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -43,6 +46,22 @@ export function OutletSlideshow() {
   
   // Map our local images to outlets by index - using the first image as primary
   const outletImages = [redmoon1, redmoon2, redmoon3];
+  
+  // Define a map of outlet IDs to their slideshow images
+  const outletImageSets: { [key: number]: string[] } = {
+    1: [redmoon1, redmoon2, redmoon3], // First outlet (Redmoon Aversa)
+    2: [redmoon2, redmoon3, redmoon1], // Second outlet 
+    3: [redmoon3, redmoon1, redmoon2], // Third outlet
+  };
+  
+  const handleOutletClick = (outlet: Outlet) => {
+    setSelectedOutlet(outlet);
+    setIsModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
@@ -66,6 +85,7 @@ export function OutletSlideshow() {
                 className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
                 onMouseEnter={() => setHoveredId(outlet.id)}
                 onMouseLeave={() => setHoveredId(null)}
+                onClick={() => handleOutletClick(outlet)}
               >
                 <img 
                   src={outletImages[index]} 
@@ -74,10 +94,13 @@ export function OutletSlideshow() {
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
                   }`}
                 />
-                <div className={`absolute inset-0 transition-opacity duration-300 ${
+                <div className={`absolute inset-0 transition-all duration-300 ${
                   hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
                   : 'bg-gradient-to-t from-black/80 to-transparent'
                 } flex flex-col justify-end p-4`}>
+                  <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
+                    {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
+                  </div>
                   <h3 className={`text-white font-bold transition-all duration-300 ${
                     hoveredId === outlet.id ? 'text-lg mb-2' : 'text-base mb-0'
                   }`}>
@@ -94,6 +117,17 @@ export function OutletSlideshow() {
           ))}
         </div>
       </div>
+      
+      {/* Slideshow Modal */}
+      {selectedOutlet && (
+        <OutletSlideshowModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          images={outletImageSets[selectedOutlet.id] || []}
+          title={getLocalizedField(selectedOutlet, 'title')}
+          description={getLocalizedField(selectedOutlet, 'description') || ''}
+        />
+      )}
     </section>
   );
 }
