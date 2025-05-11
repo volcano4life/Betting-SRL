@@ -14,7 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { PromoCode, Game, News, Review, Guide, User, Outlet } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin, Plus, X, Star } from "lucide-react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin, Plus, X, Star, ChevronUp, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet";
 import { getPageTitle, siteConfig } from "@/config/siteConfig";
@@ -2992,8 +2992,8 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               </Label>
               <p className="text-sm text-muted-foreground mb-2">
                 {language === 'it' 
-                  ? 'Aggiungi, riordina e gestisci le immagini della galleria. Trascina per riordinare. La prima immagine verrà usata come principale.'
-                  : 'Add, reorder and manage gallery images. Drag to reorder. The first image will be used as the primary image.'}
+                  ? 'Aggiungi, riordina e gestisci le immagini della galleria. Usa i pulsanti su/giù sul lato sinistro per riordinare. Seleziona la stella per impostare un\'immagine come principale.'
+                  : 'Add, reorder and manage gallery images. Use the up/down buttons on the left side to reorder. Click the star to set an image as primary.'}
               </p>
               
               <div className="border rounded-md p-4 space-y-4">
@@ -3094,6 +3094,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                                 target.src = `/assets/outlets/${img}.jpg`;
                               }}
                             />
+                            {/* Top-right buttons */}
                             <div className="absolute top-0 right-0 p-1 flex gap-1">
                               <Button
                                 type="button"
@@ -3137,8 +3138,58 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                                 <X size={12} />
                               </Button>
                             </div>
+                            
+                            {/* Image name overlay */}
                             <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1">
                               {img}
+                            </div>
+                            
+                            {/* Reordering buttons */}
+                            <div className="absolute top-1/2 transform -translate-y-1/2 left-0 flex flex-col gap-1 p-1">
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="secondary"
+                                className="w-6 h-6 bg-white/80 backdrop-blur-sm"
+                                disabled={index === 0}
+                                onClick={() => {
+                                  if (index > 0) {
+                                    const newAdditional = [...formData.additionalImages];
+                                    // Swap with previous image
+                                    [newAdditional[index], newAdditional[index - 1]] = 
+                                      [newAdditional[index - 1], newAdditional[index]];
+                                    
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      additionalImages: newAdditional
+                                    }));
+                                  }
+                                }}
+                              >
+                                <ChevronUp size={12} />
+                              </Button>
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="secondary"
+                                className="w-6 h-6 bg-white/80 backdrop-blur-sm"
+                                disabled={index >= formData.additionalImages.length - 1}
+                                onClick={() => {
+                                  if (index < formData.additionalImages.length - 1) {
+                                    const newAdditional = [...formData.additionalImages];
+                                    // Swap with next image
+                                    [newAdditional[index], newAdditional[index + 1]] = 
+                                      [newAdditional[index + 1], newAdditional[index]];
+                                    
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      additionalImages: newAdditional
+                                    }));
+                                  }
+                                }}
+                              >
+                                <ChevronDown size={12} />
+                              </Button>
                             </div>
                           </div>
                         ))}
