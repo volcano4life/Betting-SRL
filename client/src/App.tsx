@@ -40,7 +40,7 @@ function Router() {
   return (
     <>
       {showHeaderFooter && <Header />}
-      <main className={`flex-grow ${!showHeaderFooter ? 'min-h-screen' : ''}`}>
+      <main className={`flex-grow ${!showHeaderFooter ? 'min-h-screen' : 'pt-20'}`}>
         <PageTransition location={location} type={getTransitionType()} duration={0.4}>
           <Switch>
             <Route path="/" component={HomePage} />
