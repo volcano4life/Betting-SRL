@@ -129,7 +129,18 @@ export function DragDropImageGallery({
   primaryImage,
   onPrimaryChange,
   onAddImage,
-}: DragDropImageGalleryProps) {
+  labels = {
+    addImage: "Add Image",
+    noImages: "No images added yet. Add your first image above.",
+    placeholder: "Enter image name (e.g., redmoon1, redmoon2)"
+  }
+}: DragDropImageGalleryProps & {
+  labels?: {
+    addImage: string;
+    noImages: string;
+    placeholder: string;
+  }
+}) {
   const [items, setItems] = useState<ImageItem[]>([]);
   const [newImageUrl, setNewImageUrl] = useState('');
   
@@ -172,13 +183,16 @@ export function DragDropImageGallery({
   function addImage() {
     if (!newImageUrl.trim()) return;
     
+    // Clean the URL - remove any file extension if added by the user
+    const cleanUrl = newImageUrl.trim().replace(/\.(jpg|jpeg|png|gif)$/i, '');
+    
     // Add the new image
-    onAddImage(newImageUrl);
+    onAddImage(cleanUrl);
     
     // Update local state
     setItems(prev => [...prev, {
       id: `image-${prev.length}`,
-      url: newImageUrl,
+      url: cleanUrl,
     }]);
     
     // Clear the input
@@ -212,16 +226,22 @@ export function DragDropImageGallery({
     <div className="space-y-4">
       <div className="flex space-x-2">
         <Input
-          placeholder="Enter image filename (e.g., redmoon1)"
+          placeholder={labels.placeholder}
           value={newImageUrl}
           onChange={(e) => setNewImageUrl(e.target.value)}
           className="flex-grow"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && newImageUrl.trim()) {
+              e.preventDefault();
+              addImage();
+            }
+          }}
         />
         <Button 
           onClick={addImage}
           disabled={!newImageUrl.trim()}
         >
-          Add Image
+          {labels.addImage}
         </Button>
       </div>
       
@@ -249,7 +269,7 @@ export function DragDropImageGallery({
               ))
             ) : (
               <div className="text-center py-8 text-muted-foreground">
-                No images added yet. Add your first image above.
+                {labels.noImages}
               </div>
             )}
           </SortableContext>
