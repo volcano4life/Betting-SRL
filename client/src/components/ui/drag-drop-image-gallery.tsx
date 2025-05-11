@@ -46,9 +46,17 @@ function DraggableImage({
     transition,
   } = useSortable({id});
   
+  const [isRemoving, setIsRemoving] = useState(false);
+  
+  // Combine all transition properties to avoid conflicts
+  const transitionValue = isRemoving 
+    ? 'transform 0.2s ease, opacity 0.3s ease' 
+    : transition || 'transform 0.2s ease';
+  
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    opacity: isRemoving ? 0 : 1,
+    transition: transitionValue,
   };
 
   return (
@@ -122,10 +130,14 @@ function DraggableImage({
             e.stopPropagation();
             e.preventDefault();
             console.log("Remove button clicked for image:", id);
-            // Add a delay to ensure the event doesn't get caught by other handlers
+            
+            // Set removing state to trigger the fade-out animation
+            setIsRemoving(true);
+            
+            // Wait for animation to complete before actually removing
             setTimeout(() => {
               onRemove(id);
-            }, 50);
+            }, 300); // Match the animation duration (0.3s)
           }}
           onMouseDown={(e) => {
             // Prevent drag start
@@ -135,6 +147,7 @@ function DraggableImage({
           title="Remove image"
           type="button" 
           aria-label="Remove image"
+          disabled={isRemoving}
         >
           <X className="h-3 w-3" />
         </button>
@@ -469,17 +482,7 @@ export function DragDropImageGallery({
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
-          // Add modifiers to make drag events work better with the button clicks
-          modifiers={[
-            (args) => {
-              // Don't start dragging when clicking on buttons
-              const target = args.activatorEvent?.target as HTMLElement;
-              if (target?.tagName === 'BUTTON' || target?.closest('button')) {
-                return { ...args, canceled: true };
-              }
-              return args;
-            }
-          ]}
+          // We don't need modifiers, we're handling click events on buttons directly
         >
           <div className="text-xs text-muted-foreground mb-3">
             {items.length > 0 && "Drag images to reorder. The first image will be used as the primary image."}
@@ -492,15 +495,16 @@ export function DragDropImageGallery({
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {items.length > 0 ? (
                 items.map((item, index) => (
-                  <DraggableImage
-                    key={item.id}
-                    id={item.id}
-                    url={item.url}
-                    index={index}
-                    isPrimary={item.url === primaryImage}
-                    onRemove={removeImage}
-                    onSetPrimary={setPrimaryImage}
-                  />
+                  <div key={item.id} className="transition-all duration-300">
+                    <DraggableImage
+                      id={item.id}
+                      url={item.url}
+                      index={index}
+                      isPrimary={item.url === primaryImage}
+                      onRemove={removeImage}
+                      onSetPrimary={setPrimaryImage}
+                    />
+                  </div>
                 ))
               ) : (
                 <div className="col-span-full text-center py-8 bg-muted/20 rounded-md border border-dashed text-muted-foreground">
