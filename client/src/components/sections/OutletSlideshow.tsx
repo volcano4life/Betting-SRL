@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
+import redmoon1 from '@/assets/redmoon1.jpg';
+import redmoon2 from '@/assets/redmoon2.jpg';
+import redmoon3 from '@/assets/redmoon3.jpg';
 
 interface Outlet {
   id: number;
@@ -35,8 +38,11 @@ export function OutletSlideshow() {
     return null;
   }
 
-  // Only show the first 3 outlets
+  // Only show the first 3 outlets with our custom images
   const displayOutlets = outlets.slice(0, 3);
+  
+  // Map our local images to outlets by index - using the first image as primary
+  const outletImages = [redmoon1, redmoon2, redmoon3];
 
   return (
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
@@ -48,7 +54,7 @@ export function OutletSlideshow() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {displayOutlets.map((outlet) => (
+          {displayOutlets.map((outlet, index) => (
             <AnimatedWrapper
               key={outlet.id}
               animation="fade" 
@@ -62,7 +68,7 @@ export function OutletSlideshow() {
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <img 
-                  src={outlet.imageUrl} 
+                  src={outletImages[index]} 
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
