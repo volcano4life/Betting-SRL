@@ -125,7 +125,7 @@ export default function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               {getLogo()}
-              <span className="text-2xl font-bold text-[#222236] font-medium ml-2">
+              <span className="text-2xl font-bold text-[#222236] font-medium ml-2" translate="no">
                 Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
