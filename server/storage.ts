@@ -5,7 +5,8 @@ import {
   Guide, InsertGuide, 
   Subscriber, InsertSubscriber,
   User, InsertUser,
-  PromoCode, InsertPromoCode
+  PromoCode, InsertPromoCode,
+  Outlet, InsertOutlet
 } from "@shared/schema";
 
 export interface IStorage {
@@ -57,6 +58,14 @@ export interface IStorage {
   createPromoCode(promoCode: InsertPromoCode): Promise<PromoCode>;
   updatePromoCode(id: number, promoCode: Partial<InsertPromoCode>): Promise<PromoCode>;
   deletePromoCode(id: number): Promise<PromoCode>;
+  
+  // Outlets
+  getAllOutlets(): Promise<Outlet[]>;
+  getActiveOutlets(): Promise<Outlet[]>;
+  getOutletById(id: number): Promise<Outlet | undefined>;
+  createOutlet(outlet: InsertOutlet): Promise<Outlet>;
+  updateOutlet(id: number, outlet: Partial<InsertOutlet>): Promise<Outlet>;
+  deleteOutlet(id: number): Promise<Outlet>;
   
   // Subscribers
   addSubscriber(subscriber: InsertSubscriber): Promise<Subscriber>;
