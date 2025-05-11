@@ -1,7 +1,10 @@
-import express, { type Express } from "express";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import path from "path";
+import fs from "fs";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import { 
   insertSubscriberSchema, 
   insertGameSchema, 
