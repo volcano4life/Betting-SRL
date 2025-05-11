@@ -53,28 +53,28 @@ export function OutletSlideshow() {
 
   // Simple image by outlet id function
   const getOutletImage = (outletId: number): string => {
-    if (outletId === 1) return '/assets/outlets/redmoon1.jpg';
-    if (outletId === 2) return '/assets/outlets/redmoon3.jpg';
-    if (outletId === 3) return '/assets/outlets/redmoon2.jpg';
-    return '/assets/outlets/redmoon1.jpg';
+    if (outletId === 1) return '/assets/redmoon1.jpg';
+    if (outletId === 2) return '/assets/redmoon3.jpg';
+    if (outletId === 3) return '/assets/redmoon2.jpg';
+    return '/assets/redmoon1.jpg';
   };
 
   // Simple slideshow images by outlet id function
   const getOutletSlideshow = (outletId: number): string[] => {
     if (outletId === 1) return [
-      '/assets/outlets/redmoon1.jpg',
-      '/assets/outlets/redmoon2.jpg',
-      '/assets/outlets/redmoon3.jpg'
+      '/assets/redmoon1.jpg',
+      '/assets/redmoon2.jpg',
+      '/assets/redmoon3.jpg'
     ];
     if (outletId === 2) return [
-      '/assets/outlets/redmoon3.jpg',
-      '/assets/outlets/redmoon4.jpg'
+      '/assets/redmoon3.jpg',
+      '/assets/redmoon4.jpg'
     ];
     if (outletId === 3) return [
-      '/assets/outlets/redmoon2.jpg',
-      '/assets/outlets/redmoon5.jpg'
+      '/assets/redmoon2.jpg',
+      '/assets/redmoon5.jpg'
     ];
-    return ['/assets/outlets/redmoon1.jpg'];
+    return ['/assets/redmoon1.jpg'];
   };
 
   return (

@@ -61,7 +61,7 @@ function DraggableImage({
     >
       <div className="relative w-full h-full">
         <img 
-          src={url.includes('/') ? url : `/assets/outlets/${url}.jpg`} 
+          src={url.includes('/') ? url : `/assets/${url}.jpg`} 
           alt={`Gallery image ${index + 1}`} 
           className="w-full h-full object-cover" 
         />
@@ -224,11 +224,11 @@ export function DragDropImageGallery({
     <div className="space-y-4">
       <div className="space-y-2">
         <div className="text-sm text-muted-foreground">
-          <strong>Image Naming Guide:</strong> Enter simple image names without extensions (e.g., 'redmoon1') for images in the assets folder. 
+          <strong>Image Naming Guide:</strong> Enter image names exactly as shown below - no paths, no extensions.
           <ul className="list-disc pl-5 mt-1 space-y-1">
-            <li>Standard format: redmoon1, redmoon2, redmoon3, etc.</li>
-            <li>Images should be placed in the /assets/outlets/ folder</li>
-            <li>The system will automatically look for .jpg extension</li>
+            <li>Available images: redmoon1, redmoon2, redmoon3, redmoon4, redmoon5</li>
+            <li>DO NOT include .jpg extension or /assets/ path</li>
+            <li>Just type: redmoon1</li>
           </ul>
         </div>
         <div className="flex space-x-2">
