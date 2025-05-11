@@ -64,6 +64,35 @@ export default function OutletSlideshowModal({
               src={images[currentIndex]}
               alt={`${title} - ${currentIndex + 1}`}
               className="w-full h-full object-contain"
+              onError={(e) => {
+                // Try alternative paths in sequence if the image fails to load
+                const target = e.target as HTMLImageElement;
+                const originalSrc = target.src;
+                
+                // First try without the outlets folder
+                if (originalSrc.includes('/outlets/')) {
+                  const newSrc = originalSrc.replace('/outlets/', '/');
+                  target.src = newSrc;
+                  
+                  // Set up error handler for this attempt
+                  target.onerror = () => {
+                    // If still failing, try a different format (with or without hyphens)
+                    const baseName = originalSrc.split('/').pop()?.replace('.jpg', '') || '';
+                    if (baseName.includes('-')) {
+                      target.src = `/assets/${baseName.replace(/-/g, '')}.jpg`;
+                    } else if (/\d/.test(baseName)) {
+                      // Try adding hyphen before numbers
+                      target.src = `/assets/${baseName.replace(/(\d)/g, '-$1')}.jpg`;
+                    } else {
+                      // Last resort - placeholder
+                      target.src = 'https://placehold.co/600x400?text=Image+Not+Found';
+                    }
+                  };
+                } else {
+                  // Fallback for other image problems
+                  target.src = 'https://placehold.co/600x400?text=Image+Not+Found';
+                }
+              }}
             />
             
             {/* Navigation buttons */}
