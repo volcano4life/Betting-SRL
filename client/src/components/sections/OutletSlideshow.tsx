@@ -54,10 +54,26 @@ export function OutletSlideshow() {
   // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
 
+  // Helper function to get the right image path
+  const getImagePath = (imageName: string): string => {
+    // Check if the image already has a full path
+    if (imageName.startsWith('/') || imageName.startsWith('http')) {
+      return imageName;
+    }
+    
+    // Check if this is an uploaded image (should be used without extension)
+    if (imageName.includes('-')) {
+      return `/uploads/${imageName}`;
+    }
+    
+    // Otherwise, assume it's a predefined asset
+    return `/assets/${imageName}.jpg`;
+  };
+
   // Get outlet image from data
   const getOutletImage = (outlet: Outlet): string => {
     if (!outlet.imageUrl) return '/assets/redmoon1.jpg';
-    return `/assets/${outlet.imageUrl}.jpg`;
+    return getImagePath(outlet.imageUrl);
   };
 
   // Get outlet slideshow images from data
@@ -66,12 +82,12 @@ export function OutletSlideshow() {
     
     // Add primary image
     if (outlet.imageUrl) {
-      images.push(`/assets/${outlet.imageUrl}.jpg`);
+      images.push(getImagePath(outlet.imageUrl));
     }
     
     // Add additional images if available
     if (outlet.additionalImages && outlet.additionalImages.length > 0) {
-      const additionalImages = outlet.additionalImages.map(img => `/assets/${img}.jpg`);
+      const additionalImages = outlet.additionalImages.map(img => getImagePath(img));
       images.push(...additionalImages);
     }
     
@@ -115,8 +131,19 @@ export function OutletSlideshow() {
                   }`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    // Try fallback image path
-                    target.src = `/assets/outlets/${outlet.imageUrl || 'redmoon1'}.jpg`;
+                    const currentSrc = target.src;
+                    
+                    // Try different fallback paths in sequence
+                    if (currentSrc.includes('/uploads/')) {
+                      // If uploads path failed, try assets path
+                      target.src = `/assets/${outlet.imageUrl}.jpg`;
+                    } else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
+                      // If assets path failed, try outlets path
+                      target.src = `/assets/outlets/${outlet.imageUrl || 'redmoon1'}.jpg`;
+                    } else {
+                      // Last resort fallback
+                      target.src = '/assets/redmoon1.jpg';
+                    }
                   }}
                 />
                 <div className={`absolute inset-0 transition-all duration-300 ${

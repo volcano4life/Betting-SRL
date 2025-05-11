@@ -75,9 +75,17 @@ export default function OutletSlideshowModal({
                   return;
                 }
                 
-                // Try alternative folder path
-                if (currentSrc.includes('/assets/')) {
-                  const imageName = currentSrc.split('/').pop()?.split('.')[0];
+                // Get the image filename without extension
+                let imageName: string | undefined;
+                
+                if (currentSrc.includes('/uploads/')) {
+                  // If uploads path failed, try assets path
+                  imageName = currentSrc.split('/').pop();
+                  if (imageName) {
+                    target.src = `/assets/${imageName}.jpg?fallback-attempt=1`;
+                  }
+                } else if (currentSrc.includes('/assets/')) {
+                  imageName = currentSrc.split('/').pop()?.split('.')[0];
                   if (imageName) {
                     // Check if it's already using outlets path
                     if (currentSrc.includes('/assets/outlets/')) {
