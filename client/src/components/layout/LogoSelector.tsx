@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Upload } from "lucide-react";
 import BettingLogo from './BettingLogo';
 import SportsBettingLogo from './SportsBettingLogo';
 import CasinoChipLogo from './CasinoChipLogo';
@@ -12,11 +15,39 @@ interface LogoSelectorProps {
 
 const LogoSelector: React.FC<LogoSelectorProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { selectedLogo, setSelectedLogo } = useLogo();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { selectedLogo, setSelectedLogo, customLogoUrl, setCustomLogoUrl } = useLogo();
 
   const handleSelectLogo = (logoType: LogoType) => {
     setSelectedLogo(logoType);
-    setIsOpen(false);
+    if (logoType !== 'custom') {
+      setIsOpen(false);
+    }
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setPreviewUrl(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+  
+  const handleConfirmCustomLogo = () => {
+    if (previewUrl) {
+      setCustomLogoUrl(previewUrl);
+      setSelectedLogo('custom');
+      setIsOpen(false);
+    }
   };
 
   return (
@@ -71,6 +102,44 @@ const LogoSelector: React.FC<LogoSelectorProps> = () => {
               <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
                 Selected
               </div>
+            )}
+          </div>
+          
+          <div className="flex flex-col items-center gap-2 p-4 border rounded-md hover:bg-muted/50 cursor-pointer transition-colors">
+            <div 
+              className="w-16 h-16 border-2 border-dashed rounded-md flex items-center justify-center cursor-pointer"
+              onClick={handleUploadClick}
+            >
+              {previewUrl ? (
+                <img src={previewUrl} alt="Custom logo preview" className="w-14 h-14 object-contain" />
+              ) : (
+                <Upload className="w-8 h-8 text-muted-foreground" />
+              )}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept="image/*" 
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="text-center">
+              <h3 className="font-medium">Custom Logo</h3>
+              <p className="text-sm text-muted-foreground">Upload your own custom logo</p>
+            </div>
+            {selectedLogo === 'custom' && !previewUrl && customLogoUrl && (
+              <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-primary text-white">
+                Selected
+              </div>
+            )}
+            {previewUrl && (
+              <Button
+                size="sm"
+                onClick={handleConfirmCustomLogo}
+                className="mt-2"
+              >
+                Use This Logo
+              </Button>
             )}
           </div>
         </div>

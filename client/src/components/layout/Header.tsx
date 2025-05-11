@@ -47,7 +47,7 @@ export default function Header() {
   const [location] = useLocation();
   const { language, setLanguage, t } = useLanguage();
   const { user, logoutMutation } = useAuth();
-  const { selectedLogo, setSelectedLogo } = useLogo();
+  const { selectedLogo, setSelectedLogo, customLogoUrl } = useLogo();
 
   const isActive = (path: string) => location === path;
   
@@ -65,6 +65,10 @@ export default function Header() {
         return <SportsBettingLogo className="w-10 h-10 mr-2" />;
       case 'casino-chip':
         return <CasinoChipLogo className="w-10 h-10 mr-2" />;
+      case 'custom':
+        return customLogoUrl ? 
+          <img src={customLogoUrl} alt="Custom logo" className="w-10 h-10 mr-2 object-contain" /> : 
+          <BettingLogo className="w-10 h-10 mr-2" />;
       case 'poker-chip':
       default:
         return <BettingLogo className="w-10 h-10 mr-2" />;
