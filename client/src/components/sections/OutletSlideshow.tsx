@@ -49,11 +49,11 @@ export function OutletSlideshow() {
   const displayOutlets = outlets.slice(0, 3);
   
   // Define a map of outlet IDs to their slideshow images
-  // Each outlet has its own dedicated set of images
+  // Each outlet has its own dedicated set of images with the correct images for each outlet
   const outletImageSets: { [key: number]: string[] } = {
-    1: [redmoon1, redmoon2, redmoon3, redmoon4, redmoon5], // Redmoon Aversa
-    2: [redmoon2, redmoon3, redmoon4], // Wincity Trentola-Ducenta
-    3: [redmoon3, redmoon4, redmoon5], // Matchpoint Trentola-Ducenta
+    1: [redmoon1, redmoon2, redmoon3, redmoon4, redmoon5], // Redmoon Aversa - the first outlet gets all 5 images
+    2: [redmoon3, redmoon4, redmoon5], // Wincity Trentola-Ducenta
+    3: [redmoon2, redmoon4, redmoon5], // Matchpoint Trentola-Ducenta
   };
   
   const handleOutletClick = (outlet: Outlet) => {
@@ -90,10 +90,10 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={outlet.imageUrl === 'redmoon1.jpg' ? redmoon1 : 
-                       outlet.imageUrl === 'redmoon2.jpg' ? redmoon2 : 
-                       outlet.imageUrl === 'redmoon3.jpg' ? redmoon3 : 
-                       outlet.imageUrl === 'redmoon4.jpg' ? redmoon4 : redmoon5}
+                  src={outlet.imageUrl === 'redmoon1' ? redmoon1 : 
+                       outlet.imageUrl === 'redmoon2' ? redmoon2 : 
+                       outlet.imageUrl === 'redmoon3' ? redmoon3 : 
+                       outlet.imageUrl === 'redmoon4' ? redmoon4 : redmoon5}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'

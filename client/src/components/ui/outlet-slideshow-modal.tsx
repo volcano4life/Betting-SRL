@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -43,6 +43,7 @@ export default function OutletSlideshowModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-black/95 border-0">
+        <DialogTitle className="sr-only">{title}</DialogTitle>
         <div className="relative">
           {/* Close button */}
           <Button 
