@@ -64,6 +64,32 @@ export default function OutletSlideshowModal({
               src={images[currentIndex]}
               alt={`${title} - ${currentIndex + 1}`}
               className="w-full h-full object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                const currentSrc = target.src;
+                
+                // If it's already a fallback attempt, show placeholder
+                if (currentSrc.includes('fallback-attempt')) {
+                  target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+                  target.className = 'w-full h-full object-contain p-4 bg-gray-100';
+                  return;
+                }
+                
+                // Try alternative folder path
+                if (currentSrc.includes('/assets/')) {
+                  const imageName = currentSrc.split('/').pop()?.split('.')[0];
+                  if (imageName) {
+                    // Check if it's already using outlets path
+                    if (currentSrc.includes('/assets/outlets/')) {
+                      // If in outlets try without outlets
+                      target.src = `/assets/${imageName}.jpg?fallback-attempt=1`;
+                    } else {
+                      // If not in outlets, try with outlets
+                      target.src = `/assets/outlets/${imageName}.jpg?fallback-attempt=1`;
+                    }
+                  }
+                }
+              }}
             />
             
             {/* Navigation buttons */}
