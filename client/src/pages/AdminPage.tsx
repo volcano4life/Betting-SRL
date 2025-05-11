@@ -2804,7 +2804,18 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    saveMutation.mutate(formData);
+    
+    // Debug log to see what data we're submitting
+    console.log("Submitting outlet form data:", formData);
+    
+    // Ensure additionalImages is always an array
+    const dataToSubmit = {
+      ...formData,
+      // If additionalImages is null or undefined, convert to empty array
+      additionalImages: formData.additionalImages || []
+    };
+    
+    saveMutation.mutate(dataToSubmit);
   };
   
   if (isLoading) {
