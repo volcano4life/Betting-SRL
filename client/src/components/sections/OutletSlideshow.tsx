@@ -16,34 +16,6 @@ interface Outlet {
   createdAt: Date;
 }
 
-// Simple predefined image sets for outlets - safe fallback approach
-const OUTLET_IMAGES: Record<number, string[]> = {
-  1: [
-    '/assets/outlets/redmoon1.jpg',
-    '/assets/outlets/redmoon2.jpg',
-    '/assets/outlets/redmoon3.jpg',
-    '/assets/outlets/redmoon4.jpg',
-    '/assets/outlets/redmoon5.jpg'
-  ],
-  2: [
-    '/assets/outlets/redmoon3.jpg',
-    '/assets/outlets/redmoon4.jpg',
-    '/assets/outlets/redmoon5.jpg'
-  ],
-  3: [
-    '/assets/outlets/redmoon2.jpg',
-    '/assets/outlets/redmoon4.jpg', 
-    '/assets/outlets/redmoon5.jpg'
-  ]
-};
-
-// Default first image for each outlet
-const DEFAULT_IMAGES: Record<number, string> = {
-  1: '/assets/outlets/redmoon1.jpg',
-  2: '/assets/outlets/redmoon3.jpg',
-  3: '/assets/outlets/redmoon2.jpg'
-};
-
 export function OutletSlideshow() {
   const { language, getLocalizedField } = useLanguage();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
@@ -79,6 +51,32 @@ export function OutletSlideshow() {
   // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
 
+  // Simple image by outlet id function
+  const getOutletImage = (outletId: number): string => {
+    if (outletId === 1) return '/assets/outlets/redmoon1.jpg';
+    if (outletId === 2) return '/assets/outlets/redmoon3.jpg';
+    if (outletId === 3) return '/assets/outlets/redmoon2.jpg';
+    return '/assets/outlets/redmoon1.jpg';
+  };
+
+  // Simple slideshow images by outlet id function
+  const getOutletSlideshow = (outletId: number): string[] => {
+    if (outletId === 1) return [
+      '/assets/outlets/redmoon1.jpg',
+      '/assets/outlets/redmoon2.jpg',
+      '/assets/outlets/redmoon3.jpg'
+    ];
+    if (outletId === 2) return [
+      '/assets/outlets/redmoon3.jpg',
+      '/assets/outlets/redmoon4.jpg'
+    ];
+    if (outletId === 3) return [
+      '/assets/outlets/redmoon2.jpg',
+      '/assets/outlets/redmoon5.jpg'
+    ];
+    return ['/assets/outlets/redmoon1.jpg'];
+  };
+
   return (
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
       <div className="container mx-auto px-4">
@@ -104,17 +102,11 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={DEFAULT_IMAGES[outlet.id] || '/assets/outlets/redmoon1.jpg'}
+                  src={getOutletImage(outlet.id)}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
                   }`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    if (target.src.includes('/outlets/')) {
-                      target.src = target.src.replace('/outlets/', '/');
-                    }
-                  }}
                 />
                 <div className={`absolute inset-0 transition-all duration-300 ${
                   hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
@@ -145,7 +137,7 @@ export function OutletSlideshow() {
         <OutletSlideshowModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          images={OUTLET_IMAGES[selectedOutlet.id] || ['/assets/outlets/redmoon1.jpg']}
+          images={getOutletSlideshow(selectedOutlet.id)}
           title={getLocalizedField(selectedOutlet, 'title')}
           description={getLocalizedField(selectedOutlet, 'description') || ''}
         />
