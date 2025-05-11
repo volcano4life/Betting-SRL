@@ -14,7 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { PromoCode, Game, News, Review, Guide, User, Outlet } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin } from "lucide-react";
+import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin, Plus, X, Star } from "lucide-react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet";
 import { getPageTitle, siteConfig } from "@/config/siteConfig";
@@ -2996,67 +2996,161 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                   : 'Add, reorder and manage gallery images. Drag to reorder. The first image will be used as the primary image.'}
               </p>
               
-              <DragDropImageGallery
-                images={[formData.imageUrl, ...formData.additionalImages].filter(Boolean)}
-                onImagesChange={(newImages) => {
-                  console.log("Image gallery changes:", newImages);
-                  if (newImages.length > 0) {
-                    // First image becomes the primary image
-                    const [primaryImage, ...additionalImages] = newImages;
-                    console.log("New primary:", primaryImage);
-                    console.log("New additional:", additionalImages);
-                    
-                    setFormData(prev => ({
-                      ...prev,
-                      imageUrl: primaryImage,
-                      additionalImages
-                    }));
-                  } else {
-                    // If no images, reset both
-                    console.log("Clearing all images");
-                    setFormData(prev => ({
-                      ...prev,
-                      imageUrl: '',
-                      additionalImages: []
-                    }));
-                  }
-                }}
-                primaryImage={formData.imageUrl}
-                onPrimaryChange={(newPrimary) => {
-                  const allImages = [formData.imageUrl, ...formData.additionalImages].filter(Boolean);
-                  const otherImages = allImages.filter(img => img !== newPrimary);
+              <div className="border rounded-md p-4 space-y-4">
+                <div className="text-sm text-muted-foreground">
+                  <div className="flex justify-between mb-2">
+                    <strong>Gallery Management</strong>
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        const newImage = prompt("Enter image name (e.g., redmoon1):");
+                        if (newImage && newImage.trim()) {
+                          if (!formData.imageUrl) {
+                            setFormData(prev => ({
+                              ...prev,
+                              imageUrl: newImage.trim()
+                            }));
+                          } else {
+                            setFormData(prev => ({
+                              ...prev,
+                              additionalImages: [...prev.additionalImages, newImage.trim()]
+                            }));
+                          }
+                        }
+                      }}
+                    >
+                      <Plus size={14} className="mr-1" /> Add Image
+                    </Button>
+                  </div>
                   
-                  setFormData(prev => ({
-                    ...prev,
-                    imageUrl: newPrimary,
-                    additionalImages: otherImages
-                  }));
-                }}
-                onAddImage={(newImage) => {
-                  // If no primary image yet, make this the primary
-                  if (!formData.imageUrl) {
-                    setFormData(prev => ({
-                      ...prev,
-                      imageUrl: newImage
-                    }));
-                  } else {
-                    // Otherwise add to additional images
-                    setFormData(prev => ({
-                      ...prev,
-                      additionalImages: [...prev.additionalImages, newImage]
-                    }));
-                  }
-                }}
-                labels={{
-                  addImage: language === 'it' ? 'Aggiungi Immagine' : 'Add Image',
-                  noImages: language === 'it' 
-                    ? 'Nessuna immagine. Aggiungi la tua prima immagine usando il campo sopra.' 
-                    : 'No images yet. Add your first image using the field above.',
-                  placeholder: language === 'it' 
-                    ? 'Inserisci il nome dell\'immagine (es. redmoon1)' 
-                    : 'Enter image name (e.g., redmoon1)'
-                }}
-              />
+                  <p className="mb-2">Available images: redmoon1, redmoon2, redmoon3, redmoon4, redmoon5</p>
+                  
+                  {/* Primary Image */}
+                  <div className="mb-4">
+                    <Label className="mb-1 block text-sm font-medium">Primary Image</Label>
+                    {formData.imageUrl ? (
+                      <div className="relative w-full max-w-[200px] h-40 border rounded-md overflow-hidden">
+                        <img 
+                          src={`/assets/${formData.imageUrl}.jpg`} 
+                          alt="Primary" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = `/assets/outlets/${formData.imageUrl}.jpg`;
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2 w-6 h-6"
+                          onClick={() => {
+                            // Handle removing primary image
+                            if (formData.additionalImages.length > 0) {
+                              // If there are additional images, move the first one to primary
+                              const [newPrimary, ...rest] = formData.additionalImages;
+                              setFormData(prev => ({
+                                ...prev,
+                                imageUrl: newPrimary,
+                                additionalImages: rest
+                              }));
+                            } else {
+                              // No more images, clear primary
+                              setFormData(prev => ({
+                                ...prev,
+                                imageUrl: '',
+                              }));
+                            }
+                          }}
+                        >
+                          <X size={14} />
+                        </Button>
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1">
+                          {formData.imageUrl}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center p-4 border border-dashed rounded-md text-muted-foreground">
+                        No primary image set
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Additional Images */}
+                  <div>
+                    <Label className="mb-1 block text-sm font-medium">Additional Images</Label>
+                    {formData.additionalImages.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {formData.additionalImages.map((img, index) => (
+                          <div key={index} className="relative border rounded-md overflow-hidden h-32">
+                            <img 
+                              src={`/assets/${img}.jpg`} 
+                              alt={`Image ${index + 1}`} 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = `/assets/outlets/${img}.jpg`;
+                              }}
+                            />
+                            <div className="absolute top-0 right-0 p-1 flex gap-1">
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="secondary"
+                                className="w-6 h-6 bg-white"
+                                onClick={() => {
+                                  // Set this as primary
+                                  const newAdditional = [...formData.additionalImages];
+                                  const oldPrimary = formData.imageUrl;
+                                  newAdditional.splice(index, 1);
+                                  
+                                  if (oldPrimary) {
+                                    newAdditional.unshift(oldPrimary);
+                                  }
+                                  
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    imageUrl: img,
+                                    additionalImages: newAdditional
+                                  }));
+                                }}
+                              >
+                                <Star size={12} />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="w-6 h-6"
+                                onClick={() => {
+                                  // Simple direct image removal
+                                  const newAdditional = [...formData.additionalImages];
+                                  newAdditional.splice(index, 1);
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    additionalImages: newAdditional
+                                  }));
+                                }}
+                              >
+                                <X size={12} />
+                              </Button>
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1">
+                              {img}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center p-4 border border-dashed rounded-md text-muted-foreground">
+                        No additional images
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
