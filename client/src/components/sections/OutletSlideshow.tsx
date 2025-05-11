@@ -46,14 +46,14 @@ export function OutletSlideshow() {
 
   return (
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
-      <div className="container px-2">
+      <div className="container mx-auto px-4">
         <div className="mb-4 pt-2 text-center">
           <h2 className="text-xl font-bold text-white">
             {language === 'it' ? 'Scopri I nostri punti vendita' : 'Check out our betting outlets'}
           </h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {displayOutlets.map((outlet, index) => (
             <AnimatedWrapper
               key={outlet.id}
