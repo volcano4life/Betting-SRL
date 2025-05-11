@@ -3093,9 +3093,12 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                     {formData.imageUrl ? (
                       <div className="relative w-full max-w-[200px] h-40 border rounded-md overflow-hidden">
                         <img 
-                          src={formData.imageUrl.startsWith('http') ? formData.imageUrl : 
-                               formData.imageUrl.includes('/uploads/') ? formData.imageUrl :
-                               `/uploads/${formData.imageUrl}`} 
+                          src={
+                            // Handle various image path cases
+                            formData.imageUrl.startsWith('http') ? formData.imageUrl : // External URL
+                            formData.imageUrl.includes('-') ? `/public/uploads/${formData.imageUrl}` : // UUID filename (uploaded)
+                            `/assets/${formData.imageUrl}.jpg` // Default asset path
+                          } 
                           alt="Primary" 
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -3103,12 +3106,17 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                             const target = e.target as HTMLImageElement;
                             const currentSrc = target.src;
                             
-                            // If we already tried uploads path, try assets
-                            if (currentSrc.includes('/uploads/')) {
+                            // Try different paths in sequence
+                            if (currentSrc.includes('/public/uploads/')) {
+                              // If uploaded image fails, try direct uploads path
+                              target.src = `/uploads/${formData.imageUrl}`;
+                            }
+                            else if (currentSrc.includes('/uploads/')) {
+                              // If uploads path fails, try assets path
                               target.src = `/assets/${formData.imageUrl}.jpg`;
                             } 
-                            // If we already tried assets, try assets/outlets
                             else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
+                              // If assets path fails, try assets/outlets path
                               target.src = `/assets/outlets/${formData.imageUrl}.jpg`;
                             }
                             // If all else fails, show a placeholder
@@ -3162,9 +3170,12 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                         {formData.additionalImages.map((img, index) => (
                           <div key={index} className="relative border rounded-md overflow-hidden h-32">
                             <img 
-                              src={img.startsWith('http') ? img : 
-                                   img.includes('/uploads/') ? img :
-                                   `/uploads/${img}`} 
+                              src={
+                                // Handle various image path cases
+                                img.startsWith('http') ? img : // External URL
+                                img.includes('-') ? `/public/uploads/${img}` : // UUID filename (uploaded)
+                                `/assets/${img}.jpg` // Default asset path
+                              } 
                               alt={`Image ${index + 1}`} 
                               className="w-full h-full object-cover"
                               onError={(e) => {
@@ -3172,12 +3183,17 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                                 const target = e.target as HTMLImageElement;
                                 const currentSrc = target.src;
                                 
-                                // If we already tried uploads path, try assets
-                                if (currentSrc.includes('/uploads/')) {
+                                // Try different paths in sequence
+                                if (currentSrc.includes('/public/uploads/')) {
+                                  // If uploaded image fails, try direct uploads path
+                                  target.src = `/uploads/${img}`;
+                                }
+                                else if (currentSrc.includes('/uploads/')) {
+                                  // If uploads path fails, try assets path
                                   target.src = `/assets/${img}.jpg`;
                                 } 
-                                // If we already tried assets, try assets/outlets
                                 else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
+                                  // If assets path fails, try assets/outlets path
                                   target.src = `/assets/outlets/${img}.jpg`;
                                 }
                                 // If all else fails, show a placeholder

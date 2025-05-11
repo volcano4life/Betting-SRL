@@ -18,6 +18,28 @@ app.use('/assets', express.static(path.join(process.cwd(), 'public', 'assets'), 
   }
 }));
 
+// Serve uploaded files from public/uploads directory
+app.use('/public/uploads', express.static(path.join(process.cwd(), 'public', 'uploads'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (filePath.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    }
+  }
+}));
+
+// Alternative path for uploads (for backwards compatibility)
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (filePath.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    }
+  }
+}));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
