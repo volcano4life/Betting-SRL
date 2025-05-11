@@ -63,7 +63,27 @@ function DraggableImage({
         <img 
           src={url.includes('/') ? url : `/assets/${url}.jpg`} 
           alt={`Gallery image ${index + 1}`} 
-          className="w-full h-full object-cover" 
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            // Try different formats if the image doesn't load
+            const target = e.target as HTMLImageElement;
+            const currentUrl = target.src;
+            
+            // If already trying a fallback, use placeholder
+            if (currentUrl.includes('fallback-attempt')) {
+              target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+              target.className = 'w-full h-full object-contain p-2 bg-gray-100';
+              return;
+            }
+
+            // Try all possible variations of the image path
+            if (url.includes('/')) {
+              return; // Don't try variations for full URLs
+            }
+            
+            // Try with outlets folder if not found in assets root
+            target.src = `/assets/outlets/${url}.jpg?fallback-attempt=1`;
+          }}
         />
       </div>
       
