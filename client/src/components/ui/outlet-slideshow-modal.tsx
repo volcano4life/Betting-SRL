@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { VisuallyHidden } from './visually-hidden';
 
 interface OutletSlideshowModalProps {
   isOpen: boolean;
@@ -49,8 +50,10 @@ export default function OutletSlideshowModal({
             size="icon" 
             className="absolute top-2 right-2 z-20 bg-black/50 hover:bg-black/60 text-white rounded-full" 
             onClick={onClose}
+            aria-label={language === 'it' ? 'Chiudi' : 'Close'}
           >
             <X className="h-5 w-5" />
+            <VisuallyHidden>{language === 'it' ? 'Chiudi' : 'Close'}</VisuallyHidden>
           </Button>
           
           {/* Image container */}
@@ -69,16 +72,20 @@ export default function OutletSlideshowModal({
                   size="icon" 
                   className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 hover:bg-black/60 text-white rounded-full"
                   onClick={goToPrevious}
+                  aria-label={language === 'it' ? 'Immagine precedente' : 'Previous image'}
                 >
                   <ChevronLeft className="h-6 w-6" />
+                  <VisuallyHidden>{language === 'it' ? 'Immagine precedente' : 'Previous image'}</VisuallyHidden>
                 </Button>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 hover:bg-black/60 text-white rounded-full"
                   onClick={goToNext}
+                  aria-label={language === 'it' ? 'Immagine successiva' : 'Next image'}
                 >
                   <ChevronRight className="h-6 w-6" />
+                  <VisuallyHidden>{language === 'it' ? 'Immagine successiva' : 'Next image'}</VisuallyHidden>
                 </Button>
               </>
             )}

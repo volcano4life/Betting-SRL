@@ -369,27 +369,27 @@ export class MemStorage implements IStorage {
       title_it: "Redmoon Aversa",
       description_en: "Our premium betting outlet in Aversa, featuring live sports betting, virtual games, and a welcoming atmosphere for all betting enthusiasts.",
       description_it: "Il nostro punto vendita premium ad Aversa, con scommesse sportive live, giochi virtuali e un'atmosfera accogliente per tutti gli appassionati di scommesse.",
-      imageUrl: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      imageUrl: "/assets/redmoon1.jpg",
       order: 1,
       isActive: true
     };
     
     const outlet2: InsertOutlet = {
-      title_en: "Redmoon Gaming Area",
-      title_it: "Redmoon Area Giochi",
-      description_en: "Our dedicated gaming area features virtual sports, live betting terminals, and multiple screens for following all the sports action.",
-      description_it: "La nostra area giochi dedicata offre sport virtuali, terminali per scommesse live e multipli schermi per seguire tutta l'azione sportiva.",
-      imageUrl: "https://images.unsplash.com/photo-1534198730836-5dcab9c435f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      title_en: "Wincity Trentola-Ducenta",
+      title_it: "Wincity Trentola-Ducenta",
+      description_en: "Our Wincity location in Trentola-Ducenta offers a modern betting experience with state-of-the-art facilities and a wide range of gaming options.",
+      description_it: "La nostra sede Wincity a Trentola-Ducenta offre un'esperienza di scommesse moderna con strutture all'avanguardia e un'ampia gamma di opzioni di gioco.",
+      imageUrl: "/assets/redmoon2.jpg",
       order: 2,
       isActive: true
     };
     
     const outlet3: InsertOutlet = {
-      title_en: "Redmoon Event Center",
-      title_it: "Redmoon Centro Eventi",
-      description_en: "Join us at our event center where we host special betting events, tournament viewings, and exclusive promotional nights.",
-      description_it: "Unisciti a noi nel nostro centro eventi dove ospitiamo eventi speciali di scommesse, visioni di tornei e serate promozionali esclusive.",
-      imageUrl: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80",
+      title_en: "Matchpoint Trentola-Ducenta",
+      title_it: "Matchpoint Trentola-Ducenta",
+      description_en: "Visit our Matchpoint location in Trentola-Ducenta for a premium sports betting experience with real-time odds and expert staff to guide you.",
+      description_it: "Visita la nostra sede Matchpoint a Trentola-Ducenta per un'esperienza di scommesse sportive premium con quote in tempo reale e personale esperto per guidarti.",
+      imageUrl: "/assets/redmoon3.jpg",
       order: 3,
       isActive: true
     };

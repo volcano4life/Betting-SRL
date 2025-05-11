@@ -3,9 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
-import redmoon1 from '@/assets/redmoon1.jpg';
-import redmoon2 from '@/assets/redmoon2.jpg';
-import redmoon3 from '@/assets/redmoon3.jpg';
 
 interface Outlet {
   id: number;
@@ -41,17 +38,15 @@ export function OutletSlideshow() {
     return null;
   }
 
-  // Only show the first 3 outlets with our custom images
+  // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
   
-  // Map our local images to outlets by index - using the first image as primary
-  const outletImages = [redmoon1, redmoon2, redmoon3];
-  
   // Define a map of outlet IDs to their slideshow images
+  // Each outlet has its own dedicated set of images
   const outletImageSets: { [key: number]: string[] } = {
-    1: [redmoon1, redmoon2, redmoon3], // First outlet (Redmoon Aversa)
-    2: [redmoon2, redmoon3, redmoon1], // Second outlet 
-    3: [redmoon3, redmoon1, redmoon2], // Third outlet
+    1: ['/assets/redmoon1.jpg', '/assets/redmoon2.jpg', '/assets/redmoon3.jpg', '/assets/redmoon4.jpg', '/assets/redmoon5.jpg'], // Redmoon Aversa
+    2: ['/assets/redmoon2.jpg', '/assets/redmoon3.jpg', '/assets/redmoon4.jpg'], // Wincity Trentola-Ducenta
+    3: ['/assets/redmoon3.jpg', '/assets/redmoon4.jpg', '/assets/redmoon5.jpg'], // Matchpoint Trentola-Ducenta
   };
   
   const handleOutletClick = (outlet: Outlet) => {
@@ -88,7 +83,7 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={outletImages[index]} 
+                  src={outlet.imageUrl} 
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
