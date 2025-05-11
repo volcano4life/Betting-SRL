@@ -110,7 +110,7 @@ function DraggableImage({
         />
       </div>
       
-      <div className="absolute top-0 right-0 flex gap-1 p-1">
+      <div className="absolute top-0 right-0 flex gap-1 p-1 z-50">
         {isPrimary && (
           <div className="bg-primary text-primary-foreground rounded-full p-1">
             <Star className="h-3 w-3" />
@@ -122,9 +122,16 @@ function DraggableImage({
             e.stopPropagation();
             e.preventDefault();
             console.log("Remove button clicked for image:", id);
-            onRemove(id);
+            // Add a delay to ensure the event doesn't get caught by other handlers
+            setTimeout(() => {
+              onRemove(id);
+            }, 50);
           }}
-          className="bg-white/80 hover:bg-destructive hover:text-white rounded-full p-1 text-black transition-colors shadow-sm"
+          onMouseDown={(e) => {
+            // Prevent drag start
+            e.stopPropagation();
+          }}
+          className="bg-white/80 hover:bg-destructive hover:text-white rounded-full p-1 text-black transition-colors shadow-sm cursor-pointer z-50"
           title="Remove image"
           type="button" 
           aria-label="Remove image"
@@ -135,18 +142,25 @@ function DraggableImage({
       
       {!isPrimary && (
         <button
-          className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors"
+          className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors z-40"
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
             console.log("Set primary button clicked for image:", id);
-            onSetPrimary(id);
+            // Add delay to ensure the event doesn't get caught by other handlers
+            setTimeout(() => {
+              onSetPrimary(id);
+            }, 50);
+          }}
+          onMouseDown={(e) => {
+            // Prevent drag start
+            e.stopPropagation();
           }}
           title="Set as primary image"
           type="button"
           aria-label="Set as primary image"
         >
-          <div className="bg-white/80 rounded-full p-1.5 opacity-0 hover:opacity-100 group-hover:opacity-80 hover:bg-primary hover:text-white shadow-sm">
+          <div className="bg-white/80 rounded-full p-1.5 opacity-0 hover:opacity-100 group-hover:opacity-80 hover:bg-primary hover:text-white shadow-sm cursor-pointer">
             <Star className="h-4 w-4" />
           </div>
         </button>
@@ -455,6 +469,17 @@ export function DragDropImageGallery({
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
+          // Add modifiers to make drag events work better with the button clicks
+          modifiers={[
+            (args) => {
+              // Don't start dragging when clicking on buttons
+              const target = args.activatorEvent?.target as HTMLElement;
+              if (target?.tagName === 'BUTTON' || target?.closest('button')) {
+                return { ...args, canceled: true };
+              }
+              return args;
+            }
+          ]}
         >
           <div className="text-xs text-muted-foreground mb-3">
             {items.length > 0 && "Drag images to reorder. The first image will be used as the primary image."}
