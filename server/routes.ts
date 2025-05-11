@@ -711,14 +711,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/admin/outlets', requireAdmin, async (req, res) => {
     try {
-      const { title_en, title_it, description_en, description_it, imageUrl, order, isActive } = req.body;
+      const { 
+        title_en, 
+        title_it, 
+        description_en, 
+        description_it, 
+        address_en,
+        address_it, 
+        imageUrl,
+        additionalImages, 
+        order, 
+        isActive 
+      } = req.body;
       
       const outlet = await storage.createOutlet({
         title_en,
         title_it,
         description_en,
         description_it,
+        address_en,
+        address_it,
         imageUrl,
+        additionalImages,
         order,
         isActive
       });
@@ -732,14 +746,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/admin/outlets/:id', requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { title_en, title_it, description_en, description_it, imageUrl, order, isActive } = req.body;
+      const { 
+        title_en, 
+        title_it, 
+        description_en, 
+        description_it, 
+        address_en,
+        address_it, 
+        imageUrl,
+        additionalImages, 
+        order, 
+        isActive 
+      } = req.body;
       
       const outlet = await storage.updateOutlet(id, {
         title_en,
         title_it,
         description_en,
         description_it,
+        address_en,
+        address_it,
         imageUrl,
+        additionalImages,
         order,
         isActive
       });
