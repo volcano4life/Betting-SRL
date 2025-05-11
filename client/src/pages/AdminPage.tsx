@@ -2670,6 +2670,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [additionalImageInput, setAdditionalImageInput] = useState('');
   
   const [formData, setFormData] = useState({
     title_en: '',
@@ -2679,6 +2680,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
     address_en: '',
     address_it: '',
     imageUrl: '',
+    additionalImages: [],
     order: 0,
     isActive: true
   });
@@ -2704,6 +2706,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
             address_en: data.address_en || '',
             address_it: data.address_it || '',
             imageUrl: data.imageUrl,
+            additionalImages: data.additionalImages || [],
             order: data.order || 0,
             isActive: data.isActive
           });
@@ -2760,6 +2763,26 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
+  };
+  
+  const addAdditionalImage = () => {
+    if (!additionalImageInput.trim()) return;
+    setFormData((prev) => ({
+      ...prev,
+      additionalImages: [...prev.additionalImages, additionalImageInput.trim()]
+    }));
+    setAdditionalImageInput('');
+  };
+  
+  const removeAdditionalImage = (index: number) => {
+    setFormData((prev) => {
+      const updatedImages = [...prev.additionalImages];
+      updatedImages.splice(index, 1);
+      return {
+        ...prev,
+        additionalImages: updatedImages
+      };
+    });
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -2916,6 +2939,52 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                   : 'Outlets are displayed in ascending order (0, 1, 2, ...)'}
               </p>
             </div>
+          </div>
+          
+          {/* Additional Images */}
+          <div className="space-y-4">
+            <div className="flex flex-col space-y-2">
+              <Label>
+                {language === 'it' ? 'Immagini Aggiuntive' : 'Additional Images'}
+              </Label>
+              <div className="flex space-x-2">
+                <Input
+                  placeholder={language === 'it' ? 'Nome del file immagine' : 'Image filename'}
+                  value={additionalImageInput}
+                  onChange={(e) => setAdditionalImageInput(e.target.value)}
+                />
+                <Button 
+                  type="button" 
+                  onClick={addAdditionalImage}
+                  disabled={!additionalImageInput}
+                >
+                  {language === 'it' ? 'Aggiungi' : 'Add'}
+                </Button>
+              </div>
+            </div>
+            
+            {formData.additionalImages.length > 0 && (
+              <div className="border rounded-md p-4">
+                <h4 className="text-sm font-medium mb-2">
+                  {language === 'it' ? 'Immagini Aggiunte:' : 'Added Images:'}
+                </h4>
+                <ul className="space-y-2">
+                  {formData.additionalImages.map((img, index) => (
+                    <li key={index} className="flex justify-between items-center text-sm">
+                      <span>{img}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeAdditionalImage(index)}
+                      >
+                        <Trash className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           
           {/* Active Status */}
