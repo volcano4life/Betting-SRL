@@ -62,16 +62,16 @@ export default function Header() {
   const getLogo = () => {
     switch (selectedLogo) {
       case 'sports-shield':
-        return <SportsBettingLogo className="w-10 h-10 mr-2" />;
+        return <SportsBettingLogo className="w-20 h-20 mr-3" />;
       case 'casino-chip':
-        return <CasinoChipLogo className="w-10 h-10 mr-2" />;
+        return <CasinoChipLogo className="w-20 h-20 mr-3" />;
       case 'custom':
         return customLogoUrl ? 
-          <img src={customLogoUrl} alt="Custom logo" className="w-10 h-10 mr-2 object-contain" /> : 
-          <BettingLogo className="w-10 h-10 mr-2" />;
+          <img src={customLogoUrl} alt="Custom logo" className="w-20 h-20 mr-3 object-contain" /> : 
+          <BettingLogo className="w-20 h-20 mr-3" />;
       case 'poker-chip':
       default:
-        return <BettingLogo className="w-10 h-10 mr-2" />;
+        return <BettingLogo className="w-20 h-20 mr-3" />;
     }
   };
 
@@ -83,7 +83,7 @@ export default function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               {getLogo()}
-              <span className="text-xl font-bold text-[#222236] font-medium">
+              <span className="text-2xl font-bold text-[#222236] font-medium ml-2">
                 Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
