@@ -61,7 +61,7 @@ export function OutletSlideshow() {
       return imageName;
     }
     
-    // Check if this is an uploaded image (should be used without extension)
+    // Check if this is an uploaded image (UUID format with dashes)
     if (imageName.includes('-')) {
       return `/uploads/${imageName}`;
     }
@@ -69,6 +69,11 @@ export function OutletSlideshow() {
     // Otherwise, assume it's a predefined asset
     return `/assets/${imageName}.jpg`;
   };
+  
+  // Log the path resolution for debugging
+  console.log('Image path resolution examples:');
+  console.log('  redmoon1 →', getImagePath('redmoon1'));
+  console.log('  UUID image →', getImagePath('123e4567-e89b-12d3-a456-426614174000'));
 
   // Get outlet image from data
   const getOutletImage = (outlet: Outlet): string => {
@@ -133,17 +138,11 @@ export function OutletSlideshow() {
                     const target = e.target as HTMLImageElement;
                     const currentSrc = target.src;
                     
-                    // Try different fallback paths in sequence
-                    if (currentSrc.includes('/uploads/')) {
-                      // If uploads path failed, try assets path
-                      target.src = `/assets/${outlet.imageUrl}.jpg`;
-                    } else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
-                      // If assets path failed, try outlets path
-                      target.src = `/assets/outlets/${outlet.imageUrl || 'redmoon1'}.jpg`;
-                    } else {
-                      // Last resort fallback
-                      target.src = '/assets/redmoon1.jpg';
-                    }
+                    // Log error for debugging
+                    console.log('Image failed to load in slider:', currentSrc);
+                    
+                    // Simple fallback to known working image
+                    target.src = '/assets/redmoon1.jpg';
                   }}
                 />
                 <div className={`absolute inset-0 transition-all duration-300 ${

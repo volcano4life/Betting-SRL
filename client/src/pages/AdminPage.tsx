@@ -3107,18 +3107,28 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                             const currentSrc = target.src;
                             const img = formData.imageUrl;
                             
-                            // Try different paths in sequence
-                            if (currentSrc.includes('/uploads/')) {
-                              // If uploads path fails, try assets path
-                              target.src = `/assets/${img}.jpg`;
-                            } 
-                            else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
-                              // If assets path fails, try assets/outlets path
-                              target.src = `/assets/outlets/${img}.jpg`;
-                            }
-                            // If all else fails, show a placeholder
-                            else {
-                              target.src = 'https://placehold.co/200x160?text=Image+Not+Found';
+                            // Log error for debugging
+                            console.log('Image load error in admin panel:', {
+                              imageUrl: img,
+                              failedSrc: currentSrc,
+                              hasHyphens: img.includes('-'),
+                              attemptingFallback: true
+                            });
+                            
+                            // Simplify fallback approach - if it contains hyphens (UUID format),
+                            // then we're dealing with an uploaded image with extension
+                            if (img.includes('-')) {
+                              // Try both upload paths
+                              if (currentSrc.includes('/uploads/')) {
+                                // If /uploads/UUID failed, try with .jpg extension
+                                target.src = `/uploads/${img}.jpg`;
+                              } else {
+                                // Default fallback
+                                target.src = '/assets/redmoon1.jpg';
+                              }
+                            } else {
+                              // For asset images
+                              target.src = '/assets/redmoon1.jpg';
                             }
                           }}
                         />
@@ -3180,18 +3190,28 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                                 const target = e.target as HTMLImageElement;
                                 const currentSrc = target.src;
                                 
-                                // Try different paths in sequence
-                                if (currentSrc.includes('/uploads/')) {
-                                  // If uploads path fails, try assets path
-                                  target.src = `/assets/${img}.jpg`;
-                                } 
-                                else if (currentSrc.includes('/assets/') && !currentSrc.includes('/assets/outlets/')) {
-                                  // If assets path fails, try assets/outlets path
-                                  target.src = `/assets/outlets/${img}.jpg`;
-                                }
-                                // If all else fails, show a placeholder
-                                else {
-                                  target.src = 'https://placehold.co/200x160?text=Image+Not+Found';
+                                // Log error for debugging
+                                console.log('Additional image load error:', {
+                                  imageUrl: img,
+                                  failedSrc: currentSrc,
+                                  hasHyphens: img.includes('-'),
+                                  attemptingFallback: true
+                                });
+                                
+                                // Simplify fallback approach - if it contains hyphens (UUID format),
+                                // then we're dealing with an uploaded image with extension
+                                if (img.includes('-')) {
+                                  // Try both upload paths
+                                  if (currentSrc.includes('/uploads/')) {
+                                    // If /uploads/UUID failed, try with .jpg extension
+                                    target.src = `/uploads/${img}.jpg`;
+                                  } else {
+                                    // Default fallback
+                                    target.src = '/assets/redmoon1.jpg';
+                                  }
+                                } else {
+                                  // For asset images
+                                  target.src = '/assets/redmoon1.jpg';
                                 }
                               }}
                             />
