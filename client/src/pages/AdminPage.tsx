@@ -2516,15 +2516,15 @@ function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
   const queryClient = useQueryClient();
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
-    queryKey: ['/api/outlets'],
+    queryKey: ['/api/admin/outlets'],
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest('DELETE', `/api/outlets/${id}`);
+      await apiRequest('DELETE', `/api/admin/outlets/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
       toast({
         title: language === 'it' ? 'Punto Vendita Eliminato' : 'Outlet Deleted',
         description: language === 'it' 
@@ -2543,10 +2543,10 @@ function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
 
   const toggleStatusMutation = useMutation({
     mutationFn: async ({ id, isActive }: { id: number, isActive: boolean }) => {
-      await apiRequest('PATCH', `/api/outlets/${id}`, { isActive });
+      await apiRequest('PUT', `/api/admin/outlets/${id}`, { isActive });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
       toast({
         title: language === 'it' ? 'Stato Aggiornato' : 'Status Updated',
         description: language === 'it' 
@@ -2685,35 +2685,49 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
   
   // Fetch outlet data if editing
   const { isLoading } = useQuery<Outlet>({
-    queryKey: [`/api/outlets/${id}`],
+    queryKey: [`/api/admin/outlets/${id}`],
     enabled: id !== null,
-    onSuccess: (data) => {
-      setFormData({
-        title_en: data.title_en,
-        title_it: data.title_it,
-        description_en: data.description_en || '',
-        description_it: data.description_it || '',
-        address_en: data.address_en || '',
-        address_it: data.address_it || '',
-        imageUrl: data.imageUrl,
-        order: data.order || 0,
-        isActive: data.isActive
-      });
-    }
   });
+  
+  React.useEffect(() => {
+    const fetchOutlet = async () => {
+      if (id !== null) {
+        try {
+          const response = await apiRequest('GET', `/api/admin/outlets/${id}`);
+          const data = await response.json();
+          
+          setFormData({
+            title_en: data.title_en,
+            title_it: data.title_it,
+            description_en: data.description_en || '',
+            description_it: data.description_it || '',
+            address_en: data.address_en || '',
+            address_it: data.address_it || '',
+            imageUrl: data.imageUrl,
+            order: data.order || 0,
+            isActive: data.isActive
+          });
+        } catch (error) {
+          console.error('Error fetching outlet:', error);
+        }
+      }
+    };
+    
+    fetchOutlet();
+  }, [id]);
   
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
       if (id === null) {
         // Create new outlet
-        await apiRequest('POST', '/api/outlets', data);
+        await apiRequest('POST', '/api/admin/outlets', data);
       } else {
         // Update existing outlet
-        await apiRequest('PUT', `/api/outlets/${id}`, data);
+        await apiRequest('PUT', `/api/admin/outlets/${id}`, data);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
       toast({
         title: id === null
           ? (language === 'it' ? 'Punto Vendita Creato' : 'Outlet Created')
