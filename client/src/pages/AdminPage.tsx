@@ -2685,7 +2685,6 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [additionalImageInput, setAdditionalImageInput] = useState('');
   
   const [formData, setFormData] = useState({
     title_en: '',
@@ -2695,7 +2694,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
     address_en: '',
     address_it: '',
     imageUrl: '',
-    additionalImages: [],
+    additionalImages: [] as string[],
     order: 0,
     isActive: true
   });
@@ -2783,25 +2782,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
     setFormData((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
   };
   
-  const addAdditionalImage = () => {
-    if (!additionalImageInput.trim()) return;
-    setFormData((prev) => ({
-      ...prev,
-      additionalImages: [...prev.additionalImages, additionalImageInput.trim()]
-    }));
-    setAdditionalImageInput('');
-  };
-  
-  const removeAdditionalImage = (index: number) => {
-    setFormData((prev) => {
-      const updatedImages = [...prev.additionalImages];
-      updatedImages.splice(index, 1);
-      return {
-        ...prev,
-        additionalImages: updatedImages
-      };
-    });
-  };
+  // Handle image management is now handled by the DragDropImageGallery component
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -2967,72 +2948,66 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
             </div>
           </div>
           
-          {/* Additional Images */}
+          {/* Drag and Drop Image Gallery */}
           <div className="space-y-4 border-t pt-6 mt-4">
             <div className="flex flex-col space-y-2">
               <Label className="text-lg font-medium">
-                {language === 'it' ? 'Immagini Aggiuntive della Galleria' : 'Additional Gallery Images'}
+                {language === 'it' ? 'Galleria Immagini' : 'Image Gallery'}
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-2">
                 {language === 'it' 
-                  ? 'Aggiungi immagini aggiuntive che appariranno nella galleria del punto vendita.'
-                  : 'Add additional images that will appear in the outlet gallery slideshow.'}
+                  ? 'Aggiungi, riordina e gestisci le immagini della galleria. Trascina per riordinare. La prima immagine verrà usata come principale.'
+                  : 'Add, reorder and manage gallery images. Drag to reorder. The first image will be used as the primary image.'}
               </p>
-              <div className="flex space-x-2 mt-2">
-                <Input
-                  placeholder={language === 'it' ? 'Nome del file immagine' : 'Image filename'}
-                  value={additionalImageInput}
-                  onChange={(e) => setAdditionalImageInput(e.target.value)}
-                />
-                <Button 
-                  type="button" 
-                  onClick={addAdditionalImage}
-                  disabled={!additionalImageInput}
-                >
-                  {language === 'it' ? 'Aggiungi' : 'Add'}
-                </Button>
-              </div>
+              
+              <DragDropImageGallery
+                images={[formData.imageUrl, ...formData.additionalImages].filter(Boolean)}
+                onImagesChange={(newImages) => {
+                  if (newImages.length > 0) {
+                    // First image becomes the primary image
+                    const [primaryImage, ...additionalImages] = newImages;
+                    setFormData(prev => ({
+                      ...prev,
+                      imageUrl: primaryImage,
+                      additionalImages
+                    }));
+                  } else {
+                    // If no images, reset both
+                    setFormData(prev => ({
+                      ...prev,
+                      imageUrl: '',
+                      additionalImages: []
+                    }));
+                  }
+                }}
+                primaryImage={formData.imageUrl}
+                onPrimaryChange={(newPrimary) => {
+                  const allImages = [formData.imageUrl, ...formData.additionalImages].filter(Boolean);
+                  const otherImages = allImages.filter(img => img !== newPrimary);
+                  
+                  setFormData(prev => ({
+                    ...prev,
+                    imageUrl: newPrimary,
+                    additionalImages: otherImages
+                  }));
+                }}
+                onAddImage={(newImage) => {
+                  // If no primary image yet, make this the primary
+                  if (!formData.imageUrl) {
+                    setFormData(prev => ({
+                      ...prev,
+                      imageUrl: newImage
+                    }));
+                  } else {
+                    // Otherwise add to additional images
+                    setFormData(prev => ({
+                      ...prev,
+                      additionalImages: [...prev.additionalImages, newImage]
+                    }));
+                  }
+                }}
+              />
             </div>
-            
-            {formData.additionalImages && formData.additionalImages.length > 0 ? (
-              <div className="border rounded-md p-4 bg-muted/30">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-medium">
-                    {language === 'it' ? 'Immagini nella Galleria:' : 'Gallery Images:'}
-                  </h4>
-                  <span className="text-xs text-muted-foreground">
-                    {formData.additionalImages.length} {language === 'it' ? 'immagini' : 'images'}
-                  </span>
-                </div>
-                <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
-                  {formData.additionalImages.map((img, index) => (
-                    <li key={index} className="flex justify-between items-center text-sm bg-background p-2 rounded-md">
-                      <div className="flex items-center">
-                        <span className="text-primary-foreground bg-primary h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2">
-                          {index + 1}
-                        </span>
-                        <span>{img}</span>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeAdditionalImage(index)}
-                        className="hover:bg-destructive/10"
-                      >
-                        <Trash className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="border rounded-md p-4 bg-muted/30 flex items-center justify-center h-20 text-muted-foreground">
-                {language === 'it' 
-                  ? 'Nessuna immagine aggiuntiva. Aggiungi la prima immagine della galleria.' 
-                  : 'No additional images. Add the first gallery image.'}
-              </div>
-            )}
           </div>
           
           {/* Active Status */}

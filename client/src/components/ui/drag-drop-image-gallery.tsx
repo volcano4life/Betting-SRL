@@ -67,7 +67,7 @@ function DraggableImage({
       
       <div className="relative mr-2 flex-shrink-0">
         <img 
-          src={url} 
+          src={url.includes('/') ? url : `/assets/${url}.jpg`} 
           alt={`Gallery image ${index + 1}`} 
           className="h-16 w-16 object-cover rounded-md" 
         />
@@ -139,7 +139,7 @@ export function DragDropImageGallery({
       id: `image-${index}`,
       url,
     })));
-  }, []);
+  }, [images]);
   
   // Not using the dependency on images because we don't want
   // to reset the order when a parent rerenders
