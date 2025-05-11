@@ -148,7 +148,7 @@ export function OutletSlideshow() {
         <OutletSlideshowModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          images={getOutletSlideshow(selectedOutlet.id)}
+          images={getOutletSlideshow(selectedOutlet)}
           title={getLocalizedField(selectedOutlet, 'title')}
           description={getLocalizedField(selectedOutlet, 'description') || ''}
         />
