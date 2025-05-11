@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +9,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Button } from '@/components/ui/button';
 
 interface Outlet {
   id: number;
@@ -34,7 +31,7 @@ export function OutletSlideshow() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center p-6">
+      <div className="flex justify-center items-center p-2">
         <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin"></div>
       </div>
     );
@@ -45,59 +42,35 @@ export function OutletSlideshow() {
   }
 
   return (
-    <section className="py-8 bg-secondary/10">
-      <div className="container">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold mb-2">
-            {language === 'it' ? 'Scopri I nostri punti vendita' : 'Check out our betting outlets'}
-          </h2>
-          <p className="text-muted-foreground">
-            {language === 'it' 
-              ? 'Visita uno dei nostri punti vendita per un\'esperienza di scommesse premium' 
-              : 'Visit one of our outlets for a premium betting experience'}
-          </p>
-        </div>
-        
-        <Carousel className="w-full">
+    <section className="py-4 bg-gradient-to-r from-primary/5 to-secondary/5 border-y border-muted">
+      <div className="container px-2">
+        <Carousel className="w-full" opts={{ loop: true, align: "start" }}>
           <CarouselContent>
             {outlets.map((outlet) => (
-              <CarouselItem key={outlet.id} className="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={outlet.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-1 pr-1">
                 <AnimatedWrapper
-                  animation="slideUp" 
+                  animation="fade" 
                   duration={0.5} 
                   delay={0.1}
-                  className="h-full"
                 >
-                  <Card className="h-full overflow-hidden border shadow-md bg-card hover:shadow-lg transition-shadow duration-300">
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={outlet.imageUrl} 
-                        alt={getLocalizedField(outlet, 'title')} 
-                        className="w-full h-full object-cover object-center"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="text-xl font-bold mb-2">
+                  <div className="relative overflow-hidden rounded-lg group h-24 sm:h-32 md:h-40">
+                    <img 
+                      src={outlet.imageUrl} 
+                      alt={getLocalizedField(outlet, 'title')} 
+                      className="w-full h-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-2">
+                      <p className="text-white text-sm font-medium truncate">
                         {getLocalizedField(outlet, 'title')}
-                      </h3>
-                      
-                      <p className="text-muted-foreground mb-4 line-clamp-3">
-                        {getLocalizedField(outlet, 'description')}
                       </p>
-                      
-                      <div className="w-full">
-                        <Button variant="outline" className="w-full">
-                          {language === 'it' ? 'Maggiori informazioni' : 'More information'}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </AnimatedWrapper>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
+          <CarouselPrevious className="-left-3 h-8 w-8 sm:h-10 sm:w-10 bg-background/80 border-primary/20" />
+          <CarouselNext className="-right-3 h-8 w-8 sm:h-10 sm:w-10 bg-background/80 border-primary/20" />
         </Carousel>
       </div>
     </section>
