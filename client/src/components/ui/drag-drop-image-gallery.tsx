@@ -120,10 +120,14 @@ function DraggableImage({
         <button 
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
+            console.log("Remove button clicked for image:", id);
             onRemove(id);
           }}
-          className="bg-white/80 hover:bg-destructive hover:text-white rounded-full p-1 text-black transition-colors"
+          className="bg-white/80 hover:bg-destructive hover:text-white rounded-full p-1 text-black transition-colors shadow-sm"
           title="Remove image"
+          type="button" 
+          aria-label="Remove image"
         >
           <X className="h-3 w-3" />
         </button>
@@ -134,18 +138,22 @@ function DraggableImage({
           className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors"
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
+            console.log("Set primary button clicked for image:", id);
             onSetPrimary(id);
           }}
           title="Set as primary image"
+          type="button"
+          aria-label="Set as primary image"
         >
-          <div className="bg-white/80 rounded-full p-1.5 opacity-0 hover:opacity-100 group-hover:opacity-80 hover:bg-primary hover:text-white">
+          <div className="bg-white/80 rounded-full p-1.5 opacity-0 hover:opacity-100 group-hover:opacity-80 hover:bg-primary hover:text-white shadow-sm">
             <Star className="h-4 w-4" />
           </div>
         </button>
       )}
       
       <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs py-1 px-2 truncate">
-        {url.split('/').pop()}
+        {url.includes('/') ? url.split('/').pop() : url}
       </div>
     </div>
   );
@@ -182,19 +190,45 @@ export function DragDropImageGallery({
     placeholder: string;
   }
 }) {
+  // Log initial props for debugging
+  console.log("DragDropImageGallery initialized with:", {
+    images,
+    primaryImage,
+  });
   const [items, setItems] = useState<ImageItem[]>([]);
   const [newImageUrl, setNewImageUrl] = useState('');
   
-  // Initialize items from props
+  // Initialize and update items from props when images array changes
   useEffect(() => {
-    setItems(images.map((url, index) => ({
-      id: `image-${index}`,
-      url,
-    })));
-  }, [images]);
-  
-  // Not using the dependency on images because we don't want
-  // to reset the order when a parent rerenders
+    // This effect should only sync from props -> state
+    // and avoid circular updates when removing images
+    
+    // Only update if the arrays have different content
+    const currentUrls = items.map(item => item.url);
+    const incomingUrls = images;
+    
+    // Simple array comparison - if arrays are different sizes or have different elements,
+    // they need to be synchronized
+    const areArraysDifferent = (arr1: string[], arr2: string[]) => {
+      if (arr1.length !== arr2.length) return true;
+      
+      // Do deep comparison of array elements
+      for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return true;
+      }
+      return false;
+    };
+    
+    if (areArraysDifferent(currentUrls, incomingUrls)) {
+      console.log("Updating gallery items from props:", images);
+      
+      // Generate new stable IDs to prevent flickering during reordering
+      setItems(images.map((url, index) => ({
+        id: `image-${index}-${url}`, // Include URL in ID for stability
+        url,
+      })));
+    }
+  }, [images]); // Only depend on images prop, not the items state
   
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -227,12 +261,23 @@ export function DragDropImageGallery({
     // Clean the URL - remove any file extension if added by the user
     const cleanUrl = newImageUrl.trim().replace(/\.(jpg|jpeg|png|gif)$/i, '');
     
+    // Check if image already exists in the gallery
+    const imageExists = items.some(item => item.url === cleanUrl);
+    if (imageExists) {
+      console.log("Image already exists in gallery:", cleanUrl);
+      setNewImageUrl('');
+      return;
+    }
+    
+    console.log("Adding new image to gallery:", cleanUrl);
+    
     // Add the new image
     onAddImage(cleanUrl);
     
-    // Update local state
+    // Update local state with a stable ID
+    const newId = `image-${Date.now()}-${cleanUrl}`;
     setItems(prev => [...prev, {
-      id: `image-${prev.length}`,
+      id: newId,
       url: cleanUrl,
     }]);
     
@@ -244,19 +289,25 @@ export function DragDropImageGallery({
     const index = items.findIndex(item => item.id === id);
     if (index === -1) return;
     
+    const imageToRemove = items[index].url;
+    console.log("Removing image:", imageToRemove, "at index:", index);
+    
     const newItems = [...items];
     newItems.splice(index, 1);
     
     // If removing the primary image, set the first remaining image as primary
-    if (items[index].url === primaryImage && newItems.length > 0) {
+    if (imageToRemove === primaryImage && newItems.length > 0) {
       onPrimaryChange(newItems[0].url);
+    } else if (imageToRemove === primaryImage && newItems.length === 0) {
+      // If removing the last image, set primary to empty
+      onPrimaryChange('');
     }
     
-    console.log("Removing image:", items[index].url, "at index:", index);
-    console.log("New images:", newItems.map(item => item.url));
+    const newImageUrls = newItems.map(item => item.url);
+    console.log("New images array:", newImageUrls);
     
     setItems(newItems);
-    onImagesChange(newItems.map(item => item.url));
+    onImagesChange(newImageUrls);
   }
   
   function setPrimaryImage(id: string) {
@@ -307,11 +358,20 @@ export function DragDropImageGallery({
                 key={imgName}
                 className="relative group cursor-pointer border rounded-md overflow-hidden h-14"
                 onClick={() => {
+                  // Check if image already exists
+                  const imageExists = items.some(item => item.url === imgName);
+                  if (imageExists) {
+                    console.log("Quick-add: Image already exists in gallery:", imgName);
+                    return;
+                  }
+                  
+                  console.log("Quick-add: Adding new image to gallery:", imgName);
                   onAddImage(imgName);
                   
-                  // Add to local state
+                  // Add to local state with stable ID
+                  const newId = `image-${Date.now()}-${imgName}`;
                   setItems(prev => [...prev, {
-                    id: `image-${prev.length}`,
+                    id: newId,
                     url: imgName,
                   }]);
                 }}
