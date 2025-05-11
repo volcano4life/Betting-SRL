@@ -252,6 +252,9 @@ export function DragDropImageGallery({
       onPrimaryChange(newItems[0].url);
     }
     
+    console.log("Removing image:", items[index].url, "at index:", index);
+    console.log("New images:", newItems.map(item => item.url));
+    
     setItems(newItems);
     onImagesChange(newItems.map(item => item.url));
   }

@@ -2716,15 +2716,18 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
           let imageUrl = data.imageUrl;
           let additionalImages = data.additionalImages || [];
           
+          // Use different default images for each outlet
+          // We found that redmoon1.jpg and redmoon5.jpg are identical files, 
+          // and redmoon2.jpg and redmoon-3.jpg are identical
           if (!imageUrl && id === 1) {
-            imageUrl = 'redmoon1';
-            additionalImages = ['redmoon2', 'redmoon3', 'redmoon4', 'redmoon5'];
+            imageUrl = 'redmoon-1'; // Different from redmoon1
+            additionalImages = ['redmoon3', 'redmoon4', 'redmoon2'];
           } else if (!imageUrl && id === 2) {
-            imageUrl = 'redmoon3';
-            additionalImages = ['redmoon1', 'redmoon4'];
+            imageUrl = 'redmoon4';
+            additionalImages = ['redmoon-1', 'redmoon3'];
           } else if (!imageUrl && id === 3) {
             imageUrl = 'redmoon2';
-            additionalImages = ['redmoon5'];
+            additionalImages = ['redmoon3'];
           }
           
           setFormData({
