@@ -860,6 +860,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filename: fileNameWithoutExt,
         url: `/uploads/${req.file.filename}`
       });
+      
+      // Log a friendly message to help with debugging
+      console.log(`Files in the public directory are served at the root path.`);
+      console.log(`Instead of /public/uploads/${req.file.filename}, use /uploads/${req.file.filename}.`);
     } catch (error) {
       console.error('File upload error:', error);
       res.status(500).json({ 
