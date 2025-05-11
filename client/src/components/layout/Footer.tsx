@@ -7,6 +7,10 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { siteConfig } from "@/config/siteConfig";
+import BettingLogo from "./BettingLogo";
+import SportsBettingLogo from "./SportsBettingLogo";
+import CasinoChipLogo from "./CasinoChipLogo";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
