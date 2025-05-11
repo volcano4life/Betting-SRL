@@ -6,6 +6,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: string) => string;
+  tHtml: (key: string) => React.ReactNode;
   getLocalizedField: <T extends Record<string, any>>(item: T, fieldName: string) => string;
 }
 
@@ -679,6 +680,30 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return translations[language][key] || key;
   };
   
+  // Function to parse and render HTML content in translations
+  const tHtml = (key: string): React.ReactNode => {
+    const text = t(key);
+    
+    // If the translation contains HTML with translate="no", we need to parse it
+    if (text.includes('<span translate="no">')) {
+      return (
+        <>
+          {text.split(/<span translate="no">|<\/span>/).map((part, i) => {
+            // Even indices are regular text, odd indices are content that should not be translated
+            if (i % 2 === 0) {
+              return part;
+            } else {
+              return <span key={i} translate="no">{part}</span>;
+            }
+          })}
+        </>
+      );
+    }
+    
+    // If there's no HTML, just return the plain text
+    return text;
+  };
+  
   // Function to get the correct language field from an item
   const getLocalizedField = <T extends Record<string, any>>(item: T, fieldName: string): string => {
     if (!item) return '';
@@ -698,7 +723,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, getLocalizedField }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, tHtml, getLocalizedField }}>
       {children}
     </LanguageContext.Provider>
   );

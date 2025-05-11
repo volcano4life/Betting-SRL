@@ -41,7 +41,7 @@ const companyLinks = [
 ];
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, tHtml } = useLanguage();
   const { selectedLogo, customLogoUrl } = useLogo();
   
   const getLogo = () => {
