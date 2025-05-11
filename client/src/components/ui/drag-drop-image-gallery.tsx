@@ -13,11 +13,11 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './card';
-import { Trash, GripVertical, Star, StarOff } from 'lucide-react';
+import { X, Star } from 'lucide-react';
 import { Button } from './button';
 import { Input } from './input';
 
@@ -55,56 +55,57 @@ function DraggableImage({
     <div 
       ref={setNodeRef} 
       style={style} 
-      className="flex items-center bg-background border rounded-md p-2 mb-2 group"
+      className={`relative bg-background border rounded-md overflow-hidden cursor-move w-24 h-24 ${isPrimary ? 'ring-2 ring-primary border-primary' : ''}`}
+      {...attributes}
+      {...listeners}
     >
-      <div 
-        {...attributes} 
-        {...listeners} 
-        className="cursor-grab mr-2 text-muted-foreground hover:text-foreground"
-      >
-        <GripVertical size={20} />
-      </div>
+      <img 
+        src={url.includes('/') ? url : `/assets/${url}.jpg`} 
+        alt={`Gallery image ${index + 1}`} 
+        className="w-full h-full object-cover" 
+        onError={(e) => {
+          // Set a fallback if image fails to load
+          const target = e.target as HTMLImageElement;
+          target.src = 'https://placehold.co/96?text=Not+Found';
+        }}
+      />
       
-      <div className="relative mr-2 flex-shrink-0">
-        <img 
-          src={url.includes('/') ? url : `/assets/${url}.jpg`} 
-          alt={`Gallery image ${index + 1}`} 
-          className="h-16 w-16 object-cover rounded-md" 
-        />
+      <div className="absolute top-0 right-0 flex gap-1 p-1">
         {isPrimary && (
-          <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground rounded-full p-1">
-            <Star size={12} />
+          <div className="bg-primary text-primary-foreground rounded-full p-1">
+            <Star className="h-3 w-3" />
           </div>
         )}
-      </div>
-      
-      <div className="flex-grow">
-        <div className="text-sm font-medium">Image {index + 1}</div>
-        <div className="text-xs text-muted-foreground truncate">{url.split('/').pop()}</div>
-      </div>
-      
-      <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        {!isPrimary && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8" 
-            onClick={() => onSetPrimary(id)}
-            title="Set as primary image"
-          >
-            <StarOff size={16} />
-          </Button>
-        )}
         
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 text-destructive hover:text-destructive" 
-          onClick={() => onRemove(id)}
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(id);
+          }}
+          className="bg-white/80 hover:bg-destructive hover:text-white rounded-full p-1 text-black transition-colors"
           title="Remove image"
         >
-          <Trash size={16} />
-        </Button>
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+      
+      {!isPrimary && (
+        <button
+          className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSetPrimary(id);
+          }}
+          title="Set as primary image"
+        >
+          <div className="bg-white/80 rounded-full p-1.5 opacity-0 hover:opacity-100 group-hover:opacity-80 hover:bg-primary hover:text-white">
+            <Star className="h-4 w-4" />
+          </div>
+        </button>
+      )}
+      
+      <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs py-1 px-2 truncate">
+        {url.split('/').pop()}
       </div>
     </div>
   );
@@ -251,27 +252,33 @@ export function DragDropImageGallery({
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
         >
+          <div className="text-xs text-muted-foreground mb-3">
+            {items.length > 0 && "Drag images to reorder. The first image will be used as the primary image."}
+          </div>
+          
           <SortableContext 
             items={items.map(item => item.id)}
-            strategy={verticalListSortingStrategy}
+            strategy={rectSortingStrategy}
           >
-            {items.length > 0 ? (
-              items.map((item, index) => (
-                <DraggableImage
-                  key={item.id}
-                  id={item.id}
-                  url={item.url}
-                  index={index}
-                  isPrimary={item.url === primaryImage}
-                  onRemove={removeImage}
-                  onSetPrimary={setPrimaryImage}
-                />
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                {labels.noImages}
-              </div>
-            )}
+            <div className="flex flex-wrap gap-3">
+              {items.length > 0 ? (
+                items.map((item, index) => (
+                  <DraggableImage
+                    key={item.id}
+                    id={item.id}
+                    url={item.url}
+                    index={index}
+                    isPrimary={item.url === primaryImage}
+                    onRemove={removeImage}
+                    onSetPrimary={setPrimaryImage}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-8 w-full text-muted-foreground">
+                  {labels.noImages}
+                </div>
+              )}
+            </div>
           </SortableContext>
         </DndContext>
       </Card>
