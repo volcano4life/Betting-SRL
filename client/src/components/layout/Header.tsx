@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import {
   NavigationMenu,
@@ -48,6 +48,41 @@ export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { user, logoutMutation } = useAuth();
   const { selectedLogo, setSelectedLogo, customLogoUrl } = useLogo();
+  
+  // Scroll direction detection
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const headerRef = useRef<HTMLElement>(null);
+  
+  useEffect(() => {
+    let lastScrollTime = 0;
+    const throttleTime = 100; // ms to throttle scroll events
+    
+    const handleScroll = () => {
+      const now = Date.now();
+      if (now - lastScrollTime < throttleTime) return;
+      lastScrollTime = now;
+      
+      const currentScrollY = window.scrollY;
+      
+      // Scrolling down - hide header
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } 
+      // Scrolling up - show header immediately
+      else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
 
   const isActive = (path: string) => location === path;
   
@@ -76,7 +111,14 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
+    <header 
+      ref={headerRef}
+      className={`fixed w-full top-0 z-50 bg-white shadow-md transition-all duration-300 ease-in-out transform ${
+        isVisible 
+          ? 'translate-y-0' 
+          : '-translate-y-full'
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
