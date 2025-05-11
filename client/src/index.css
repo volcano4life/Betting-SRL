@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom animations */
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
 /* Ensure elements with translate="no" attribute are not translated by browsers */
 [translate="no"] {
   -webkit-translate: none;

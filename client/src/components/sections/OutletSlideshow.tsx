@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Outlet {
@@ -30,6 +30,8 @@ export function OutletSlideshow() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
   const outletsPerPage = 3; // Number of outlets to show per page
+  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -44,6 +46,24 @@ export function OutletSlideshow() {
     setIsModalOpen(false);
     setSelectedOutlet(null);
   };
+  
+  // Auto-rotation effect
+  useEffect(() => {
+    if (!outlets || outlets.length <= outletsPerPage) return;
+    
+    let interval: NodeJS.Timeout;
+    
+    // Don't rotate if paused or section is hovered
+    if (!isPaused && !isHovered) {
+      interval = setInterval(() => {
+        setCurrentPage((prev) => (prev + 1) % Math.ceil(outlets.length / outletsPerPage));
+      }, 5000); // Rotate every 5 seconds by default
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [outlets, currentPage, isPaused, isHovered, outletsPerPage]);
 
   if (isLoading) {
     return (
@@ -134,13 +154,32 @@ export function OutletSlideshow() {
           </h2>
         </div>
         
-        <div className="relative max-w-6xl mx-auto">
+        <div 
+          className="relative max-w-6xl mx-auto"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Auto-rotation control */}
+          {outlets && outlets.length > outletsPerPage && (
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className="absolute right-2 top-2 z-20 bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-full shadow-md flex items-center justify-center"
+              aria-label={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
+            >
+              {isPaused ? (
+                <Play className="h-3.5 w-3.5" />
+              ) : (
+                <Pause className="h-3.5 w-3.5" />
+              )}
+            </button>
+          )}
+        
           {/* Navigation buttons for larger screens */}
-          {outlets.length > outletsPerPage && (
+          {outlets && outlets.length > outletsPerPage && (
             <>
               <button 
                 onClick={goToPrevPage}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex items-center justify-center"
                 aria-label="Previous outlets"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -148,7 +187,7 @@ export function OutletSlideshow() {
               
               <button 
                 onClick={goToNextPage}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -mr-4 hidden sm:flex"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -mr-4 hidden sm:flex items-center justify-center"
                 aria-label="Next outlets"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -168,8 +207,14 @@ export function OutletSlideshow() {
               >
                 <div 
                   className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
-                  onMouseEnter={() => setHoveredId(outlet.id)}
-                  onMouseLeave={() => setHoveredId(null)}
+                  onMouseEnter={() => {
+                    setHoveredId(outlet.id);
+                    setIsHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredId(null);
+                    setIsHovered(false);
+                  }}
                   onClick={() => handleOutletClick(outlet)}
                 >
                   <img 
@@ -213,7 +258,7 @@ export function OutletSlideshow() {
           </div>
           
           {/* Mobile pagination controls */}
-          {outlets.length > outletsPerPage && (
+          {outlets && outlets.length > outletsPerPage && (
             <div className="flex justify-center items-center mt-4 sm:hidden">
               <Button 
                 onClick={goToPrevPage}
@@ -242,7 +287,7 @@ export function OutletSlideshow() {
           )}
           
           {/* Desktop pagination indicators */}
-          {outlets.length > outletsPerPage && (
+          {outlets && outlets.length > outletsPerPage && (
             <div className="hidden sm:flex justify-center mt-4">
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button
@@ -254,6 +299,19 @@ export function OutletSlideshow() {
                   aria-label={`Go to page ${index + 1}`}
                 />
               ))}
+            </div>
+          )}
+          
+          {/* Auto-rotation indicator */}
+          {outlets && outlets.length > outletsPerPage && !isPaused && !isHovered && (
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 overflow-hidden">
+              <div 
+                className="h-full bg-white/40 transition-all"
+                style={{ 
+                  width: `${(100 / 5) * ((Date.now() / 1000) % 5)}%`,
+                  animation: 'progress 5s linear infinite'
+                }}
+              />
             </div>
           )}
         </div>
