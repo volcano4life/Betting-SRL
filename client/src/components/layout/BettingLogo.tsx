@@ -10,7 +10,8 @@ const BettingLogo: React.FC<LogoProps> = ({ className = "" }) => {
     <img 
       src={bettingSrlLogo} 
       alt="Betting SRL" 
-      className={className}
+      className={`object-contain ${className}`}
+      style={{ objectFit: 'contain', aspectRatio: 'auto' }}
     />
   );
 };

@@ -52,11 +52,11 @@ export default function Footer() {
         return <CasinoChipLogo className="w-20 h-20 mr-3" />;
       case 'custom':
         return customLogoUrl ? 
-          <img src={customLogoUrl} alt="Custom logo" className="w-20 h-20 mr-3 object-contain" /> : 
-          <BettingLogo className="w-20 h-20 mr-3" />;
+          <img src={customLogoUrl} alt="Custom logo" className="h-14 mr-3 object-contain" style={{ maxWidth: "100%", aspectRatio: "auto" }} /> : 
+          <BettingLogo className="h-14 mr-3" />;
       case 'poker-chip':
       default:
-        return <BettingLogo className="w-20 h-20 mr-3" />;
+        return <BettingLogo className="h-14 mr-3" />;
     }
   };
 
