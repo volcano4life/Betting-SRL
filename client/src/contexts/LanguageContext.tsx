@@ -634,7 +634,7 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.terms': 'Termini & Condizioni',
     'footer.privacy': 'Privacy Policy',
     'footer.contact': 'Contattaci',
-    'footer.copyright': '© {year} Betting SRL. Tutti i diritti riservati. Tutti i marchi sono di proprietà dei rispettivi proprietari.',
+    'footer.copyright': '© {year} <span translate="no">Betting SRL</span>. Tutti i diritti riservati. Tutti i marchi sono di proprietà dei rispettivi proprietari.',
     'footer.disclaimer': 'Il gioco comporta rischi. Gioca responsabilmente.',
     'footer.tagline': 'La tua fonte affidabile per recensioni di casinò italiani, codici promozionali esclusivi e approfondimenti sulle scommesse sportive.',
     'footer.casinoGames': 'Giochi da Casinò',
