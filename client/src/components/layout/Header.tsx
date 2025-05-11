@@ -85,10 +85,7 @@ export default function Header() {
             </Link>
             {user?.isAdmin && (
               <div className="ml-2">
-                <LogoSelector 
-                  selectedLogo={selectedLogo} 
-                  onSelectLogo={setSelectedLogo} 
-                />
+                <LogoSelector />
               </div>
             )}
           </div>

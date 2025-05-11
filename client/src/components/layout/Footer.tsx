@@ -7,6 +7,7 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useLogo } from "@/contexts/LogoContext";
 import { siteConfig } from "@/config/siteConfig";
 import BettingLogo from "./BettingLogo";
 import SportsBettingLogo from "./SportsBettingLogo";
@@ -41,16 +42,27 @@ const companyLinks = [
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { selectedLogo } = useLogo();
   
+  const getLogo = () => {
+    switch (selectedLogo) {
+      case 'sports-shield':
+        return <SportsBettingLogo className="w-10 h-10 mr-2" />;
+      case 'casino-chip':
+        return <CasinoChipLogo className="w-10 h-10 mr-2" />;
+      case 'poker-chip':
+      default:
+        return <BettingLogo className="w-10 h-10 mr-2" />;
+    }
+  };
+
   return (
     <footer className="bg-[#222236] text-gray-300">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-xl">B</span>
-              </div>
+              {getLogo()}
               <span className="text-xl font-bold text-white font-medium">
                 Betting <span className="text-primary">SRL</span>
               </span>
