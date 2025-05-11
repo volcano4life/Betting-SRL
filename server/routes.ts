@@ -815,6 +815,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Configure multer for file uploads
+  const uploadsDir = path.join(process.cwd(), "public/uploads");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  
+  const uploadStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+      // Create a unique filename using uuid and keep the original extension
+      const fileExt = path.extname(file.originalname);
+      const fileName = uuidv4() + fileExt;
+      cb(null, fileName);
+    }
+  });
+
+  const upload = multer({ 
+    storage: uploadStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: function(req, file, cb) {
+      // Accept only images
+      if (!file.mimetype.startsWith('image/')) {
+        return cb(new Error('Only image files are allowed!'));
+      }
+      cb(null, true);
+    }
+  });
+
+  // File upload endpoint
+  app.post('/api/upload', requireAdmin, upload.single('image'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      
+      // Just the filename without extension
+      const fileNameWithoutExt = path.basename(req.file.filename, path.extname(req.file.filename));
+      
+      res.json({ 
+        success: true, 
+        filename: fileNameWithoutExt,
+        url: `/uploads/${req.file.filename}`
+      });
+    } catch (error) {
+      console.error('File upload error:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Error uploading file', 
+        error: error.message 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
