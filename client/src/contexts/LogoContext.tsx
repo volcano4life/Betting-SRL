@@ -1,22 +1,27 @@
 import React, { createContext, ReactNode, useState, useContext } from "react";
 
-export type LogoType = 'poker-chip' | 'sports-shield' | 'casino-chip';
+export type LogoType = 'poker-chip' | 'sports-shield' | 'casino-chip' | 'custom';
 
 interface LogoContextType {
   selectedLogo: LogoType;
   setSelectedLogo: (logo: LogoType) => void;
+  customLogoUrl: string | null;
+  setCustomLogoUrl: (url: string | null) => void;
 }
 
 export const LogoContext = createContext<LogoContextType | null>(null);
 
 export const LogoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedLogo, setSelectedLogo] = useState<LogoType>('poker-chip');
+  const [customLogoUrl, setCustomLogoUrl] = useState<string | null>(null);
 
   return (
     <LogoContext.Provider
       value={{
         selectedLogo,
         setSelectedLogo,
+        customLogoUrl,
+        setCustomLogoUrl,
       }}
     >
       {children}

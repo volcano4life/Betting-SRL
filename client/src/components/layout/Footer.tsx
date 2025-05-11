@@ -42,7 +42,7 @@ const companyLinks = [
 
 export default function Footer() {
   const { t } = useLanguage();
-  const { selectedLogo } = useLogo();
+  const { selectedLogo, customLogoUrl } = useLogo();
   
   const getLogo = () => {
     switch (selectedLogo) {
@@ -50,6 +50,10 @@ export default function Footer() {
         return <SportsBettingLogo className="w-10 h-10 mr-2" />;
       case 'casino-chip':
         return <CasinoChipLogo className="w-10 h-10 mr-2" />;
+      case 'custom':
+        return customLogoUrl ? 
+          <img src={customLogoUrl} alt="Custom logo" className="w-10 h-10 mr-2 object-contain" /> : 
+          <BettingLogo className="w-10 h-10 mr-2" />;
       case 'poker-chip':
       default:
         return <BettingLogo className="w-10 h-10 mr-2" />;
