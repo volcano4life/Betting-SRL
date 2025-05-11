@@ -17,8 +17,8 @@ export default function HomePage() {
         <meta name="description" content={siteConfig.defaultDescription} />
       </Helmet>
 
-      <HeroSection />
       <OutletSlideshow />
+      <HeroSection />
       <FeaturedCasinosSection />
       <PromoCodesSection />
       <SportsBettingSection />

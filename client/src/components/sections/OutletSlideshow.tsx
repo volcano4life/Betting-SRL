@@ -42,9 +42,9 @@ export function OutletSlideshow() {
   }
 
   return (
-    <section className="py-4 bg-gradient-to-r from-primary/5 to-secondary/5 border-y border-muted">
+    <section className="py-2 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
       <div className="container px-2">
-        <Carousel className="w-full" opts={{ loop: true, align: "start" }}>
+        <Carousel className="w-full" opts={{ loop: true, align: "start", dragFree: true }}>
           <CarouselContent>
             {outlets.map((outlet) => (
               <CarouselItem key={outlet.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-1 pr-1">
@@ -53,7 +53,7 @@ export function OutletSlideshow() {
                   duration={0.5} 
                   delay={0.1}
                 >
-                  <div className="relative overflow-hidden rounded-lg group h-24 sm:h-32 md:h-40">
+                  <div className="relative overflow-hidden rounded-md group h-20 sm:h-24 md:h-32">
                     <img 
                       src={outlet.imageUrl} 
                       alt={getLocalizedField(outlet, 'title')} 
@@ -69,8 +69,8 @@ export function OutletSlideshow() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="-left-3 h-8 w-8 sm:h-10 sm:w-10 bg-background/80 border-primary/20" />
-          <CarouselNext className="-right-3 h-8 w-8 sm:h-10 sm:w-10 bg-background/80 border-primary/20" />
+          <CarouselPrevious className="-left-3 h-8 w-8 bg-[#222236]/80 border-accent/20 text-white hover:bg-accent/20 hover:text-white" />
+          <CarouselNext className="-right-3 h-8 w-8 bg-[#222236]/80 border-accent/20 text-white hover:bg-accent/20 hover:text-white" />
         </Carousel>
       </div>
     </section>
