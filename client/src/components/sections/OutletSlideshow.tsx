@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
