@@ -63,7 +63,30 @@ export function OutletSlideshow() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [outlets, currentPage, isPaused, isHovered, outletsPerPage]);
+  }, [outlets, isPaused, isHovered, outletsPerPage]); // Removing currentPage dependency to prevent reset
+  
+  // Reference to track animation
+  const progressRef = useRef<HTMLDivElement>(null);
+  
+  // Reset animation when page changes or when pause state changes
+  useEffect(() => {
+    if (progressRef.current) {
+      // Reset animation by removing and re-adding it
+      progressRef.current.style.animation = 'none';
+      
+      // Force a reflow to ensure the animation restart properly
+      // eslint-disable-next-line no-unused-expressions
+      progressRef.current.offsetHeight;
+      
+      if (!isPaused && !isHovered) {
+        setTimeout(() => {
+          if (progressRef.current) {
+            progressRef.current.style.animation = 'progress 5s linear 1';
+          }
+        }, 10);
+      }
+    }
+  }, [currentPage, isPaused, isHovered]);
 
   if (isLoading) {
     return (
@@ -303,13 +326,14 @@ export function OutletSlideshow() {
           )}
           
           {/* Auto-rotation indicator */}
-          {outlets && outlets.length > outletsPerPage && !isPaused && !isHovered && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 overflow-hidden">
+          {outlets && outlets.length > outletsPerPage && (
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden">
               <div 
-                className="h-full bg-white/40 transition-all"
+                ref={progressRef}
+                className={`h-full transition-all ${isPaused || isHovered ? 'bg-white/20' : 'bg-white/50'}`}
                 style={{ 
-                  width: `${(100 / 5) * ((Date.now() / 1000) % 5)}%`,
-                  animation: 'progress 5s linear infinite'
+                  animation: (!isPaused && !isHovered) ? 'progress 5s linear 1' : 'none', 
+                  width: isPaused || isHovered ? '30%' : undefined
                 }}
               />
             </div>

@@ -151,14 +151,12 @@ export default function Header() {
                   <ul className="grid w-[200px] gap-1 p-2">
                     {casinoCategories.map((category) => (
                       <li key={category.href}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={category.href}
-                            className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                          >
-                            {category.label}
-                          </Link>
-                        </NavigationMenuLink>
+                        <Link
+                          href={category.href}
+                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                        >
+                          {category.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -177,14 +175,12 @@ export default function Header() {
                   <ul className="grid w-[200px] gap-1 p-2">
                     {promotionCategories.map((category) => (
                       <li key={category.href}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={category.href}
-                            className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                          >
-                            {category.label}
-                          </Link>
-                        </NavigationMenuLink>
+                        <Link
+                          href={category.href}
+                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                        >
+                          {category.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -203,14 +199,12 @@ export default function Header() {
                   <ul className="grid w-[200px] gap-1 p-2">
                     {sportsCategories.map((category) => (
                       <li key={category.href}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={category.href}
-                            className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                          >
-                            {category.label}
-                          </Link>
-                        </NavigationMenuLink>
+                        <Link
+                          href={category.href}
+                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
+                        >
+                          {category.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -218,29 +212,31 @@ export default function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/casinos">
-                  <NavigationMenuLink
-                    className={cn(
-                      "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                      isActive("/casinos") && "text-primary"
-                    )}
-                  >
+                <NavigationMenuLink
+                  className={cn(
+                    "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
+                    isActive("/casinos") && "text-primary"
+                  )}
+                  asChild
+                >
+                  <Link href="/casinos">
                     {t('nav.casinos')}
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/promos">
-                  <NavigationMenuLink
-                    className={cn(
-                      "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                      isActive("/promos") && "text-primary"
-                    )}
-                  >
+                <NavigationMenuLink
+                  className={cn(
+                    "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
+                    isActive("/promos") && "text-primary"
+                  )}
+                  asChild
+                >
+                  <Link href="/promos">
                     {t('nav.promoCodes')}
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
