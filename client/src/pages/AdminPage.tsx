@@ -2524,7 +2524,10 @@ function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
       await apiRequest('DELETE', `/api/admin/outlets/${id}`);
     },
     onSuccess: () => {
+      // Invalidate both admin and public outlet queries
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      
       toast({
         title: language === 'it' ? 'Punto Vendita Eliminato' : 'Outlet Deleted',
         description: language === 'it' 
@@ -2554,7 +2557,10 @@ function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
       });
     },
     onSuccess: () => {
+      // Invalidate both admin and public outlet queries
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      
       toast({
         title: language === 'it' ? 'Stato Aggiornato' : 'Status Updated',
         description: language === 'it' 
@@ -2738,7 +2744,10 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
       }
     },
     onSuccess: () => {
+      // Invalidate both admin and public outlet queries
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
+      
       toast({
         title: id === null
           ? (language === 'it' ? 'Punto Vendita Creato' : 'Outlet Created')
