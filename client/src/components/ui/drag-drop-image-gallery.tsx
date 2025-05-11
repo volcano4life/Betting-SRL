@@ -65,32 +65,18 @@ function DraggableImage({
           alt={`Gallery image ${index + 1}`} 
           className="w-full h-full object-cover" 
           onError={(e) => {
-            // Try alternative paths in sequence
+            // Simple fallback with clearer error display
             const target = e.target as HTMLImageElement;
-            
-            // Define all possible paths to try in order
-            const possiblePaths = [
-              `/assets/${url}.jpg`,
-              `/assets/outlets/${url.replace(/\-/g, '')}.jpg`,  // Try without hyphens
-              `/assets/outlets/redmoon-${url.replace('redmoon', '')}.jpg`, // Try with hyphen format
-              `/assets/outlets/${url.replace(/[0-9]/g, '-$&')}.jpg` // Try with hyphen before numbers
-            ];
-            
-            let pathIndex = 0;
-            
-            const tryNextPath = () => {
-              if (pathIndex < possiblePaths.length) {
-                target.src = possiblePaths[pathIndex];
-                pathIndex++;
-              } else {
-                // If all paths fail, show placeholder
-                target.src = 'https://placehold.co/96?text=Not+Found';
-                target.className = 'w-full h-full object-contain bg-gray-100';
-              }
-            };
-            
-            target.onerror = tryNextPath;
-            tryNextPath();
+            // Try without the outlets folder if it's there
+            if (target.src.includes('/outlets/')) {
+              target.src = target.src.replace('/outlets/', '/');
+              
+              // Final fallback if that also fails
+              target.onerror = () => {
+                target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+                target.className = 'w-full h-full object-contain p-2 bg-gray-100';
+              };
+            }
           }}
         />
       </div>
@@ -252,7 +238,12 @@ export function DragDropImageGallery({
     <div className="space-y-4">
       <div className="space-y-2">
         <div className="text-sm text-muted-foreground">
-          You can add images by name (like 'redmoon1') or provide a full URL. Supported image names include redmoon1, redmoon2, redmoon3, etc.
+          <strong>Image Naming Guide:</strong> Enter simple image names without extensions (e.g., 'redmoon1') for images in the assets folder. 
+          <ul className="list-disc pl-5 mt-1 space-y-1">
+            <li>Standard format: redmoon1, redmoon2, redmoon3, etc.</li>
+            <li>Images should be placed in the /assets/outlets/ folder</li>
+            <li>The system will automatically look for .jpg extension</li>
+          </ul>
         </div>
         <div className="flex space-x-2">
           <Input

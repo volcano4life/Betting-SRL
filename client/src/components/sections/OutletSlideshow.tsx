@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AnimatedWrapper from '@/components/ui/animated-wrapper';
@@ -16,8 +16,36 @@ interface Outlet {
   createdAt: Date;
 }
 
+// Simple predefined image sets for outlets - safe fallback approach
+const OUTLET_IMAGES: Record<number, string[]> = {
+  1: [
+    '/assets/outlets/redmoon1.jpg',
+    '/assets/outlets/redmoon2.jpg',
+    '/assets/outlets/redmoon3.jpg',
+    '/assets/outlets/redmoon4.jpg',
+    '/assets/outlets/redmoon5.jpg'
+  ],
+  2: [
+    '/assets/outlets/redmoon3.jpg',
+    '/assets/outlets/redmoon4.jpg',
+    '/assets/outlets/redmoon5.jpg'
+  ],
+  3: [
+    '/assets/outlets/redmoon2.jpg',
+    '/assets/outlets/redmoon4.jpg', 
+    '/assets/outlets/redmoon5.jpg'
+  ]
+};
+
+// Default first image for each outlet
+const DEFAULT_IMAGES: Record<number, string> = {
+  1: '/assets/outlets/redmoon1.jpg',
+  2: '/assets/outlets/redmoon3.jpg',
+  3: '/assets/outlets/redmoon2.jpg'
+};
+
 export function OutletSlideshow() {
-  const { language, t, getLocalizedField } = useLanguage();
+  const { language, getLocalizedField } = useLanguage();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +53,16 @@ export function OutletSlideshow() {
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
   });
+
+  const handleOutletClick = (outlet: Outlet) => {
+    setSelectedOutlet(outlet);
+    setIsModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOutlet(null);
+  };
 
   if (isLoading) {
     return (
@@ -40,52 +78,6 @@ export function OutletSlideshow() {
 
   // Only show the first 3 outlets
   const displayOutlets = outlets.slice(0, 3);
-  
-  // Generate image sets for each outlet
-  const getOutletImageSet = (outletId: number): string[] => {
-    // Define base image names
-    const baseImages = ['redmoon1', 'redmoon2', 'redmoon3', 'redmoon4', 'redmoon5'];
-    
-    // Use different subsets for different outlets for variety
-    switch(outletId) {
-      case 1: // Redmoon Aversa
-        return baseImages.map(img => `/assets/outlets/${img}.jpg`); // All images
-      case 2: // Wincity
-        return ['redmoon3', 'redmoon4', 'redmoon5'].map(img => `/assets/outlets/${img}.jpg`);
-      case 3: // Matchpoint
-        return ['redmoon2', 'redmoon4', 'redmoon5'].map(img => `/assets/outlets/${img}.jpg`);
-      default:
-        return baseImages.slice(0, 3).map(img => `/assets/outlets/${img}.jpg`);
-    }
-  };
-  
-  // Create outlet image sets map
-  const [outletImageSets, setOutletImageSets] = useState<{ [key: number]: string[] }>({});
-  
-  // Initialize outlet image sets
-  useEffect(() => {
-    if (outlets && outlets.length > 0) {
-      const imageSets: { [key: number]: string[] } = {};
-      outlets.forEach(outlet => {
-        imageSets[outlet.id] = getOutletImageSet(outlet.id);
-      });
-      setOutletImageSets(imageSets);
-    }
-  }, [outlets]);
-  
-  // Function to get the primary image for an outlet (the first image in its slideshow)
-  const getPrimaryImage = (outletId: number): string => {
-    return outletImageSets[outletId]?.[0] || "";
-  };
-  
-  const handleOutletClick = (outlet: Outlet) => {
-    setSelectedOutlet(outlet);
-    setIsModalOpen(true);
-  };
-  
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
@@ -97,7 +89,7 @@ export function OutletSlideshow() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-6xl mx-auto">
-          {displayOutlets.map((outlet, index) => (
+          {displayOutlets.map((outlet) => (
             <AnimatedWrapper
               key={outlet.id}
               animation="fade" 
@@ -112,30 +104,15 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={getPrimaryImage(outlet.id)}
+                  src={DEFAULT_IMAGES[outlet.id] || '/assets/outlets/redmoon1.jpg'}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
                   }`}
                   onError={(e) => {
-                    // Try alternative paths in sequence if the primary image fails to load
                     const target = e.target as HTMLImageElement;
-                    const originalSrc = target.src;
-                    
-                    // First try without the outlets folder
-                    if (originalSrc.includes('/outlets/')) {
-                      target.src = originalSrc.replace('/outlets/', '/');
-                      
-                      // Set error handler for this attempt
-                      target.onerror = () => {
-                        // If that fails, try a general fallback for the outlet
-                        target.src = `/assets/outlets/redmoon${outlet.id}.jpg`;
-                        
-                        // Final fallback
-                        target.onerror = () => {
-                          target.src = `/assets/redmoon${outlet.id}.jpg`;
-                        };
-                      };
+                    if (target.src.includes('/outlets/')) {
+                      target.src = target.src.replace('/outlets/', '/');
                     }
                   }}
                 />
@@ -168,7 +145,7 @@ export function OutletSlideshow() {
         <OutletSlideshowModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          images={outletImageSets[selectedOutlet.id] || []}
+          images={OUTLET_IMAGES[selectedOutlet.id] || ['/assets/outlets/redmoon1.jpg']}
           title={getLocalizedField(selectedOutlet, 'title')}
           description={getLocalizedField(selectedOutlet, 'description') || ''}
         />
