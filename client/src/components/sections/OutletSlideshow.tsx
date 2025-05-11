@@ -56,6 +56,11 @@ export function OutletSlideshow() {
     3: [redmoon2, redmoon4, redmoon5], // Matchpoint Trentola-Ducenta
   };
   
+  // Function to get the primary image for an outlet (the first image in its slideshow)
+  const getPrimaryImage = (outletId: number): string => {
+    return outletImageSets[outletId]?.[0] || "";
+  };
+  
   const handleOutletClick = (outlet: Outlet) => {
     setSelectedOutlet(outlet);
     setIsModalOpen(true);
@@ -90,10 +95,7 @@ export function OutletSlideshow() {
                 onClick={() => handleOutletClick(outlet)}
               >
                 <img 
-                  src={outlet.imageUrl === 'redmoon1' ? redmoon1 : 
-                       outlet.imageUrl === 'redmoon2' ? redmoon2 : 
-                       outlet.imageUrl === 'redmoon3' ? redmoon3 : 
-                       outlet.imageUrl === 'redmoon4' ? redmoon4 : redmoon5}
+                  src={getPrimaryImage(outlet.id)}
                   alt={getLocalizedField(outlet, 'title')} 
                   className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
                     hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
