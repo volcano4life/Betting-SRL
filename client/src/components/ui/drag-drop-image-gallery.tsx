@@ -64,20 +64,6 @@ function DraggableImage({
           src={url.includes('/') ? url : `/assets/outlets/${url}.jpg`} 
           alt={`Gallery image ${index + 1}`} 
           className="w-full h-full object-cover" 
-          onError={(e) => {
-            // Simple fallback with clearer error display
-            const target = e.target as HTMLImageElement;
-            // Try without the outlets folder if it's there
-            if (target.src.includes('/outlets/')) {
-              target.src = target.src.replace('/outlets/', '/');
-              
-              // Final fallback if that also fails
-              target.onerror = () => {
-                target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
-                target.className = 'w-full h-full object-contain p-2 bg-gray-100';
-              };
-            }
-          }}
         />
       </div>
       

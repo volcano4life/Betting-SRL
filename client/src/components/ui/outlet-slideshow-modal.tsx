@@ -64,13 +64,6 @@ export default function OutletSlideshowModal({
               src={images[currentIndex]}
               alt={`${title} - ${currentIndex + 1}`}
               className="w-full h-full object-contain"
-              onError={(e) => {
-                // Simple fallback approach
-                const target = e.target as HTMLImageElement;
-                if (target.src.includes('/outlets/')) {
-                  target.src = target.src.replace('/outlets/', '/');
-                }
-              }}
             />
             
             {/* Navigation buttons */}
