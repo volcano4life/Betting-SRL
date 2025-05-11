@@ -110,7 +110,7 @@ export default function ReviewDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle('reviewDetail', getLocalizedField(review, 'title'))}</title>
+        <title translate="no">{getPageTitle('reviewDetail', getLocalizedField(review, 'title'))}</title>
         <meta name="description" content={getLocalizedField(review, 'summary')} />
       </Helmet>
       

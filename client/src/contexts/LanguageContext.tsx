@@ -677,7 +677,14 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   // Function to get translation for a key
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    const translatedText = translations[language][key] || key;
+    
+    // Always protect the brand name from translation
+    if (translatedText.includes('Betting SRL')) {
+      return translatedText.replace('Betting SRL', 'Betting SRL');
+    }
+    
+    return translatedText;
   };
   
   // Function to parse and render HTML content in translations

@@ -76,7 +76,7 @@ export default function ChangePasswordPage() {
   return (
     <>
       <Helmet>
-        <title>{getPageTitle('changePassword')}</title>
+        <title translate="no">{getPageTitle('changePassword')}</title>
         <meta name="description" content={`Update your account password securely on ${siteConfig.name}.`} />
       </Helmet>
       
