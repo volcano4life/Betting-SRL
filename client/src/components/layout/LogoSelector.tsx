@@ -4,17 +4,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import BettingLogo from './BettingLogo';
 import SportsBettingLogo from './SportsBettingLogo';
 import CasinoChipLogo from './CasinoChipLogo';
+import { useLogo, LogoType } from '@/contexts/LogoContext';
 
 interface LogoSelectorProps {
-  onSelectLogo: (logoType: string) => void;
-  selectedLogo: string;
+  // No props needed anymore, we'll use context
 }
 
-const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo }) => {
+const LogoSelector: React.FC<LogoSelectorProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { selectedLogo, setSelectedLogo } = useLogo();
 
-  const handleSelectLogo = (logoType: string) => {
-    onSelectLogo(logoType);
+  const handleSelectLogo = (logoType: LogoType) => {
+    setSelectedLogo(logoType);
     setIsOpen(false);
   };
 
@@ -32,7 +33,7 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
           <div className="flex flex-col items-center gap-2 p-4 border rounded-md hover:bg-muted/50 cursor-pointer transition-colors" 
-            onClick={() => handleSelectLogo('poker-chip')}>
+            onClick={() => handleSelectLogo('poker-chip' as LogoType)}>
             <BettingLogo className="w-16 h-16" />
             <div className="text-center">
               <h3 className="font-medium">Card Table</h3>
@@ -46,7 +47,7 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
           </div>
           
           <div className="flex flex-col items-center gap-2 p-4 border rounded-md hover:bg-muted/50 cursor-pointer transition-colors" 
-            onClick={() => handleSelectLogo('sports-shield')}>
+            onClick={() => handleSelectLogo('sports-shield' as LogoType)}>
             <SportsBettingLogo className="w-16 h-16" />
             <div className="text-center">
               <h3 className="font-medium">Sports Field</h3>
@@ -60,7 +61,7 @@ const LogoSelector: React.FC<LogoSelectorProps> = ({ onSelectLogo, selectedLogo 
           </div>
           
           <div className="flex flex-col items-center gap-2 p-4 border rounded-md hover:bg-muted/50 cursor-pointer transition-colors" 
-            onClick={() => handleSelectLogo('casino-chip')}>
+            onClick={() => handleSelectLogo('casino-chip' as LogoType)}>
             <CasinoChipLogo className="w-16 h-16" />
             <div className="text-center">
               <h3 className="font-medium">Vegas Night</h3>

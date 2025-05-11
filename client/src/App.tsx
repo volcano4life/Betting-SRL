@@ -14,6 +14,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CookieConsent from "@/components/common/CookieConsent";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { LogoProvider } from "./contexts/LogoContext";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PageTransition from "@/components/ui/page-transition";
@@ -63,13 +64,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <LanguageProvider>
-          <TooltipProvider>
-            <Toaster />
-            <div className="min-h-screen flex flex-col">
-              <Router />
-              <CookieConsent />
-            </div>
-          </TooltipProvider>
+          <LogoProvider>
+            <TooltipProvider>
+              <Toaster />
+              <div className="min-h-screen flex flex-col">
+                <Router />
+                <CookieConsent />
+              </div>
+            </TooltipProvider>
+          </LogoProvider>
         </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>

@@ -19,6 +19,7 @@ import BettingLogo from "./BettingLogo";
 import SportsBettingLogo from "./SportsBettingLogo";
 import CasinoChipLogo from "./CasinoChipLogo";
 import LogoSelector from "./LogoSelector";
+import { useLogo } from "@/contexts/LogoContext";
 
 const casinoCategories = [
   { label: "Slot Machines", href: "/casinos?category=slots" },
@@ -46,7 +47,7 @@ export default function Header() {
   const [location] = useLocation();
   const { language, setLanguage, t } = useLanguage();
   const { user, logoutMutation } = useAuth();
-  const [selectedLogo, setSelectedLogo] = useState<string>('poker-chip');
+  const { selectedLogo, setSelectedLogo } = useLogo();
 
   const isActive = (path: string) => location === path;
   
