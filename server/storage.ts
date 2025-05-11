@@ -87,6 +87,7 @@ export class MemStorage implements IStorage {
   private guides: Map<number, Guide>;
   private subscribers: Map<number, Subscriber>;
   private promoCodes: Map<number, PromoCode>;
+  private outlets: Map<number, Outlet>;
   
   private userId: number;
   private gameId: number;
@@ -95,6 +96,7 @@ export class MemStorage implements IStorage {
   private guideId: number;
   private subscriberId: number;
   private promoCodeId: number;
+  private outletId: number;
   
   constructor() {
     this.users = new Map();
@@ -104,6 +106,7 @@ export class MemStorage implements IStorage {
     this.guides = new Map();
     this.subscribers = new Map();
     this.promoCodes = new Map();
+    this.outlets = new Map();
     
     this.userId = 1;
     this.gameId = 1;
@@ -112,6 +115,7 @@ export class MemStorage implements IStorage {
     this.guideId = 1;
     this.subscriberId = 1;
     this.promoCodeId = 1;
+    this.outletId = 1;
     
     // Add some initial data
     this.initializeData();
