@@ -12,6 +12,7 @@ const BettingLogo: React.FC<LogoProps> = ({ className = "" }) => {
       alt="Betting SRL" 
       className={`object-contain ${className}`}
       style={{ objectFit: 'contain', aspectRatio: 'auto' }}
+      translate="no"
     />
   );
 };

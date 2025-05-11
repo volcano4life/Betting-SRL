@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure elements with translate="no" attribute are not translated by browsers */
+[translate="no"] {
+  -webkit-translate: none;
+  translate: none;
+}
+
 :root {
   --background: 0 0% 97%;
   --foreground: 222 11% 13%;
