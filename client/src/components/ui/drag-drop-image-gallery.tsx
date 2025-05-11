@@ -55,20 +55,28 @@ function DraggableImage({
     <div 
       ref={setNodeRef} 
       style={style} 
-      className={`relative bg-background border rounded-md overflow-hidden cursor-move w-24 h-24 ${isPrimary ? 'ring-2 ring-primary border-primary' : ''}`}
+      className={`relative bg-background border rounded-md overflow-hidden cursor-move w-32 h-32 ${isPrimary ? 'ring-2 ring-primary border-primary' : ''}`}
       {...attributes}
       {...listeners}
     >
-      <img 
-        src={url.includes('/') ? url : `/assets/${url}.jpg`} 
-        alt={`Gallery image ${index + 1}`} 
-        className="w-full h-full object-cover" 
-        onError={(e) => {
-          // Set a fallback if image fails to load
-          const target = e.target as HTMLImageElement;
-          target.src = 'https://placehold.co/96?text=Not+Found';
-        }}
-      />
+      <div className="relative w-full h-full">
+        <img 
+          src={url.includes('/') ? url : `/assets/outlets/${url}.jpg`} 
+          alt={`Gallery image ${index + 1}`} 
+          className="w-full h-full object-cover" 
+          onError={(e) => {
+            // Try alternative path
+            const target = e.target as HTMLImageElement;
+            target.src = `/assets/${url}.jpg`;
+            
+            // Add another error handler for the alternative path
+            target.onerror = () => {
+              target.src = 'https://placehold.co/96?text=Not+Found';
+              target.className = 'w-full h-full object-contain bg-gray-100';
+            };
+          }}
+        />
+      </div>
       
       <div className="absolute top-0 right-0 flex gap-1 p-1">
         {isPrimary && (
