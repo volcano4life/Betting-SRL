@@ -69,20 +69,43 @@ function DraggableImage({
             const target = e.target as HTMLImageElement;
             const currentUrl = target.src;
             
-            // If already trying a fallback, use placeholder
-            if (currentUrl.includes('fallback-attempt')) {
+            // If already at attempt 3, use a placeholder image
+            if (currentUrl.includes('fallback-attempt=3')) {
+              console.log('Final fallback for', url);
               target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
               target.className = 'w-full h-full object-contain p-2 bg-gray-100';
               return;
             }
 
-            // Try all possible variations of the image path
+            // If it contains a full URL path, don't try variations
             if (url.includes('/')) {
-              return; // Don't try variations for full URLs
+              console.log('Skipping fallbacks for full URL:', url);
+              return;
             }
             
-            // Try with outlets folder if not found in assets root
-            target.src = `/assets/outlets/${url}.jpg?fallback-attempt=1`;
+            // Check which attempt we're on
+            let attemptNum = 1;
+            if (currentUrl.includes('fallback-attempt=1')) {
+              attemptNum = 2;
+            } else if (currentUrl.includes('fallback-attempt=2')) {
+              attemptNum = 3;
+            }
+            
+            // Try different paths based on the attempt number
+            if (attemptNum === 1) {
+              // Try with outlets folder
+              target.src = `/assets/outlets/${url}.jpg?fallback-attempt=1`;
+            } else if (attemptNum === 2) {
+              // Try with hyphenated version (redmoon-1 instead of redmoon1)
+              const hyphenated = url.replace(/(\d+)$/, '-$1');
+              target.src = `/assets/outlets/${hyphenated}.jpg?fallback-attempt=2`;
+            } else {
+              // Try just by name without the outlets folder
+              const baseName = url.split('/').pop();
+              target.src = `/assets/${baseName}.jpg?fallback-attempt=3`;
+            }
+            
+            console.log(`Attempt ${attemptNum} for ${url}: ${target.src}`);
           }}
         />
       </div>
@@ -296,7 +319,28 @@ export function DragDropImageGallery({
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = `/assets/outlets/${imgName}.jpg`;
+                    const currentSrc = target.src;
+                    
+                    // If already tried all fallbacks
+                    if (currentSrc.includes('fallback-attempt=3')) {
+                      target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+                      target.className = 'w-full h-full object-contain p-2 bg-gray-100';
+                      return;
+                    }
+                    
+                    // Try different paths based on where we are in the fallback chain
+                    if (!currentSrc.includes('fallback-attempt')) {
+                      // First fallback - try outlets folder
+                      target.src = `/assets/outlets/${imgName}.jpg?fallback-attempt=1`;
+                    } else if (currentSrc.includes('fallback-attempt=1')) {
+                      // Second fallback - try hyphenated filename
+                      const hyphenated = imgName.replace(/(\d+)$/, '-$1');
+                      target.src = `/assets/outlets/${hyphenated}.jpg?fallback-attempt=2`;
+                    } else if (currentSrc.includes('fallback-attempt=2')) {
+                      // Third fallback - try assets folder with hyphen
+                      const hyphenated = imgName.replace(/(\d+)$/, '-$1');
+                      target.src = `/assets/${hyphenated}.jpg?fallback-attempt=3`;
+                    }
                   }}
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
