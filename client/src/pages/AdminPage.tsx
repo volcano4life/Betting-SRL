@@ -2981,9 +2981,13 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
               <DragDropImageGallery
                 images={[formData.imageUrl, ...formData.additionalImages].filter(Boolean)}
                 onImagesChange={(newImages) => {
+                  console.log("Image gallery changes:", newImages);
                   if (newImages.length > 0) {
                     // First image becomes the primary image
                     const [primaryImage, ...additionalImages] = newImages;
+                    console.log("New primary:", primaryImage);
+                    console.log("New additional:", additionalImages);
+                    
                     setFormData(prev => ({
                       ...prev,
                       imageUrl: primaryImage,
@@ -2991,6 +2995,7 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
                     }));
                   } else {
                     // If no images, reset both
+                    console.log("Clearing all images");
                     setFormData(prev => ({
                       ...prev,
                       imageUrl: '',
