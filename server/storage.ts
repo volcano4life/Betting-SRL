@@ -89,6 +89,11 @@ export class MemStorage implements IStorage {
   private promoCodes: Map<number, PromoCode>;
   private outlets: Map<number, Outlet>;
   
+  // Caching for GNews data
+  private cachedNews: News[] | null = null;
+  private newsCacheTimestamp: number = 0;
+  private readonly CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+  
   private userId: number;
   private gameId: number;
   private reviewId: number;
@@ -519,13 +524,48 @@ export class MemStorage implements IStorage {
   
   // News methods
   async getAllNews(): Promise<News[]> {
-    return Array.from(this.news.values());
+    await this.ensureNewsCache();
+    return this.cachedNews || [];
   }
   
   async getLatestNews(limit: number = 5): Promise<News[]> {
-    return Array.from(this.news.values())
+    await this.ensureNewsCache();
+    return (this.cachedNews || [])
       .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
       .slice(0, limit);
+  }
+
+  private async ensureNewsCache(): Promise<void> {
+    const now = Date.now();
+    if (this.cachedNews && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
+      return; // Cache is still valid
+    }
+    
+    // Load cached news on first access or if cache is expired
+    if (!this.cachedNews) {
+      await this.loadCachedNews();
+    }
+  }
+
+  private async loadCachedNews(): Promise<void> {
+    try {
+      const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
+      const articles = await fetchGNews('sports', 'it');
+      
+      this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
+      this.newsCacheTimestamp = Date.now();
+    } catch (error) {
+      console.error('Failed to load news from GNews API:', error);
+      // Fallback to static news if API fails
+      this.cachedNews = Array.from(this.news.values());
+      this.newsCacheTimestamp = Date.now();
+    }
+  }
+
+  async refreshNewsCache(): Promise<void> {
+    this.cachedNews = null;
+    this.newsCacheTimestamp = 0;
+    await this.loadCachedNews();
   }
   
   async getNewsBySlug(slug: string): Promise<News | undefined> {
