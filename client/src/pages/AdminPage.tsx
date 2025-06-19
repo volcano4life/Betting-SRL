@@ -38,7 +38,7 @@ export default function AdminPage() {
   const { t, language, setLanguage } = useLanguage();
   const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<ContentType>("promo-codes");
+  const [activeTab, setActiveTab] = useState<ContentType>("games");
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   
@@ -99,7 +99,6 @@ export default function AdminPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <TabsList className="mr-4">
-                <TabsTrigger value="promo-codes">{t('admin.promoCodes')}</TabsTrigger>
                 <TabsTrigger value="games">{t('admin.games')}</TabsTrigger>
                 <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
                 <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
@@ -138,24 +137,7 @@ export default function AdminPage() {
             )}
           </div>
 
-          {/* Promo Codes Management */}
-          <TabsContent value="promo-codes">
-            {isAdding ? (
-              <PromoCodeForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <PromoCodeForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <PromoCodesList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
+
           
           {/* Games Management */}
           <TabsContent value="games">
@@ -276,33 +258,40 @@ export default function AdminPage() {
   );
 }
 
-// ===== PROMO CODES =====
-function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
+
+
+type FormProps = {
+  id: number | null;
+  onCancel: () => void;
+  onSuccess: () => void;
+};
+// ===== GAMES =====
+function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t, getLocalizedField } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const { data: promoCodes, isLoading } = useQuery<PromoCode[]>({
-    queryKey: ['/api/admin/promo-codes'],
+  const { data: games, isLoading } = useQuery<Game[]>({
+    queryKey: ['/api/admin/games'],
     meta: {
-      errorMessage: t('admin.promoCodeLoadError')
+      errorMessage: t('admin.gameLoadError')
     }
   });
   
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest('DELETE', `/api/admin/promo-codes/${id}`);
+      await apiRequest('DELETE', `/api/admin/games/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/promo-codes'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/games'] });
       toast({
-        title: t('admin.promoCodeDeletedTitle'),
-        description: t('admin.promoCodeDeletedDesc'),
+        title: t('admin.gameDeletedTitle'),
+        description: t('admin.gameDeletedDesc'),
       });
     },
     onError: (error) => {
       toast({
-        title: t('admin.promoCodeDeleteErrorTitle'),
+        title: t('admin.gameDeleteErrorTitle'),
         description: error.message,
         variant: 'destructive'
       });
@@ -320,32 +309,43 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('admin.promoCodes')}</CardTitle>
-        <CardDescription>{t('admin.promoCodesDesc')}</CardDescription>
+        <CardTitle>{t('admin.games')}</CardTitle>
+        <CardDescription>{t('admin.gamesDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[600px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.promoCodeCasino')}</TableHead>
-                <TableHead>{t('admin.promoCode')}</TableHead>
-                <TableHead>{t('admin.validUntil')}</TableHead>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.rating')}</TableHead>
+                <TableHead>{t('admin.featured')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {promoCodes?.length ? (
-                promoCodes.map((promoCode) => (
-                  <TableRow key={promoCode.id}>
-                    <TableCell>{getLocalizedField(promoCode, 'casino_name')}</TableCell>
-                    <TableCell>{promoCode.code}</TableCell>
-                    <TableCell>{format(new Date(promoCode.validUntil), 'dd/MM/yyyy')}</TableCell>
+              {games?.length ? (
+                games.map((game) => (
+                  <TableRow key={game.id}>
+                    <TableCell>{getLocalizedField(game, 'title')}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                        {game.overallRating.toFixed(1)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {game.featured ? (
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        onClick={() => onEdit(promoCode.id)}
+                        onClick={() => onEdit(game.id)}
                       >
                         {t('admin.edit')}
                       </Button>
@@ -360,7 +360,7 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
                           <DialogHeader>
                             <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
                             <DialogDescription>
-                              {t('admin.confirmDeletePromoCode')}
+                              {t('admin.confirmDeleteGame')}
                             </DialogDescription>
                           </DialogHeader>
                           <DialogFooter>
@@ -370,7 +370,7 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
                             <Button 
                               variant="destructive"
                               onClick={() => {
-                                deleteMutation.mutate(promoCode.id);
+                                deleteMutation.mutate(game.id);
                                 document.querySelector('dialog')?.close();
                               }}
                             >
@@ -385,7 +385,7 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center py-6">
-                    {t('admin.noPromoCodes')}
+                    {t('admin.noGames')}
                   </TableCell>
                 </TableRow>
               )}
@@ -397,177 +397,7 @@ function PromoCodesList({ onEdit }: { onEdit: (id: number) => void }) {
   );
 }
 
-type PromoCodeFormProps = {
-  id: number | null;
-  onCancel: () => void;
-  onSuccess: () => void;
-};
-
-function PromoCodeForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
-  const { t } = useLanguage();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  
-  const [formData, setFormData] = useState<Partial<PromoCode> & { validUntil: string | Date }>({
-    casino_name_en: '',
-    casino_name_it: '',
-    code: '',
-    description_en: '',
-    description_it: '',
-    bonus_en: '',
-    bonus_it: '',
-    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-    casinoLogo: '',
-    affiliateLink: '',
-    active: true,
-    featured: 0
-  });
-
-  const { data: promoCode, isLoading, isError } = useQuery<PromoCode>({
-    queryKey: [`/api/admin/promo-codes/${id}`],
-    enabled: !!id,
-    meta: {
-      errorMessage: t('admin.promoCodeLoadError')
-    },
-    retry: false
-  });
-
-  // Initialize form with promoCode data when loaded (editing mode)
-  React.useEffect(() => {
-    if (promoCode) {
-      setFormData({
-        ...promoCode,
-        validUntil: new Date(promoCode.validUntil)
-      });
-    }
-  }, [promoCode]);
-
-  const saveMutation = useMutation({
-    mutationFn: async (data: Partial<PromoCode> & { validUntil: string | Date }) => {
-      // Convert validUntil to Date object for API submission
-      const dataToSend = {
-        ...data,
-        validUntil: data.validUntil instanceof Date 
-          ? data.validUntil 
-          : new Date(data.validUntil)
-      };
-      
-      if (id) {
-        // Update existing
-        await apiRequest('PUT', `/api/admin/promo-codes/${id}`, dataToSend);
-      } else {
-        // Create new
-        await apiRequest('POST', '/api/admin/promo-codes', dataToSend);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/promo-codes'] });
-      toast({
-        title: id ? t('admin.promoCodeUpdatedTitle') : t('admin.promoCodeCreatedTitle'),
-        description: id ? t('admin.promoCodeUpdatedDesc') : t('admin.promoCodeCreatedDesc'),
-      });
-      onSuccess();
-    },
-    onError: (error) => {
-      toast({
-        title: t('admin.savingErrorTitle'),
-        description: error.message,
-        variant: 'destructive'
-      });
-    }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Convert the Date object to an ISO string for API submission
-    const dataToSubmit = {
-      ...formData,
-      validUntil: formData.validUntil instanceof Date 
-        ? formData.validUntil.toISOString() 
-        : formData.validUntil
-    };
-    
-    saveMutation.mutate(dataToSubmit);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' 
-        ? (e.target as HTMLInputElement).checked 
-        : name === 'featured' 
-          ? parseInt(value) 
-          : name === 'validUntil' && value
-            ? new Date(value)
-            : value
-    }));
-  };
-
-  // Show loading spinner when loading data
-  if (isLoading && id) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-  
-  // Handle errors (like 404 Not Found)
-  if (isError && id) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.error')}</CardTitle>
-          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p>{t('admin.itemNotFoundDesc')}</p>
-            <Button variant="outline" className="mt-4" onClick={onCancel}>
-              {t('admin.back')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {id ? t('admin.editPromoCode') : t('admin.addPromoCode')}
-        </CardTitle>
-        <CardDescription>
-          {t('admin.promoCodeFormDesc')}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* English Content */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">{t('admin.englishContent')}</h3>
-              
-              <div className="space-y-2">
-                <Label htmlFor="casino_name_en">{t('admin.casinoName')} (EN)</Label>
-                <Input
-                  id="casino_name_en"
-                  name="casino_name_en"
-                  value={formData.casino_name_en || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description_en">{t('admin.description')} (EN)</Label>
-                <Textarea
-                  id="description_en"
-                  name="description_en"
+function GameForm({ id, onCancel, onSuccess }: FormProps) {
                   value={formData.description_en || ''}
                   onChange={handleChange}
                   required
