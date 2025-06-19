@@ -97,17 +97,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(reviews);
   });
   
-  // News endpoints - fetches only Italian sports news from GNews API
+  // News endpoints - uses cached Italian sports news
   app.get('/api/news', async (req, res) => {
     try {
-      // Get real Italian sports news from GNews API
-      const gNewsArticles = await fetchGNews('sports', 'it');
-      const sportsNews = gNewsArticles
-        .map((article, index) => convertGNewsToNews(article, index + 1000));
-      
-      res.json(sportsNews);
+      const news = await storage.getAllNews();
+      res.json(news);
     } catch (error) {
-      console.error('Error fetching Italian sports news:', error);
+      console.error('Error fetching news:', error);
       res.status(500).json({ message: 'Error fetching news', error: error.message });
     }
   });
@@ -115,16 +111,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/news/latest', async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
-      
-      // Get real Italian sports news from GNews API
-      const gNewsArticles = await fetchGNews('sports', 'it');
-      const latestNews = gNewsArticles
-        .slice(0, limit)
-        .map((article, index) => convertGNewsToNews(article, index + 2000));
-      
+      const latestNews = await storage.getLatestNews(limit);
       res.json(latestNews);
     } catch (error) {
-      console.error('Error fetching latest Italian sports news:', error);
+      console.error('Error fetching latest news:', error);
       res.status(500).json({ message: 'Error fetching latest news', error: error.message });
     }
   });
