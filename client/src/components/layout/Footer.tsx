@@ -63,7 +63,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#222236] text-gray-300">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <div className="flex items-center mb-4">
               {getLogo()}
