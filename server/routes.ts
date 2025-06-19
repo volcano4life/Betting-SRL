@@ -147,10 +147,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         convertGNewsToNews(article, index + 3000)
       );
       
-      // Debug logging
-      console.log('Looking for slug:', slug);
-      console.log('Available slugs:', convertedArticles.map(a => a.slug));
-      
       const matchingArticle = convertedArticles.find(article => article.slug === slug);
       
       if (matchingArticle) {
