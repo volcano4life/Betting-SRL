@@ -108,9 +108,10 @@ export default function NewsDetailPage() {
               </p>
 
               <div className="prose prose-lg max-w-none">
-                <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                  {getLocalizedField(newsItem, 'content')}
-                </div>
+                <div 
+                  className="text-gray-800 leading-relaxed whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{ __html: getLocalizedField(newsItem, 'content') }}
+                />
               </div>
             </div>
           </div>
