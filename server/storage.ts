@@ -113,6 +113,7 @@ export class MemStorage implements IStorage {
   private subscriberId: number;
   private promoCodeId: number;
   private outletId: number;
+  private advertisementBannerId: number;
   
   constructor() {
     this.users = new Map();
@@ -123,6 +124,7 @@ export class MemStorage implements IStorage {
     this.subscribers = new Map();
     this.promoCodes = new Map();
     this.outlets = new Map();
+    this.advertisementBanners = new Map();
     
     this.userId = 1;
     this.gameId = 1;
@@ -132,6 +134,7 @@ export class MemStorage implements IStorage {
     this.subscriberId = 1;
     this.promoCodeId = 1;
     this.outletId = 1;
+    this.advertisementBannerId = 1;
     
     // Add some initial data
     this.initializeData();
@@ -465,6 +468,47 @@ export class MemStorage implements IStorage {
     this.createOutlet(outlet1);
     this.createOutlet(outlet2);
     this.createOutlet(outlet3);
+
+    // Add demo advertisement banners
+    const leftBanner1: InsertAdvertisementBanner = {
+      title: "Casino Bonus 200%",
+      imageUrl: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=600&q=80",
+      clickUrl: "https://example-casino.com/bonus",
+      position: "left",
+      isActive: true,
+      order: 1
+    };
+    this.createAdvertisementBanner(leftBanner1);
+
+    const leftBanner2: InsertAdvertisementBanner = {
+      title: "Sports Betting Welcome Offer",
+      imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80",
+      clickUrl: "https://example-sportsbook.com/welcome",
+      position: "left",
+      isActive: true,
+      order: 2
+    };
+    this.createAdvertisementBanner(leftBanner2);
+
+    const rightBanner1: InsertAdvertisementBanner = {
+      title: "Live Casino Experience",
+      imageUrl: "https://images.unsplash.com/photo-1511193311914-0346f16ede32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=500&q=80",
+      clickUrl: "https://example-livecasino.com/play",
+      position: "right",
+      isActive: true,
+      order: 1
+    };
+    this.createAdvertisementBanner(rightBanner1);
+
+    const rightBanner2: InsertAdvertisementBanner = {
+      title: "Poker Tournament €10,000",
+      imageUrl: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=350&q=80",
+      clickUrl: "https://example-poker.com/tournament",
+      position: "right",
+      isActive: true,
+      order: 2
+    };
+    this.createAdvertisementBanner(rightBanner2);
   }
   
   // Games methods
@@ -810,6 +854,52 @@ export class MemStorage implements IStorage {
     
     this.outlets.delete(id);
     return outlet;
+  }
+
+  // Advertisement Banner methods
+  async getAllAdvertisementBanners(): Promise<AdvertisementBanner[]> {
+    return Array.from(this.advertisementBanners.values()).sort((a, b) => a.order - b.order);
+  }
+
+  async getActiveAdvertisementBanners(position?: string): Promise<AdvertisementBanner[]> {
+    let banners = Array.from(this.advertisementBanners.values()).filter(banner => banner.isActive);
+    if (position) {
+      banners = banners.filter(banner => banner.position === position);
+    }
+    return banners.sort((a, b) => a.order - b.order);
+  }
+
+  async getAdvertisementBannerById(id: number): Promise<AdvertisementBanner | undefined> {
+    return this.advertisementBanners.get(id);
+  }
+
+  async createAdvertisementBanner(banner: InsertAdvertisementBanner): Promise<AdvertisementBanner> {
+    const id = this.advertisementBannerId++;
+    const createdAt = new Date();
+    const newBanner: AdvertisementBanner = { ...banner, id, createdAt };
+    this.advertisementBanners.set(id, newBanner);
+    return newBanner;
+  }
+
+  async updateAdvertisementBanner(id: number, banner: Partial<InsertAdvertisementBanner>): Promise<AdvertisementBanner> {
+    const existingBanner = this.advertisementBanners.get(id);
+    if (!existingBanner) {
+      throw new Error(`Advertisement banner with id ${id} not found.`);
+    }
+    
+    const updatedBanner: AdvertisementBanner = { ...existingBanner, ...banner };
+    this.advertisementBanners.set(id, updatedBanner);
+    return updatedBanner;
+  }
+
+  async deleteAdvertisementBanner(id: number): Promise<AdvertisementBanner> {
+    const banner = this.advertisementBanners.get(id);
+    if (!banner) {
+      throw new Error(`Advertisement banner with id ${id} not found.`);
+    }
+    
+    this.advertisementBanners.delete(id);
+    return banner;
   }
 }
 
