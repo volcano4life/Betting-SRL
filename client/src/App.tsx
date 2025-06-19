@@ -14,6 +14,7 @@ import AdminPage from "@/pages/AdminPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import PageWithSidebars from "@/components/layout/PageWithSidebars";
 import CookieConsent from "@/components/common/CookieConsent";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LogoProvider } from "./contexts/LogoContext";
@@ -44,18 +45,27 @@ function Router() {
       {showHeaderFooter && <Header />}
       <main className={`flex-grow ${!showHeaderFooter ? 'min-h-screen' : 'pt-20'}`}>
         <PageTransition location={location} type={getTransitionType()} duration={0.4}>
-          <Switch>
-            <Route path="/" component={HomePage} />
-            <Route path="/reviews" component={ReviewListingPage} />
-            <Route path="/reviews/:slug" component={ReviewDetailPage} />
-            <Route path="/news" component={NewsListingPage} />
-            <Route path="/news/:slug" component={NewsDetailPage} />
-            <Route path="/auth" component={AuthPage} />
-            <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
-            <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
-            {/* Fallback to 404 */}
-            <Route component={NotFound} />
-          </Switch>
+          {showHeaderFooter ? (
+            <PageWithSidebars>
+              <Switch>
+                <Route path="/" component={HomePage} />
+                <Route path="/reviews" component={ReviewListingPage} />
+                <Route path="/reviews/:slug" component={ReviewDetailPage} />
+                <Route path="/news" component={NewsListingPage} />
+                <Route path="/news/:slug" component={NewsDetailPage} />
+                <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
+                {/* Fallback to 404 */}
+                <Route component={NotFound} />
+              </Switch>
+            </PageWithSidebars>
+          ) : (
+            <Switch>
+              <Route path="/auth" component={AuthPage} />
+              <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
+              {/* Fallback to 404 */}
+              <Route component={NotFound} />
+            </Switch>
+          )}
         </PageTransition>
       </main>
       {showHeaderFooter && <Footer />}
