@@ -13,7 +13,7 @@ import { News } from "@shared/schema";
 
 export default function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const { t, getLocalizedField, language } = useLanguage();
+  const { t, getLocalizedField, language, translateCategory } = useLanguage();
 
   const { data: newsItem, isLoading, isError } = useQuery<News>({
     queryKey: [`/api/news/${slug}`],
@@ -83,7 +83,7 @@ export default function NewsDetailPage() {
               />
               <div className="absolute top-4 left-4">
                 <Badge className="bg-green-600 text-white">
-                  {newsItem.category}
+                  {translateCategory(newsItem.category)}
                 </Badge>
               </div>
             </div>

@@ -12,7 +12,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getPageTitle } from "@/config/siteConfig";
 
 export default function NewsListingPage() {
-  const { t, getLocalizedField, language } = useLanguage();
+  const { t, getLocalizedField, language, translateCategory } = useLanguage();
   const { data: news, isLoading, isError } = useQuery<News[]>({
     queryKey: ['/api/news'],
   });
@@ -109,7 +109,7 @@ export default function NewsListingPage() {
                       />
                       <div className="absolute top-0 left-0 m-3">
                         <Badge className="bg-blue-600 text-white">
-                          {article.category}
+                          {translateCategory(article.category)}
                         </Badge>
                       </div>
                       {article.featured && (

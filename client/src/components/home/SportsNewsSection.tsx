@@ -10,7 +10,7 @@ import { News } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function SportsNewsSection() {
-  const { t, getLocalizedField, language } = useLanguage();
+  const { t, getLocalizedField, language, translateCategory } = useLanguage();
   const { data: sportsNews, isLoading } = useQuery<News[]>({
     queryKey: ['/api/sports-news'],
   });
