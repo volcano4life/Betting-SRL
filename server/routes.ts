@@ -97,16 +97,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(reviews);
   });
   
-  // News endpoints
+  // News endpoints - fetches only Italian sports news from GNews API
   app.get('/api/news', async (req, res) => {
-    const news = await storage.getAllNews();
-    res.json(news);
+    try {
+      // Get real Italian sports news from GNews API
+      const gNewsArticles = await fetchGNews('sports', 'it');
+      const sportsNews = gNewsArticles
+        .map((article, index) => convertGNewsToNews(article, index + 1000));
+      
+      res.json(sportsNews);
+    } catch (error) {
+      console.error('Error fetching Italian sports news:', error);
+      res.status(500).json({ message: 'Error fetching news', error: error.message });
+    }
   });
   
   app.get('/api/news/latest', async (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
-    const latestNews = await storage.getLatestNews(limit);
-    res.json(latestNews);
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      
+      // Get real Italian sports news from GNews API
+      const gNewsArticles = await fetchGNews('sports', 'it');
+      const latestNews = gNewsArticles
+        .slice(0, limit)
+        .map((article, index) => convertGNewsToNews(article, index + 2000));
+      
+      res.json(latestNews);
+    } catch (error) {
+      console.error('Error fetching latest Italian sports news:', error);
+      res.status(500).json({ message: 'Error fetching latest news', error: error.message });
+    }
   });
   
   app.get('/api/news/:slug', async (req, res) => {
@@ -122,29 +142,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
       
-      // Fetch real sports news from GNews API
+      // Fetch real Italian sports news from GNews API
       const gNewsArticles = await fetchGNews('sports', 'it');
       
       // Convert to our news format and limit results
       const sportsNews = gNewsArticles
         .slice(0, limit)
-        .map((article, index) => convertGNewsToNews(article, index));
+        .map((article, index) => convertGNewsToNews(article, index + 3000));
       
       res.json(sportsNews);
     } catch (error) {
-      console.error('Error fetching sports news from GNews:', error);
-      
-      // Fallback to sample data only if API fails
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
-      const allNews = await storage.getLatestNews(20);
-      
-      const sportsKeywords = ['sport', 'calcio', 'football', 'soccer', 'tennis', 'basketball', 'serie', 'champions', 'uefa', 'fifa', 'atletico', 'juventus', 'milan', 'inter'];
-      const fallbackNews = allNews.filter(news => {
-        const searchText = `${news.category} ${news.title_en} ${news.title_it} ${news.summary_en} ${news.summary_it}`.toLowerCase();
-        return sportsKeywords.some(keyword => searchText.includes(keyword));
-      }).slice(0, limit);
-      
-      res.json(fallbackNews);
+      console.error('Error fetching Italian sports news from GNews:', error);
+      res.status(500).json({ message: 'Error fetching sports news', error: error.message });
     }
   });
 
