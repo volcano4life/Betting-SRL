@@ -6,7 +6,8 @@ import {
   Subscriber, InsertSubscriber,
   User, InsertUser,
   PromoCode, InsertPromoCode,
-  Outlet, InsertOutlet
+  Outlet, InsertOutlet,
+  AdvertisementBanner, InsertAdvertisementBanner
 } from "@shared/schema";
 
 export interface IStorage {
@@ -71,6 +72,14 @@ export interface IStorage {
   // Subscribers
   addSubscriber(subscriber: InsertSubscriber): Promise<Subscriber>;
   
+  // Advertisement Banners
+  getAllAdvertisementBanners(): Promise<AdvertisementBanner[]>;
+  getActiveAdvertisementBanners(position?: string): Promise<AdvertisementBanner[]>;
+  getAdvertisementBannerById(id: number): Promise<AdvertisementBanner | undefined>;
+  createAdvertisementBanner(banner: InsertAdvertisementBanner): Promise<AdvertisementBanner>;
+  updateAdvertisementBanner(id: number, banner: Partial<InsertAdvertisementBanner>): Promise<AdvertisementBanner>;
+  deleteAdvertisementBanner(id: number): Promise<AdvertisementBanner>;
+  
   // Search
   search(query: string): Promise<{
     games: Game[];
@@ -89,6 +98,7 @@ export class MemStorage implements IStorage {
   private subscribers: Map<number, Subscriber>;
   private promoCodes: Map<number, PromoCode>;
   private outlets: Map<number, Outlet>;
+  private advertisementBanners: Map<number, AdvertisementBanner>;
   
   // Caching for GNews data
   private cachedNews: News[] | null = null;

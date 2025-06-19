@@ -126,6 +126,18 @@ export const outlets = pgTable("outlets", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Advertisement banners table
+export const advertisementBanners = pgTable("advertisement_banners", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  imageUrl: text("image_url").notNull(),
+  clickUrl: text("click_url"),
+  position: text("position").notNull(), // 'left' or 'right'
+  isActive: boolean("is_active").default(true).notNull(),
+  order: integer("order").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Define relations
 export const reviewsRelations = relations(reviews, ({ one }) => ({
   game: one(games, {
@@ -175,6 +187,11 @@ export const insertOutletSchema = createInsertSchema(outlets).omit({
   createdAt: true
 });
 
+export const insertAdvertisementBannerSchema = createInsertSchema(advertisementBanners).omit({
+  id: true,
+  createdAt: true
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -199,3 +216,6 @@ export type InsertSubscriber = z.infer<typeof insertSubscriberSchema>;
 
 export type Outlet = typeof outlets.$inferSelect;
 export type InsertOutlet = z.infer<typeof insertOutletSchema>;
+
+export type AdvertisementBanner = typeof advertisementBanners.$inferSelect;
+export type InsertAdvertisementBanner = z.infer<typeof insertAdvertisementBannerSchema>;
