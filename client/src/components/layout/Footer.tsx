@@ -4,59 +4,50 @@ import {
   Twitter, 
   Instagram, 
   Youtube, 
-  MessageCircle 
+  MessageCircle,
+  Target,
+  Shield,
+  Gamepad2
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLogo } from "@/contexts/LogoContext";
-import { siteConfig } from "@/config/siteConfig";
-import BettingLogo from "./BettingLogo";
-import SportsBettingLogo from "./SportsBettingLogo";
-import CasinoChipLogo from "./CasinoChipLogo";
-
-const casinoCategories = [
-  { label: "Slot Machines", href: "/casinos?category=slots" },
-  { label: "Roulette", href: "/casinos?category=roulette" },
-  { label: "Blackjack", href: "/casinos?category=blackjack" },
-  { label: "Poker", href: "/casinos?category=poker" },
-  { label: "Baccarat", href: "/casinos?category=baccarat" },
-  { label: "Live Casino", href: "/casinos?category=live" },
-  { label: "Bingo", href: "/casinos?category=bingo" },
-];
-
-const promoCategories = [
-  { label: "Welcome Bonuses", href: "/promos?type=welcome" },
-  { label: "No Deposit", href: "/promos?type=no-deposit" },
-  { label: "Free Spins", href: "/promos?type=free-spins" },
-  { label: "Cashback", href: "/promos?type=cashback" },
-  { label: "Loyalty Programs", href: "/promos?type=loyalty" },
-];
-
-const companyLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Our Team", href: "/team" },
-  { label: "Careers", href: "/careers" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-];
 
 export default function Footer() {
-  const { t, tHtml } = useLanguage();
+  const { t } = useLanguage();
   const { selectedLogo, customLogoUrl } = useLogo();
-  
+
+  const companyLinks = [
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Responsible Gaming', href: '/responsible-gaming' },
+    { label: 'Contact', href: '/contact' }
+  ];
+
   const getLogo = () => {
     switch (selectedLogo) {
-      case 'sports-shield':
-        return <SportsBettingLogo className="w-20 h-20 mr-3" />;
-      case 'casino-chip':
-        return <CasinoChipLogo className="w-20 h-20 mr-3" />;
-      case 'custom':
-        return customLogoUrl ? 
-          <img src={customLogoUrl} alt="Custom logo" className="h-14 mr-3 object-contain" style={{ maxWidth: "100%", aspectRatio: "auto" }} /> : 
-          <BettingLogo className="h-14 mr-3" />;
       case 'poker-chip':
+        return <Target className="w-8 h-8 text-primary" />;
+      case 'sports-shield':
+        return <Shield className="w-8 h-8 text-primary" />;
+      case 'casino-chip':
+        return <Gamepad2 className="w-8 h-8 text-primary" />;
+      case 'custom':
+        if (customLogoUrl) {
+          return (
+            <img 
+              src={customLogoUrl} 
+              alt="Custom Logo" 
+              className="w-8 h-8 object-contain"
+              onError={(e) => {
+                console.error('Failed to load custom logo, falling back to default');
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          );
+        }
+        return <Target className="w-8 h-8 text-primary" />;
       default:
-        return <BettingLogo className="h-14 mr-3" />;
+        return <Target className="w-8 h-8 text-primary" />;
     }
   };
 
@@ -92,10 +83,6 @@ export default function Footer() {
               </a>
             </div>
           </div>
-
-
-
-
 
           <div>
             <h3 className="text-white font-bold mb-4">{t('footer.company')}</h3>
