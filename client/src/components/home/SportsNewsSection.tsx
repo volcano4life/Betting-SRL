@@ -90,7 +90,7 @@ export default function SportsNewsSection() {
 
                     <div className="flex flex-wrap gap-1 mb-3">
                       <Badge variant="secondary" className="text-xs">
-                        {article.category}
+                        {translateCategory(article.category)}
                       </Badge>
                     </div>
                     
