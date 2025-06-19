@@ -122,10 +122,10 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0 min-w-0">
             <Link href="/" className="flex items-center">
               {getLogo()}
-              <span className="text-2xl font-bold text-[#222236] font-medium ml-2" translate="no">
+              <span className="text-2xl font-bold text-[#222236] font-medium ml-2 whitespace-nowrap" translate="no">
                 Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
@@ -137,7 +137,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
+          <NavigationMenu className="hidden lg:flex mx-6">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger 
@@ -211,33 +211,7 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className={cn(
-                    "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                    isActive("/casinos") && "text-primary"
-                  )}
-                  asChild
-                >
-                  <Link href="/casinos">
-                    {t('nav.casinos')}
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className={cn(
-                    "text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2",
-                    isActive("/promos") && "text-primary"
-                  )}
-                  asChild
-                >
-                  <Link href="/promos">
-                    {t('nav.promoCodes')}
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -315,7 +289,7 @@ export default function Header() {
             
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden text-[#222236] hover:text-primary">
+                <Button variant="ghost" size="icon" className="lg:hidden text-[#222236] hover:text-primary">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
