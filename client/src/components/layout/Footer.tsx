@@ -17,10 +17,10 @@ export default function Footer() {
   const { selectedLogo, customLogoUrl } = useLogo();
 
   const companyLinks = [
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
-    { label: 'Responsible Gaming', href: '/responsible-gaming' },
-    { label: 'Contact', href: '/contact' }
+    { label: 'About Us', href: '/about', key: 'footer.about' },
+    { label: 'Privacy Policy', href: '/privacy', key: 'footer.privacy' },
+    { label: 'Terms & Conditions', href: '/terms', key: 'footer.terms' },
+    { label: 'Contact Us', href: '/contact', key: 'footer.contact' }
   ];
 
   const getLogo = () => {
@@ -90,7 +90,7 @@ export default function Footer() {
               {companyLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-white transition duration-200">
-                    {t(`footer.links.${link.label.toLowerCase().replace(/ /g, '')}`)}
+                    {t(link.key)}
                   </Link>
                 </li>
               ))}
