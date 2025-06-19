@@ -32,7 +32,7 @@ import { DragDropImageGallery } from "@/components/ui/drag-drop-image-gallery";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
 
-type ContentType = "promo-codes" | "games" | "reviews" | "news" | "guides" | "administrators" | "outlets";
+type ContentType = "games" | "reviews" | "news" | "guides" | "administrators" | "outlets";
 
 export default function AdminPage() {
   const { t, language, setLanguage } = useLanguage();
