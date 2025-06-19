@@ -42,6 +42,7 @@ export interface IStorage {
   getNewsBySlug(slug: string): Promise<News | undefined>;
   getNewsById(id: number): Promise<News | undefined>;
   createNews(news: InsertNews): Promise<News>;
+  refreshNewsCache(): Promise<void>;
   
   // Guides
   getAllGuides(): Promise<Guide[]>;

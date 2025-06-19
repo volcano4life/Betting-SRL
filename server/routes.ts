@@ -121,51 +121,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.get('/api/news/:slug', async (req, res) => {
     try {
-      const slug = req.params.slug;
-      
-      // First try to find in local storage
-      const localNewsItem = await storage.getNewsBySlug(slug);
-      if (localNewsItem) {
-        return res.json(localNewsItem);
+      const news = await storage.getNewsBySlug(req.params.slug);
+      if (!news) {
+        return res.status(404).json({ message: 'News article not found' });
       }
-      
-      // If not found locally, search in GNews articles
-      const gNewsArticles = await fetchGNews('sports', 'it');
-      
-      // Convert all articles and find the one with matching slug
-      const convertedArticles = gNewsArticles.map((article, index) => 
-        convertGNewsToNews(article, index + 3000)
-      );
-      
-      const matchingArticle = convertedArticles.find(article => article.slug === slug);
-      
-      if (matchingArticle) {
-        return res.json(matchingArticle);
-      }
-      
-      return res.status(404).json({ message: 'News article not found' });
+      res.json(news);
     } catch (error) {
       console.error('Error fetching news article:', error);
-      res.status(500).json({ message: 'Error fetching news article' });
+      res.status(500).json({ message: 'Failed to fetch news article' });
     }
   });
 
-  // Sports news endpoint - fetches real Italian sports news from GNews API
+  // Sports news endpoint - uses cached Italian sports news
   app.get('/api/sports-news', async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
-      
-      // Fetch real Italian sports news from GNews API
-      const gNewsArticles = await fetchGNews('sports', 'it');
-      
-      // Convert to our news format and limit results
-      const sportsNews = gNewsArticles
-        .slice(0, limit)
-        .map((article, index) => convertGNewsToNews(article, index + 3000));
-      
+      const sportsNews = await storage.getLatestNews(limit);
       res.json(sportsNews);
     } catch (error) {
-      console.error('Error fetching Italian sports news from GNews:', error);
+      console.error('Error fetching sports news:', error);
       res.status(500).json({ message: 'Error fetching sports news', error: error.message });
     }
   });
@@ -944,6 +918,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: 'Error uploading file', 
         error: String(error)
       });
+    }
+  });
+
+  // Admin endpoint to refresh news cache
+  app.post('/api/admin/refresh-news', requireAdmin, async (req, res) => {
+    try {
+      await storage.refreshNewsCache();
+      res.json({ message: 'News cache refreshed successfully' });
+    } catch (error) {
+      console.error('Error refreshing news cache:', error);
+      res.status(500).json({ message: 'Error refreshing news cache', error: error.message });
     }
   });
 
