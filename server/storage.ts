@@ -93,7 +93,7 @@ export class MemStorage implements IStorage {
   // Caching for GNews data
   private cachedNews: News[] | null = null;
   private newsCacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+  private readonly CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
   
   private userId: number;
   private gameId: number;
@@ -538,28 +538,31 @@ export class MemStorage implements IStorage {
 
   private async ensureNewsCache(): Promise<void> {
     const now = Date.now();
+    
+    // If cache is valid, return immediately
     if (this.cachedNews && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
-      return; // Cache is still valid
+      return;
     }
     
-    // Load cached news on first access or if cache is expired
-    if (!this.cachedNews) {
-      await this.loadCachedNews();
-    }
+    // If cache is expired or doesn't exist, refresh it
+    await this.loadCachedNews();
   }
 
   private async loadCachedNews(): Promise<void> {
     try {
+      console.log('Refreshing news cache from GNews API...');
       const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
       const articles = await fetchGNews('sports', 'it');
       
       this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
       this.newsCacheTimestamp = Date.now();
+      console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
     } catch (error) {
       console.error('Failed to load news from GNews API:', error);
       // Fallback to static news if API fails
       this.cachedNews = Array.from(this.news.values());
       this.newsCacheTimestamp = Date.now();
+      console.log('Using fallback static news data');
     }
   }
 
