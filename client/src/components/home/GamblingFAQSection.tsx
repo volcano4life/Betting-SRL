@@ -89,11 +89,7 @@ export default function GamblingFAQSection() {
           </Accordion>
         </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t('faq.moreQuestions')} <a href="/contact" className="text-primary underline hover:text-primary/80">{t('faq.contactTeam')}</a>
-          </p>
-        </div>
+
       </div>
     </section>
   );
