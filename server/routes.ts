@@ -729,6 +729,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get advertisement banners (public)
+  app.get("/api/advertisement-banners", async (req, res) => {
+    try {
+      const position = req.query.position as string;
+      const banners = await storage.getActiveAdvertisementBanners(position);
+      res.json(banners);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching advertisement banners", error });
+    }
+  });
+
   // Admin outlet management endpoints
   app.get('/api/admin/outlets', requireAdmin, async (req, res) => {
     try {
