@@ -29,11 +29,7 @@ const casinoCategories = [
   { label: "Baccarat", href: "/casinos?category=baccarat" },
 ];
 
-const promotionCategories = [
-  { label: "Welcome Bonuses", href: "/promos?type=welcome" },
-  { label: "No Deposit", href: "/promos?type=no-deposit" },
-  { label: "Free Spins", href: "/promos?type=free-spins" },
-];
+
 
 const sportsCategories = [
   { label: "Football", href: "/sports?category=football" },
@@ -163,29 +159,7 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger 
-                  className={cn(
-                    "text-[#222236] hover:text-primary font-semibold transition duration-200"
-                  )}
-                >
-                  {t('nav.promotions')}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[200px] gap-1 p-2">
-                    {promotionCategories.map((category) => (
-                      <li key={category.href}>
-                        <Link
-                          href={category.href}
-                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                        >
-                          {category.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+
 
               <NavigationMenuItem>
                 <NavigationMenuTrigger 
@@ -312,20 +286,7 @@ export default function Header() {
                       ))}
                     </div>
                   </div>
-                  <div className="py-2">
-                    <h3 className="font-semibold mb-2">{t('nav.promotions')}</h3>
-                    <div className="flex flex-col space-y-2 pl-2">
-                      {promotionCategories.map((category) => (
-                        <Link 
-                          key={category.href} 
-                          href={category.href} 
-                          className="text-sm text-[#222236] hover:text-primary"
-                        >
-                          {category.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+
                   <div className="py-2">
                     <h3 className="font-semibold mb-2">{t('nav.sportsBetting')}</h3>
                     <div className="flex flex-col space-y-2 pl-2">
@@ -343,9 +304,7 @@ export default function Header() {
                   <Link href="/casinos" className="text-[#222236] hover:text-primary font-semibold py-2">
                     {t('nav.casinos')}
                   </Link>
-                  <Link href="/promos" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    {t('nav.promoCodes')}
-                  </Link>
+
                   <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
                     {t('nav.sportsBetting')}
                   </Link>
