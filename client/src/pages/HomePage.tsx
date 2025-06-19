@@ -1,6 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedCasinosSection from "@/components/home/FeaturedCasinosSection";
-import SportsBettingSection from "@/components/home/SportsBettingSection";
+import SportsNewsSection from "@/components/home/SportsNewsSection";
 import ResponsibleGamblingSection from "@/components/home/ResponsibleGamblingSection";
 import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
@@ -19,7 +19,7 @@ export default function HomePage() {
       <OutletSlideshow />
       <HeroSection />
       <FeaturedCasinosSection />
-      <SportsBettingSection />
+      <SportsNewsSection />
       <ResponsibleGamblingSection />
       <GamblingFAQSection />
       <NewsletterSection />
