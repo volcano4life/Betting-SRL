@@ -26,6 +26,7 @@ import {
   sendPasswordResetEmail,
   sendAdminInvitationEmail 
 } from "./services/email";
+import { fetchGNews, convertGNewsToNews } from "./services/gnews";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -116,19 +117,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(newsItem);
   });
 
-  // Sports news endpoint - filters news by sports-related content
+  // Sports news endpoint - fetches real Italian sports news from GNews API
   app.get('/api/sports-news', async (req, res) => {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
-    const allNews = await storage.getLatestNews(20); // Get more news to filter from
-    
-    // Filter news articles that contain sports-related keywords in category, title, or content
-    const sportsKeywords = ['sport', 'calcio', 'football', 'soccer', 'tennis', 'basketball', 'serie', 'champions', 'uefa', 'fifa', 'atletico', 'juventus', 'milan', 'inter'];
-    const sportsNews = allNews.filter(news => {
-      const searchText = `${news.category} ${news.title_en} ${news.title_it} ${news.summary_en} ${news.summary_it}`.toLowerCase();
-      return sportsKeywords.some(keyword => searchText.includes(keyword));
-    }).slice(0, limit);
-    
-    res.json(sportsNews);
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
+      
+      // Fetch real sports news from GNews API
+      const gNewsArticles = await fetchGNews('sports', 'it');
+      
+      // Convert to our news format and limit results
+      const sportsNews = gNewsArticles
+        .slice(0, limit)
+        .map((article, index) => convertGNewsToNews(article, index));
+      
+      res.json(sportsNews);
+    } catch (error) {
+      console.error('Error fetching sports news from GNews:', error);
+      
+      // Fallback to sample data only if API fails
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
+      const allNews = await storage.getLatestNews(20);
+      
+      const sportsKeywords = ['sport', 'calcio', 'football', 'soccer', 'tennis', 'basketball', 'serie', 'champions', 'uefa', 'fifa', 'atletico', 'juventus', 'milan', 'inter'];
+      const fallbackNews = allNews.filter(news => {
+        const searchText = `${news.category} ${news.title_en} ${news.title_it} ${news.summary_en} ${news.summary_it}`.toLowerCase();
+        return sportsKeywords.some(keyword => searchText.includes(keyword));
+      }).slice(0, limit);
+      
+      res.json(fallbackNews);
+    }
   });
 
   // Get single news article by slug
