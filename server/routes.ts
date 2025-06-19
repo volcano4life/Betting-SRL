@@ -130,6 +130,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     res.json(sportsNews);
   });
+
+  // Get single news article by slug
+  app.get('/api/news/:slug', async (req, res) => {
+    try {
+      const news = await storage.getNewsBySlug(req.params.slug);
+      if (!news) {
+        return res.status(404).json({ message: 'News article not found' });
+      }
+      res.json(news);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch news article' });
+    }
+  });
   
   // Guides endpoints
   app.get('/api/guides', async (req, res) => {

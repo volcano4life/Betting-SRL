@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/HomePage";
 import ReviewListingPage from "@/pages/ReviewListingPage";
 import ReviewDetailPage from "@/pages/ReviewDetailPage";
+import NewsDetailPage from "@/pages/NewsDetailPage";
 import AuthPage from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
@@ -46,6 +47,7 @@ function Router() {
             <Route path="/" component={HomePage} />
             <Route path="/reviews" component={ReviewListingPage} />
             <Route path="/reviews/:slug" component={ReviewDetailPage} />
+            <Route path="/news/:slug" component={NewsDetailPage} />
             <Route path="/auth" component={AuthPage} />
             <ProtectedRoute path="/admin" component={AdminPage} adminOnly={true} />
             <ProtectedRoute path="/change-password" component={ChangePasswordPage} />

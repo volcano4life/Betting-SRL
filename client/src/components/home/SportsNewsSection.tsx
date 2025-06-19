@@ -48,6 +48,10 @@ export default function SportsNewsSection() {
                       src={article.coverImage} 
                       alt={getLocalizedField(article, 'title')}
                       className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80";
+                      }}
                     />
                     <div className="absolute top-0 left-0 m-3">
                       <Badge className="bg-green-600 text-white">
