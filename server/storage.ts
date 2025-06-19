@@ -572,30 +572,14 @@ export class MemStorage implements IStorage {
   async getNewsBySlug(slug: string): Promise<News | undefined> {
     await this.ensureNewsCache();
     
-    // Debug logging
-    console.log('[DEBUG] Looking for news slug:', slug);
-    console.log('[DEBUG] Available cached news count:', this.cachedNews?.length || 0);
-    if (this.cachedNews && this.cachedNews.length > 0) {
-      console.log('[DEBUG] First cached news slug:', this.cachedNews[0].slug);
-    }
-    
     // First check cached news
     if (this.cachedNews) {
       const cachedArticle = this.cachedNews.find(news => news.slug === slug);
-      if (cachedArticle) {
-        console.log('[DEBUG] Found cached article:', cachedArticle.title_en);
-        return cachedArticle;
-      }
+      if (cachedArticle) return cachedArticle;
     }
     
     // Fallback to static news
-    const staticArticle = Array.from(this.news.values()).find(news => news.slug === slug);
-    if (staticArticle) {
-      console.log('[DEBUG] Found static article:', staticArticle.title_en);
-    } else {
-      console.log('[DEBUG] No article found with slug:', slug);
-    }
-    return staticArticle;
+    return Array.from(this.news.values()).find(news => news.slug === slug);
   }
   
   async getNewsById(id: number): Promise<News | undefined> {
