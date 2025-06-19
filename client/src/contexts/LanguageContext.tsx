@@ -8,6 +8,7 @@ interface LanguageContextType {
   t: (key: string) => string;
   tHtml: (key: string) => React.ReactNode;
   getLocalizedField: <T extends Record<string, any>>(item: T, fieldName: string) => string;
+  translateCategory: (category: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -313,6 +314,17 @@ const translations: Record<Language, Record<string, string>> = {
     'news.empty': 'No News Available',
     'news.emptyDesc': 'There are no news articles available at this time.',
     'news.readMore': 'Read More',
+    
+    // News categories
+    'category.regulation': 'Regulation',
+    'category.promotions': 'Promotions',
+    'category.football': 'Football',
+    'category.championsLeague': 'Champions League',
+    'category.tennis': 'Tennis',
+    'category.sports': 'Sports',
+    'category.gaming': 'Gaming',
+    'category.casino': 'Casino',
+    'category.betting': 'Betting',
     
     'responsible.title': 'Responsible Gambling',
     'responsible.description': 'Play responsibly and know your limits. Gambling should be entertaining, not a way to make money.',
@@ -628,6 +640,17 @@ const translations: Record<Language, Record<string, string>> = {
     'news.emptyDesc': 'Non ci sono articoli di notizie disponibili al momento.',
     'news.readMore': 'Leggi di Più',
     
+    // News categories
+    'category.regulation': 'Regolamentazione',
+    'category.promotions': 'Promozioni',
+    'category.football': 'Calcio',
+    'category.championsLeague': 'Champions League',
+    'category.tennis': 'Tennis',
+    'category.sports': 'Sport',
+    'category.gaming': 'Gaming',
+    'category.casino': 'Casinò',
+    'category.betting': 'Scommesse',
+    
     'responsible.title': 'Gioco Responsabile',
     'responsible.description': 'Gioca responsabilmente e conosci i tuoi limiti. Il gioco dovrebbe essere un divertimento, non un modo per fare soldi.',
     'responsible.principle1.title': 'Imposta Limiti di Tempo',
@@ -754,6 +777,20 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
     
     return '';
+  };
+
+  // Function to translate category names
+  const translateCategory = (category: string): string => {
+    // Convert category to translation key format
+    const categoryKey = category.toLowerCase()
+      .replace(/\s+/g, '')
+      .replace('champions league', 'championsLeague');
+    
+    const translationKey = `category.${categoryKey}`;
+    const translated = translations[language][translationKey];
+    
+    // Return translated category or fallback to original
+    return translated || category;
   };
 
   return (
