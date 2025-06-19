@@ -115,6 +115,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.json(newsItem);
   });
+
+  // Sports news endpoint - filters news by sports-related content
+  app.get('/api/sports-news', async (req, res) => {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
+    const allNews = await storage.getLatestNews(20); // Get more news to filter from
+    
+    // Filter news articles that contain sports-related keywords in category, title, or content
+    const sportsKeywords = ['sport', 'calcio', 'football', 'soccer', 'tennis', 'basketball', 'serie', 'champions', 'uefa', 'fifa', 'atletico', 'juventus', 'milan', 'inter'];
+    const sportsNews = allNews.filter(news => {
+      const searchText = `${news.category} ${news.title_en} ${news.title_it} ${news.summary_en} ${news.summary_it}`.toLowerCase();
+      return sportsKeywords.some(keyword => searchText.includes(keyword));
+    }).slice(0, limit);
+    
+    res.json(sportsNews);
+  });
   
   // Guides endpoints
   app.get('/api/guides', async (req, res) => {
