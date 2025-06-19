@@ -92,7 +92,7 @@ export default function NewsDetailPage() {
               <div className="flex items-center text-sm text-gray-500 mb-4">
                 <Calendar className="h-4 w-4 mr-2" />
                 <span>{formatDate(newsItem.publishDate, language)}</span>
-                {newsItem.featured && (
+                {newsItem.featured === 1 && (
                   <Badge variant="outline" className="ml-auto">
                     {t('news.featured')}
                   </Badge>

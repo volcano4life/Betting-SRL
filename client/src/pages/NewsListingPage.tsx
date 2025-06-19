@@ -112,7 +112,7 @@ export default function NewsListingPage() {
                           {translateCategory(article.category)}
                         </Badge>
                       </div>
-                      {article.featured && (
+                      {article.featured === 1 && (
                         <div className="absolute top-0 right-0 m-3">
                           <Badge variant="secondary">
                             {t('news.featured')}
