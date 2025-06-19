@@ -300,6 +300,49 @@ export class MemStorage implements IStorage {
       featured: 0
     };
     this.createNews(news2);
+
+    // Add sports news samples
+    const sportsNews1: InsertNews = {
+      title_en: "Juventus Signs €100M Deal with New Serie A Betting Partner",
+      title_it: "La Juventus Firma un Accordo da €100M con il Nuovo Partner di Scommesse della Serie A",
+      slug: "juventus-signs-100m-deal-serie-a-betting-partner",
+      summary_en: "Juventus announces a groundbreaking partnership with a major betting operator, marking the largest sponsorship deal in Serie A history.",
+      summary_it: "La Juventus annuncia una partnership rivoluzionaria con un importante operatore di scommesse, segnando il più grande accordo di sponsorizzazione nella storia della Serie A.",
+      content_en: "Juventus Football Club has announced a historic €100 million partnership deal with a leading sports betting operator, making it the largest sponsorship agreement in Serie A history. The three-year deal will see the betting company become the club's official betting partner and shirt sponsor. The announcement comes as Italian football continues to embrace partnerships with regulated gambling operators. Club president Andrea Agnelli stated that the partnership will help fund new player acquisitions and stadium improvements. The deal reflects the growing intersection between professional sports and the regulated betting industry in Italy.",
+      content_it: "La Juventus Football Club ha annunciato uno storico accordo di partnership da €100 milioni con un importante operatore di scommesse sportive, rendendolo il più grande accordo di sponsorizzazione nella storia della Serie A. L'accordo triennale vedrà la società di scommesse diventare il partner ufficiale di scommesse del club e sponsor della maglia. L'annuncio arriva mentre il calcio italiano continua ad abbracciare partnership con operatori di gioco d'azzardo regolamentati. Il presidente del club Andrea Agnelli ha dichiarato che la partnership aiuterà a finanziare nuovi acquisti di giocatori e miglioramenti dello stadio. L'accordo riflette la crescente intersezione tra sport professionistici e l'industria delle scommesse regolamentate in Italia.",
+      coverImage: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Football",
+      featured: 1
+    };
+    this.createNews(sportsNews1);
+
+    const sportsNews2: InsertNews = {
+      title_en: "UEFA Champions League: Italian Teams Lead Betting Odds for Quarter-Finals",
+      title_it: "UEFA Champions League: Le Squadre Italiane Guidano le Quote per i Quarti di Finale",
+      slug: "uefa-champions-league-italian-teams-betting-odds",
+      summary_en: "AC Milan, Inter Milan, and Napoli are among the favorites according to major European sportsbooks for the upcoming Champions League quarter-finals.",
+      summary_it: "AC Milan, Inter Milan e Napoli sono tra i favoriti secondo i principali sportsbook europei per i prossimi quarti di finale di Champions League.",
+      content_en: "Italian football is experiencing a renaissance in European competition, with three Serie A teams making it to the UEFA Champions League quarter-finals. According to major European sportsbooks, AC Milan leads the betting odds at 3/1, followed by Inter Milan at 4/1, and Napoli at 5/1. The strong showing of Italian clubs has led to increased betting activity, with regulated operators reporting a 40% increase in Champions League wagers from Italian customers. Sports betting analysts attribute this success to improved tactical approaches and significant investments in player development. The quarter-final draws will take place next Friday, with matches scheduled for early April.",
+      content_it: "Il calcio italiano sta vivendo una rinascita nella competizione europea, con tre squadre di Serie A che hanno raggiunto i quarti di finale della UEFA Champions League. Secondo i principali sportsbook europei, l'AC Milan guida le quote scommesse a 3/1, seguito dall'Inter Milan a 4/1 e dal Napoli a 5/1. La forte prestazione dei club italiani ha portato a un aumento dell'attività di scommesse, con operatori regolamentati che riportano un aumento del 40% delle scommesse sulla Champions League da parte dei clienti italiani. Gli analisti delle scommesse sportive attribuiscono questo successo a approcci tattici migliorati e investimenti significativi nello sviluppo dei giocatori. I sorteggi dei quarti di finale si terranno venerdì prossimo, con partite programmate per l'inizio di aprile.",
+      coverImage: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Champions League",
+      featured: 0
+    };
+    this.createNews(sportsNews2);
+
+    const sportsNews3: InsertNews = {
+      title_en: "Tennis: Italian Open Rome Sets Record Betting Handle for ATP Masters",
+      title_it: "Tennis: Gli Internazionali d'Italia di Roma Stabiliscono un Record di Scommesse per gli ATP Masters",
+      slug: "italian-open-rome-record-betting-handle-atp-masters",
+      summary_en: "The Italian Open in Rome generated the highest betting volume for any ATP Masters 1000 tournament this season, driven by strong local interest.",
+      summary_it: "Gli Internazionali d'Italia a Roma hanno generato il volume di scommesse più alto per qualsiasi torneo ATP Masters 1000 di questa stagione, guidato dal forte interesse locale.",
+      content_en: "The Italian Open tennis tournament in Rome has set a new record for betting handle among ATP Masters 1000 events this season, with over €15 million wagered across regulated Italian operators during the tournament week. The surge in betting activity was driven by strong performances from Italian players, including Jannik Sinner's run to the semifinals and Lorenzo Musetti's impressive showing. Tennis betting has grown significantly in Italy, with the sport now accounting for 15% of all sports betting volume in the country. The tournament's popularity among bettors was further boosted by favorable weather conditions that ensured all matches were completed on schedule.",
+      content_it: "Il torneo di tennis degli Internazionali d'Italia a Roma ha stabilito un nuovo record per il volume di scommesse tra gli eventi ATP Masters 1000 di questa stagione, con oltre €15 milioni scommessi attraverso operatori italiani regolamentati durante la settimana del torneo. L'aumento dell'attività di scommesse è stato guidato dalle forti prestazioni dei giocatori italiani, inclusa la corsa di Jannik Sinner alle semifinali e l'impressionante prestazione di Lorenzo Musetti. Le scommesse sul tennis sono cresciute significativamente in Italia, con questo sport che ora rappresenta il 15% di tutto il volume di scommesse sportive nel paese. La popolarità del torneo tra gli scommettitori è stata ulteriormente rafforzata dalle condizioni meteorologiche favorevoli che hanno assicurato il completamento di tutte le partite nei tempi previsti.",
+      coverImage: "https://images.unsplash.com/photo-1554068875-090f0c7aaba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Tennis",
+      featured: 0
+    };
+    this.createNews(sportsNews3);
     
     // Add betting guides
     const guide1: InsertGuide = {
