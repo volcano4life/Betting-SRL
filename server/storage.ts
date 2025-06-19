@@ -155,7 +155,15 @@ export class MemStorage implements IStorage {
     const isAdmin = user.isAdmin === true; // Ensure isAdmin is a boolean, default to false if undefined
     // Set isBlocked to false by default for new users
     const isBlocked = false;
-    const newUser: User = { ...user, id, createdAt, isAdmin, isBlocked };
+    const newUser: User = { 
+      ...user, 
+      id, 
+      createdAt, 
+      isAdmin, 
+      isBlocked,
+      pendingApproval: user.pendingApproval ?? false,
+      email: user.email ?? null
+    };
     this.users.set(id, newUser);
     return newUser;
   }
@@ -876,7 +884,14 @@ export class MemStorage implements IStorage {
   async createAdvertisementBanner(banner: InsertAdvertisementBanner): Promise<AdvertisementBanner> {
     const id = this.advertisementBannerId++;
     const createdAt = new Date();
-    const newBanner: AdvertisementBanner = { ...banner, id, createdAt };
+    const newBanner: AdvertisementBanner = { 
+      ...banner, 
+      id, 
+      createdAt,
+      order: banner.order ?? 0,
+      isActive: banner.isActive ?? true,
+      clickUrl: banner.clickUrl ?? null
+    };
     this.advertisementBanners.set(id, newBanner);
     return newBanner;
   }
