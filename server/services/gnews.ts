@@ -90,7 +90,7 @@ export function convertGNewsToNews(article: GNewsArticle, index: number): any {
     coverImage: article.image || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80',
     category: category,
     featured: index < 3 ? 1 : 0, // Mark first 3 as featured
-    publishDate: new Date(article.publishedAt),
+    publishDate: new Date(article.publishedAt).toISOString(),
     sourceUrl: article.url,
     sourceName: article.source.name
   };
