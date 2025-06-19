@@ -93,18 +93,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold mb-4">{t('footer.casinoGames')}</h3>
-            <ul className="space-y-2 text-sm">
-              {casinoCategories.map((category) => (
-                <li key={category.href}>
-                  <Link href={category.href} className="hover:text-white transition duration-200">
-                    {t(`footer.casino.${category.label.toLowerCase().replace(/ /g, '')}`)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+
 
           <div>
             <h3 className="text-white font-bold mb-4">{t('footer.promotions')}</h3>
