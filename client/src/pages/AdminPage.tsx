@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { PromoCode, Game, News, Review, Guide, User, Outlet } from "@shared/schema";
+import { Game, News, Review, Guide, User, Outlet } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin, Plus, X, Star, ChevronUp, ChevronDown } from "lucide-react";
@@ -48,223 +48,310 @@ export default function AdminPage() {
     setEditingItemId(null);
     setIsAdding(false);
   };
-  
-  // Check if current user is site owner (username: 'admin')
-  const isSiteOwner = user?.username === 'admin';
+
+  // Handle starting edit mode
+  const handleEdit = (id: number) => {
+    setEditingItemId(id);
+    setIsAdding(false);
+  };
+
+  // Handle starting add mode
+  const handleAdd = () => {
+    setEditingItemId(null);
+    setIsAdding(true);
+  };
+
+  // Handle canceling edit/add mode
+  const handleCancel = () => {
+    setEditingItemId(null);
+    setIsAdding(false);
+  };
+
+  // Handle successful edit/add operation
+  const handleSuccess = () => {
+    setEditingItemId(null);
+    setIsAdding(false);
+  };
 
   // Handle logout
   const handleLogout = () => {
     logoutMutation.mutate();
   };
-  
-  // Handle language toggle
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'it' : 'en');
-  };
+
+  if (!user?.isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-red-500" />
+              {t('admin.accessDenied')}
+            </CardTitle>
+            <CardDescription>
+              {t('admin.adminRequired')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-4">
+              <p className="text-sm text-gray-600">
+                {t('admin.contactAdmin')}
+              </p>
+              <div className="flex gap-2">
+                <Button asChild variant="outline" className="flex-1">
+                  <Link href="/">{t('admin.backToHome')}</Link>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={handleLogout}
+                  className="flex-1"
+                >
+                  {t('admin.logout')}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <>
       <Helmet>
-        <title translate="no">{getPageTitle('admin')}</title>
-        <meta name="description" content={`Administrator control panel for managing content on ${siteConfig.name}.`} />
+        <title>{getPageTitle('admin.title')}</title>
+        <meta name="description" content={t('admin.description')} />
       </Helmet>
       
-      <div className="min-h-screen bg-background">
-      {/* Admin header */}
-      <header className="border-b bg-card">
-        <div className="container flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg font-semibold">{t('admin.title')}</h1>
-            <span className="text-sm px-2 py-1 rounded-md bg-primary/10 text-primary">
-              {user?.username}
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={toggleLanguage}>
-              {language === 'en' ? '🇮🇹 Italiano' : '🇬🇧 English'}
-            </Button>
-            <Link href="/">
-              <Button variant="outline">{t('admin.backToSite')}</Button>
-            </Link>
-            <Button variant="outline" onClick={handleLogout}>
-              {t('admin.logout')}
-            </Button>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-4">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {t('admin.title')}
+                </h1>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Crown className="h-4 w-4" />
+                  {user.username}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                {/* Language Switcher */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={language === 'en' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setLanguage('en')}
+                  >
+                    EN
+                  </Button>
+                  <Button
+                    variant={language === 'it' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setLanguage('it')}
+                  >
+                    IT
+                  </Button>
+                </div>
+                
+                <Separator orientation="vertical" className="h-6" />
+                
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/">{t('admin.viewSite')}</Link>
+                </Button>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={handleLogout}
+                  disabled={logoutMutation.isPending}
+                >
+                  {logoutMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    t('admin.logout')
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
 
-      {/* Admin content */}
-      <main className="container p-4 space-y-6">
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <TabsList className="mr-4">
-                <TabsTrigger value="games">{t('admin.games')}</TabsTrigger>
-                <TabsTrigger value="reviews">{t('admin.reviews')}</TabsTrigger>
-                <TabsTrigger value="news">{t('admin.news')}</TabsTrigger>
-                <TabsTrigger value="guides">{t('admin.guides')}</TabsTrigger>
-                <TabsTrigger value="outlets">
-                  <Store className="h-4 w-4 mr-2" />
-                  {language === 'it' ? 'Punti Vendita' : 'Outlets'}
-                </TabsTrigger>
-              </TabsList>
-              
-              <Separator orientation="vertical" className="h-8 mx-2" />
-              
-              <TabsList>
-                <TabsTrigger value="administrators" className="bg-secondary/30">
-                  <Users className="h-4 w-4 mr-2" />
-                  {t('admin.administrators')}
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            
-            {activeTab !== 'administrators' ? (
-              <Button onClick={() => {
-                setIsAdding(true);
-                setEditingItemId(null);
-              }}>
-                {t('admin.addNew')}
-              </Button>
-            ) : isSiteOwner && (
-              <Button onClick={() => {
-                setIsAdding(true);
-                setEditingItemId(null);
-              }}>
-                <UserPlus className="h-4 w-4 mr-2" />
-                {t('admin.inviteAdmin')}
-              </Button>
-            )}
-          </div>
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="games" className="flex items-center gap-2">
+                <Star className="h-4 w-4" />
+                {t('admin.games')}
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4" />
+                {t('admin.reviews')}
+              </TabsTrigger>
+              <TabsTrigger value="news" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                {t('admin.news')}
+              </TabsTrigger>
+              <TabsTrigger value="guides" className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                {t('admin.guides')}
+              </TabsTrigger>
+              <TabsTrigger value="outlets" className="flex items-center gap-2">
+                <Store className="h-4 w-4" />
+                {t('admin.outlets')}
+              </TabsTrigger>
+              <TabsTrigger value="administrators" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                {t('admin.administrators')}
+              </TabsTrigger>
+            </TabsList>
 
+            <TabsContent value="games" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <GameForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.games')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('admin.addGame')}
+                    </Button>
+                  </div>
+                  <GamesList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
 
-          
-          {/* Games Management */}
-          <TabsContent value="games">
-            {isAdding ? (
-              <GameForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <GameForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <GamesList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
-          
-          {/* Reviews Management */}
-          <TabsContent value="reviews">
-            {isAdding ? (
-              <ReviewForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <ReviewForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <ReviewsList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
-          
-          {/* News Management */}
-          <TabsContent value="news">
-            {isAdding ? (
-              <NewsForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <NewsForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <NewsList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
-          
-          {/* Guides Management */}
-          <TabsContent value="guides">
-            {isAdding ? (
-              <GuideForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <GuideForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <GuidesList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
-          
-          {/* Administrators Management */}
-          <TabsContent value="administrators">
-            {isAdding ? (
-              <AdminInviteForm 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <AdminEditForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <AdminsList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
+            <TabsContent value="reviews" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <ReviewForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.reviews')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('admin.addReview')}
+                    </Button>
+                  </div>
+                  <ReviewsList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
 
-          {/* Outlets Management */}
-          <TabsContent value="outlets">
-            {isAdding ? (
-              <OutletForm 
-                id={null} 
-                onCancel={() => setIsAdding(false)} 
-                onSuccess={() => setIsAdding(false)} 
-              />
-            ) : editingItemId ? (
-              <OutletForm 
-                id={editingItemId} 
-                onCancel={() => setEditingItemId(null)} 
-                onSuccess={() => setEditingItemId(null)} 
-              />
-            ) : (
-              <OutletsList onEdit={setEditingItemId} />
-            )}
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+            <TabsContent value="news" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <NewsForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.news')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('admin.addNews')}
+                    </Button>
+                  </div>
+                  <NewsList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="guides" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <GuideForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.guides')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('admin.addGuide')}
+                    </Button>
+                  </div>
+                  <GuidesList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="outlets" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <OutletForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.outlets')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('admin.addOutlet')}
+                    </Button>
+                  </div>
+                  <OutletsList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="administrators" className="space-y-6">
+              {isAdding ? (
+                <AdminInviteForm 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : editingItemId ? (
+                <AdminEditForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{t('admin.administrators')}</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      {t('admin.inviteAdmin')}
+                    </Button>
+                  </div>
+                  <AdminsList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </>
   );
 }
-
-
 
 type FormProps = {
   id: number | null;
   onCancel: () => void;
   onSuccess: () => void;
 };
+
 // ===== GAMES =====
 function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t, getLocalizedField } = useLanguage();
@@ -398,259 +485,6 @@ function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
 }
 
 function GameForm({ id, onCancel, onSuccess }: FormProps) {
-                  value={formData.description_en || ''}
-                  onChange={handleChange}
-                  required
-                  rows={3}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="bonus_en">{t('admin.bonus')} (EN)</Label>
-                <Input
-                  id="bonus_en"
-                  name="bonus_en"
-                  value={formData.bonus_en || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-            
-            {/* Italian Content */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">{t('admin.italianContent')}</h3>
-              
-              <div className="space-y-2">
-                <Label htmlFor="casino_name_it">{t('admin.casinoName')} (IT)</Label>
-                <Input
-                  id="casino_name_it"
-                  name="casino_name_it"
-                  value={formData.casino_name_it || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description_it">{t('admin.description')} (IT)</Label>
-                <Textarea
-                  id="description_it"
-                  name="description_it"
-                  value={formData.description_it || ''}
-                  onChange={handleChange}
-                  required
-                  rows={3}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="bonus_it">{t('admin.bonus')} (IT)</Label>
-                <Input
-                  id="bonus_it"
-                  name="bonus_it"
-                  value={formData.bonus_it || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-          
-          {/* Common Fields */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="code">{t('admin.promoCode')}</Label>
-                <Input
-                  id="code"
-                  name="code"
-                  value={formData.code || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="validUntil">{t('admin.validUntil')}</Label>
-                <Input
-                  id="validUntil"
-                  name="validUntil"
-                  type="date"
-                  value={formData.validUntil instanceof Date ? formData.validUntil.toISOString().split('T')[0] : String(formData.validUntil || '')}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="featured">{t('admin.featured')}</Label>
-                <Select 
-                  name="featured" 
-                  value={formData.featured?.toString() || "0"}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'featured', value, type: 'select' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectFeatured')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">{t('admin.notFeatured')}</SelectItem>
-                    <SelectItem value="1">{t('admin.featuredLevel1')}</SelectItem>
-                    <SelectItem value="2">{t('admin.featuredLevel2')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="casinoLogo">{t('admin.logoUrl')}</Label>
-              <Input
-                id="casinoLogo"
-                name="casinoLogo"
-                value={formData.casinoLogo || ''}
-                onChange={handleChange}
-                placeholder="https://example.com/logo.png"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="affiliateLink">{t('admin.affiliateLink')}</Label>
-              <Input
-                id="affiliateLink"
-                name="affiliateLink"
-                value={formData.affiliateLink || ''}
-                onChange={handleChange}
-                required
-                placeholder="https://example.com/affiliate"
-              />
-            </div>
-          </div>
-          
-          <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={onCancel}>
-              {t('admin.cancel')}
-            </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
-              {t('admin.save')}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
-}
-
-// ===== GAMES =====
-// For brevity, I'm adding stubs for the remaining components,
-// which would follow the same pattern as the PromoCode components above
-
-function GamesList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { t, getLocalizedField } = useLanguage();
-  
-  const { data: games, isLoading } = useQuery<Game[]>({
-    queryKey: ['/api/admin/games'],
-    meta: {
-      errorMessage: t('admin.gamesLoadError')
-    }
-  });
-  
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-  
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t('admin.games')}</CardTitle>
-        <CardDescription>{t('admin.gamesDesc')}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[600px]">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('admin.titleColumn')}</TableHead>
-                <TableHead>{t('admin.slug')}</TableHead>
-                <TableHead>{t('admin.featured')}</TableHead>
-                <TableHead>{t('admin.actions')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {games?.length ? (
-                games.map((game) => (
-                  <TableRow key={game.id}>
-                    <TableCell>
-                      {getLocalizedField(game, 'title')}
-                    </TableCell>
-                    <TableCell>{game.slug}</TableCell>
-                    <TableCell>{game.featured ? '✓' : '–'}</TableCell>
-                    <TableCell className="flex items-center gap-2">
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
-                        onClick={() => onEdit(game.id)}
-                      >
-                        {t('admin.edit')}
-                      </Button>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button size="sm" variant="destructive">
-                            <Trash className="h-4 w-4 mr-1" />
-                            {t('admin.delete')}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
-                            <DialogDescription>
-                              {t('admin.confirmDeleteGame')}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DialogFooter>
-                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
-                              {t('admin.cancel')}
-                            </Button>
-                            <Button 
-                              variant="destructive"
-                              onClick={() => {
-                                // Add deletion logic here when implemented
-                                document.querySelector('dialog')?.close();
-                              }}
-                            >
-                              {t('admin.confirmDelete')}
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-6">
-                    {t('admin.noGames')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </ScrollArea>
-      </CardContent>
-    </Card>
-  );
-}
-
-function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -726,21 +560,12 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       });
     }
   });
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Make sure slug is filled
-    if (!formData.slug) {
-      setFormData(prev => ({
-        ...prev,
-        slug: generateSlug(formData.title_en || '')
-      }));
-    }
-    
     saveMutation.mutate(formData);
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
@@ -748,24 +573,26 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       ...prev,
       [name]: type === 'checkbox' 
         ? (e.target as HTMLInputElement).checked 
-        : name === 'rating'
-          ? parseFloat(value)
+        : name === 'featured' || name.includes('Rating')
+          ? parseFloat(value) || 0
           : name === 'releaseDate' && value
             ? new Date(value)
-            : value
+            : name === 'slug' && prev.title_en && !value
+              ? generateSlug(prev.title_en as string)
+              : value
     }));
   };
-  
-  // Auto-generate slug when title changes
-  useEffect(() => {
-    if (formData.title_en && !id) {
+
+  // Generate slug when title changes
+  React.useEffect(() => {
+    if (formData.title_en && (!formData.slug || !id)) {
       setFormData(prev => ({
         ...prev,
-        slug: generateSlug(formData.title_en)
+        slug: generateSlug(prev.title_en as string)
       }));
     }
   }, [formData.title_en, id]);
-  
+
   // Show loading spinner when loading data
   if (isLoading && id) {
     return (
@@ -794,7 +621,7 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       </Card>
     );
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -831,7 +658,7 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.description_en || ''}
                   onChange={handleChange}
                   required
-                  rows={3}
+                  rows={4}
                 />
               </div>
             </div>
@@ -859,7 +686,7 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.description_it || ''}
                   onChange={handleChange}
                   required
-                  rows={3}
+                  rows={4}
                 />
               </div>
             </div>
@@ -882,17 +709,91 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
+                <Label htmlFor="releaseDate">{t('admin.releaseDate')}</Label>
+                <Input
+                  id="releaseDate"
+                  name="releaseDate"
+                  type="date"
+                  value={formData.releaseDate instanceof Date ? formData.releaseDate.toISOString().split('T')[0] : ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="featured">{t('admin.featured')}</Label>
+                <Select 
+                  name="featured" 
+                  value={formData.featured?.toString() || "0"}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'featured', value, type: 'select' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectFeatured')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">{t('admin.notFeatured')}</SelectItem>
+                    <SelectItem value="1">{t('admin.featured')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+              <Input
+                id="coverImage"
+                name="coverImage"
+                value={formData.coverImage || ''}
+                onChange={handleChange}
+                placeholder="https://..."
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="platforms">{t('admin.platforms')}</Label>
+                <Input
+                  id="platforms"
+                  name="platforms"
+                  value={formData.platforms?.join(', ') || ''}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    platforms: e.target.value.split(',').map(p => p.trim()).filter(Boolean)
+                  }))}
+                  placeholder="PC, PlayStation, Xbox"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="genres">{t('admin.genres')}</Label>
+                <Input
+                  id="genres"
+                  name="genres"
+                  value={formData.genres?.join(', ') || ''}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    genres: e.target.value.split(',').map(g => g.trim()).filter(Boolean)
+                  }))}
+                  placeholder="Action, Adventure, RPG"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="overallRating">{t('admin.overallRating')}</Label>
                 <Input
                   id="overallRating"
                   name="overallRating"
                   type="number"
                   min="0"
-                  max="5"
+                  max="10"
                   step="0.1"
                   value={formData.overallRating || 0}
                   onChange={handleChange}
-                  required
                 />
               </div>
               
@@ -903,16 +804,13 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   name="gameplayRating"
                   type="number"
                   min="0"
-                  max="5"
+                  max="10"
                   step="0.1"
                   value={formData.gameplayRating || 0}
                   onChange={handleChange}
-                  required
                 />
               </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
               <div className="space-y-2">
                 <Label htmlFor="graphicsRating">{t('admin.graphicsRating')}</Label>
                 <Input
@@ -920,11 +818,10 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   name="graphicsRating"
                   type="number"
                   min="0"
-                  max="5"
+                  max="10"
                   step="0.1"
                   value={formData.graphicsRating || 0}
                   onChange={handleChange}
-                  required
                 />
               </div>
               
@@ -935,11 +832,10 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   name="storyRating"
                   type="number"
                   min="0"
-                  max="5"
+                  max="10"
                   step="0.1"
                   value={formData.storyRating || 0}
                   onChange={handleChange}
-                  required
                 />
               </div>
               
@@ -950,65 +846,29 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   name="valueRating"
                   type="number"
                   min="0"
-                  max="5"
+                  max="10"
                   step="0.1"
                   value={formData.valueRating || 0}
                   onChange={handleChange}
-                  required
                 />
               </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="releaseDate">{t('admin.releaseDate')}</Label>
-                <Input
-                  id="releaseDate"
-                  name="releaseDate"
-                  type="date"
-                  value={formData.releaseDate instanceof Date 
-                    ? formData.releaseDate.toISOString().split('T')[0] 
-                    : String(formData.releaseDate || '')}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
-                <Input
-                  id="coverImage"
-                  name="coverImage"
-                  value={formData.coverImage || ''}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.png"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="featured" 
-                checked={formData.featured ? true : false}
-                onCheckedChange={(checked) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    featured: checked ? 1 : 0
-                  }))
-                }}
-              />
-              <Label htmlFor="featured">{t('admin.featuredGame')}</Label>
             </div>
           </div>
           
           <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={onCancel}>
+            <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
+            <Button 
+              type="submit" 
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {t('admin.save')}
             </Button>
           </div>
@@ -1021,11 +881,33 @@ function GameForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 // ===== REVIEWS =====
 function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t, getLocalizedField } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const { data: reviews, isLoading } = useQuery<Review[]>({
     queryKey: ['/api/admin/reviews'],
     meta: {
-      errorMessage: t('admin.reviewsLoadError')
+      errorMessage: t('admin.reviewLoadError')
+    }
+  });
+  
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('DELETE', `/api/admin/reviews/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/reviews'] });
+      toast({
+        title: t('admin.reviewDeletedTitle'),
+        description: t('admin.reviewDeletedDesc'),
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('admin.reviewDeleteErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
     }
   });
   
@@ -1048,9 +930,8 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.titleColumn')}</TableHead>
-                <TableHead>{t('admin.gameId')}</TableHead>
-                <TableHead>{t('admin.rating')}</TableHead>
+                <TableHead>{t('admin.title')}</TableHead>
+                <TableHead>{t('admin.publishDate')}</TableHead>
                 <TableHead>{t('admin.featured')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
               </TableRow>
@@ -1059,12 +940,15 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
               {reviews?.length ? (
                 reviews.map((review) => (
                   <TableRow key={review.id}>
+                    <TableCell>{getLocalizedField(review, 'title')}</TableCell>
+                    <TableCell>{format(new Date(review.publishDate), 'dd/MM/yyyy')}</TableCell>
                     <TableCell>
-                      {getLocalizedField(review, 'title')}
+                      {review.featured ? (
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
                     </TableCell>
-                    <TableCell>{review.gameId}</TableCell>
-                    <TableCell>{review.rating}/10</TableCell>
-                    <TableCell>{review.featured ? '✓' : '–'}</TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
                         size="sm" 
@@ -1094,7 +978,7 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
                             <Button 
                               variant="destructive"
                               onClick={() => {
-                                // Add deletion logic here when implemented
+                                deleteMutation.mutate(review.id);
                                 document.querySelector('dialog')?.close();
                               }}
                             >
@@ -1108,7 +992,7 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-6">
+                  <TableCell colSpan={4} className="text-center py-6">
                     {t('admin.noReviews')}
                   </TableCell>
                 </TableRow>
@@ -1121,7 +1005,7 @@ function ReviewsList({ onEdit }: { onEdit: (id: number) => void }) {
   );
 }
 
-function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
+function ReviewForm({ id, onCancel, onSuccess }: FormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1129,23 +1013,15 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const [formData, setFormData] = useState<Partial<Review>>({
     title_en: '',
     title_it: '',
-    summary_en: '',
-    summary_it: '',
     content_en: '',
     content_it: '',
+    excerpt_en: '',
+    excerpt_it: '',
     slug: '',
-    rating: 0,
     featured: 0,
-    gameId: 0,
-    coverImage: ''
-  });
-  
-  // Get games for game selection dropdown
-  const { data: games } = useQuery<Game[]>({
-    queryKey: ['/api/admin/games'],
-    meta: {
-      errorMessage: t('admin.gamesLoadError')
-    }
+    publishDate: new Date(),
+    featuredImage: '',
+    tags: []
   });
   
   const { data: review, isLoading, isError } = useQuery<Review>({
@@ -1169,6 +1045,7 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   
   const saveMutation = useMutation({
     mutationFn: async (data: Partial<Review>) => {
+      // Ensure the date is properly formatted
       const dataToSend = {
         ...data,
         publishDate: data.publishDate instanceof Date 
@@ -1200,42 +1077,39 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       });
     }
   });
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Make sure slug is filled
-    if (!formData.slug) {
-      setFormData(prev => ({
-        ...prev,
-        slug: generateSlug(formData.title_en || '')
-      }));
-    }
-    
     saveMutation.mutate(formData);
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' || name === 'rating' || name === 'gameId'
-        ? parseFloat(value)
-        : value
+      [name]: type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : name === 'featured'
+          ? parseInt(value) || 0
+          : name === 'publishDate' && value
+            ? new Date(value)
+            : name === 'slug' && prev.title_en && !value
+              ? generateSlug(prev.title_en as string)
+              : value
     }));
   };
-  
-  // Auto-generate slug when title changes
-  useEffect(() => {
-    if (formData.title_en && !id) {
+
+  // Generate slug when title changes
+  React.useEffect(() => {
+    if (formData.title_en && (!formData.slug || !id)) {
       setFormData(prev => ({
         ...prev,
-        slug: generateSlug(formData.title_en)
+        slug: generateSlug(prev.title_en as string)
       }));
     }
   }, [formData.title_en, id]);
-  
+
   // Show loading spinner when loading data
   if (isLoading && id) {
     return (
@@ -1264,7 +1138,7 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       </Card>
     );
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -1294,14 +1168,14 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Label htmlFor="excerpt_en">{t('admin.excerpt')} (EN)</Label>
                 <Textarea
-                  id="summary_en"
-                  name="summary_en"
-                  value={formData.summary_en || ''}
+                  id="excerpt_en"
+                  name="excerpt_en"
+                  value={formData.excerpt_en || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -1313,7 +1187,7 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_en || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -1334,14 +1208,14 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Label htmlFor="excerpt_it">{t('admin.excerpt')} (IT)</Label>
                 <Textarea
-                  id="summary_it"
-                  name="summary_it"
-                  value={formData.summary_it || ''}
+                  id="excerpt_it"
+                  name="excerpt_it"
+                  value={formData.excerpt_it || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -1353,7 +1227,7 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_it || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -1376,77 +1250,78 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="gameId">{t('admin.game')}</Label>
-                <Select 
-                  name="gameId" 
-                  value={formData.gameId?.toString() || ""}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'gameId', value, type: 'number' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectGame')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {games?.map(game => (
-                      <SelectItem key={game.id} value={game.id.toString()}>
-                        {game.title_en}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="rating">{t('admin.rating')}</Label>
+                <Label htmlFor="publishDate">{t('admin.publishDate')}</Label>
                 <Input
-                  id="rating"
-                  name="rating"
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.1"
-                  value={formData.rating || 0}
+                  id="publishDate"
+                  name="publishDate"
+                  type="date"
+                  value={formData.publishDate instanceof Date ? formData.publishDate.toISOString().split('T')[0] : ''}
                   onChange={handleChange}
                   required
                 />
               </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="featured">{t('admin.featured')}</Label>
+                <Select 
+                  name="featured" 
+                  value={formData.featured?.toString() || "0"}
+                  onValueChange={(value) => handleChange({
+                    target: { name: 'featured', value, type: 'select' }
+                  } as any)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('admin.selectFeatured')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">{t('admin.notFeatured')}</SelectItem>
+                    <SelectItem value="1">{t('admin.featured')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+              <Label htmlFor="featuredImage">{t('admin.featuredImage')}</Label>
               <Input
-                id="coverImage"
-                name="coverImage"
-                value={formData.coverImage || ''}
+                id="featuredImage"
+                name="featuredImage"
+                value={formData.featuredImage || ''}
                 onChange={handleChange}
-                placeholder="https://example.com/image.png"
+                placeholder="https://..."
                 required
               />
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="featured" 
-                checked={formData.featured ? true : false}
-                onCheckedChange={(checked) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    featured: checked ? 1 : 0
-                  }))
-                }}
+            <div className="space-y-2">
+              <Label htmlFor="tags">{t('admin.tags')}</Label>
+              <Input
+                id="tags"
+                name="tags"
+                value={formData.tags?.join(', ') || ''}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)
+                }))}
+                placeholder="casino, review, bonus"
               />
-              <Label htmlFor="featured">{t('admin.featuredReview')}</Label>
             </div>
           </div>
           
           <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={onCancel}>
+            <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
+            <Button 
+              type="submit" 
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {t('admin.save')}
             </Button>
           </div>
@@ -1459,11 +1334,33 @@ function ReviewForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 // ===== NEWS =====
 function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t, getLocalizedField } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const { data: news, isLoading } = useQuery<News[]>({
     queryKey: ['/api/admin/news'],
     meta: {
       errorMessage: t('admin.newsLoadError')
+    }
+  });
+  
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('DELETE', `/api/admin/news/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/news'] });
+      toast({
+        title: t('admin.newsDeletedTitle'),
+        description: t('admin.newsDeletedDesc'),
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('admin.newsDeleteErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
     }
   });
   
@@ -1486,8 +1383,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.titleColumn')}</TableHead>
-                <TableHead>{t('admin.category')}</TableHead>
+                <TableHead>{t('admin.title')}</TableHead>
                 <TableHead>{t('admin.publishDate')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
               </TableRow>
@@ -1496,10 +1392,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
               {news?.length ? (
                 news.map((newsItem) => (
                   <TableRow key={newsItem.id}>
-                    <TableCell>
-                      {getLocalizedField(newsItem, 'title')}
-                    </TableCell>
-                    <TableCell>{newsItem.category}</TableCell>
+                    <TableCell>{getLocalizedField(newsItem, 'title')}</TableCell>
                     <TableCell>{format(new Date(newsItem.publishDate), 'dd/MM/yyyy')}</TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
@@ -1530,7 +1423,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
                             <Button 
                               variant="destructive"
                               onClick={() => {
-                                // Add deletion logic here when implemented
+                                deleteMutation.mutate(newsItem.id);
                                 document.querySelector('dialog')?.close();
                               }}
                             >
@@ -1544,7 +1437,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-6">
+                  <TableCell colSpan={3} className="text-center py-6">
                     {t('admin.noNews')}
                   </TableCell>
                 </TableRow>
@@ -1557,7 +1450,7 @@ function NewsList({ onEdit }: { onEdit: (id: number) => void }) {
   );
 }
 
-function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
+function NewsForm({ id, onCancel, onSuccess }: FormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1565,17 +1458,17 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const [formData, setFormData] = useState<Partial<News>>({
     title_en: '',
     title_it: '',
-    summary_en: '',
-    summary_it: '',
     content_en: '',
     content_it: '',
+    excerpt_en: '',
+    excerpt_it: '',
     slug: '',
-    category: '',
-    featured: 0,
-    coverImage: ''
+    publishDate: new Date(),
+    featuredImage: '',
+    tags: []
   });
   
-  const { data: newsItem, isLoading, isError } = useQuery<News>({
+  const { data: news, isLoading, isError } = useQuery<News>({
     queryKey: [`/api/admin/news/${id}`],
     enabled: !!id,
     meta: {
@@ -1586,16 +1479,17 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   
   // Initialize form with news data when loaded (editing mode)
   React.useEffect(() => {
-    if (newsItem) {
+    if (news) {
       setFormData({
-        ...newsItem,
-        publishDate: new Date(newsItem.publishDate)
+        ...news,
+        publishDate: new Date(news.publishDate)
       });
     }
-  }, [newsItem]);
+  }, [news]);
   
   const saveMutation = useMutation({
     mutationFn: async (data: Partial<News>) => {
+      // Ensure the date is properly formatted
       const dataToSend = {
         ...data,
         publishDate: data.publishDate instanceof Date 
@@ -1627,49 +1521,37 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       });
     }
   });
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Make sure slug is filled
-    if (!formData.slug) {
-      setFormData(prev => ({
-        ...prev,
-        slug: generateSlug(formData.title_en || '')
-      }));
-    }
-    
     saveMutation.mutate(formData);
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : name === 'publishDate' && value
+          ? new Date(value)
+          : name === 'slug' && prev.title_en && !value
+            ? generateSlug(prev.title_en as string)
+            : value
     }));
   };
-  
-  // Auto-generate slug when title changes
-  useEffect(() => {
-    if (formData.title_en && !id) {
+
+  // Generate slug when title changes
+  React.useEffect(() => {
+    if (formData.title_en && (!formData.slug || !id)) {
       setFormData(prev => ({
         ...prev,
-        slug: generateSlug(formData.title_en)
+        slug: generateSlug(prev.title_en as string)
       }));
     }
   }, [formData.title_en, id]);
-  
-  // News categories
-  const categories = [
-    'casino-news',
-    'sports-betting',
-    'gambling-regulations',
-    'promotions',
-    'industry-news'
-  ];
-  
+
   // Show loading spinner when loading data
   if (isLoading && id) {
     return (
@@ -1698,7 +1580,7 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       </Card>
     );
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -1728,14 +1610,14 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Label htmlFor="excerpt_en">{t('admin.excerpt')} (EN)</Label>
                 <Textarea
-                  id="summary_en"
-                  name="summary_en"
-                  value={formData.summary_en || ''}
+                  id="excerpt_en"
+                  name="excerpt_en"
+                  value={formData.excerpt_en || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -1747,7 +1629,7 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_en || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -1768,14 +1650,14 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Label htmlFor="excerpt_it">{t('admin.excerpt')} (IT)</Label>
                 <Textarea
-                  id="summary_it"
-                  name="summary_it"
-                  value={formData.summary_it || ''}
+                  id="excerpt_it"
+                  name="excerpt_it"
+                  value={formData.excerpt_it || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -1787,7 +1669,7 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_it || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -1797,7 +1679,7 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
           <div className="space-y-4">
             <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="slug">{t('admin.slug')}</Label>
                 <Input
@@ -1810,36 +1692,12 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="category">{t('admin.category')}</Label>
-                <Select 
-                  name="category" 
-                  value={formData.category || ""}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'category', value, type: 'select' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectCategory')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category} value={category}>
-                        {t(`admin.category.${category}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
                 <Label htmlFor="publishDate">{t('admin.publishDate')}</Label>
                 <Input
                   id="publishDate"
                   name="publishDate"
                   type="date"
-                  value={formData.publishDate instanceof Date 
-                    ? formData.publishDate.toISOString().split('T')[0] 
-                    : String(formData.publishDate || new Date().toISOString().split('T')[0])}
+                  value={formData.publishDate instanceof Date ? formData.publishDate.toISOString().split('T')[0] : ''}
                   onChange={handleChange}
                   required
                 />
@@ -1847,56 +1705,85 @@ function NewsForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
+              <Label htmlFor="featuredImage">{t('admin.featuredImage')}</Label>
               <Input
-                id="coverImage"
-                name="coverImage"
-                value={formData.coverImage || ''}
+                id="featuredImage"
+                name="featuredImage"
+                value={formData.featuredImage || ''}
                 onChange={handleChange}
-                placeholder="https://example.com/image.png"
+                placeholder="https://..."
                 required
               />
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="featured" 
-                checked={formData.featured ? true : false}
-                onCheckedChange={(checked) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    featured: checked ? 1 : 0
-                  }))
-                }}
+            <div className="space-y-2">
+              <Label htmlFor="tags">{t('admin.tags')}</Label>
+              <Input
+                id="tags"
+                name="tags"
+                value={formData.tags?.join(', ') || ''}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)
+                }))}
+                placeholder="casino, news, bonus"
               />
-              <Label htmlFor="featured">{t('admin.featuredNews')}</Label>
             </div>
           </div>
           
           <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={onCancel}>
+            <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
+            <Button 
+              type="submit" 
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {t('admin.save')}
             </Button>
           </div>
         </form>
       </CardContent>
     </Card>
-  );
+  );  
 }
 
 // ===== GUIDES =====
 function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t, getLocalizedField } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const { data: guides, isLoading } = useQuery<Guide[]>({
     queryKey: ['/api/admin/guides'],
     meta: {
-      errorMessage: t('admin.guidesLoadError')
+      errorMessage: t('admin.guideLoadError')
+    }
+  });
+  
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('DELETE', `/api/admin/guides/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/guides'] });
+      toast({
+        title: t('admin.guideDeletedTitle'),
+        description: t('admin.guideDeletedDesc'),
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('admin.guideDeleteErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
     }
   });
   
@@ -1919,8 +1806,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.titleColumn')}</TableHead>
-                <TableHead>{t('admin.difficulty')}</TableHead>
+                <TableHead>{t('admin.title')}</TableHead>
                 <TableHead>{t('admin.publishDate')}</TableHead>
                 <TableHead>{t('admin.actions')}</TableHead>
               </TableRow>
@@ -1929,10 +1815,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
               {guides?.length ? (
                 guides.map((guide) => (
                   <TableRow key={guide.id}>
-                    <TableCell>
-                      {getLocalizedField(guide, 'title')}
-                    </TableCell>
-                    <TableCell>{t(`admin.difficulty.${guide.difficulty.toLowerCase()}`)}</TableCell>
+                    <TableCell>{getLocalizedField(guide, 'title')}</TableCell>
                     <TableCell>{format(new Date(guide.publishDate), 'dd/MM/yyyy')}</TableCell>
                     <TableCell className="flex items-center gap-2">
                       <Button 
@@ -1963,7 +1846,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
                             <Button 
                               variant="destructive"
                               onClick={() => {
-                                // Add deletion logic here when implemented
+                                deleteMutation.mutate(guide.id);
                                 document.querySelector('dialog')?.close();
                               }}
                             >
@@ -1977,7 +1860,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-6">
+                  <TableCell colSpan={3} className="text-center py-6">
                     {t('admin.noGuides')}
                   </TableCell>
                 </TableRow>
@@ -1990,7 +1873,7 @@ function GuidesList({ onEdit }: { onEdit: (id: number) => void }) {
   );
 }
 
-function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
+function GuideForm({ id, onCancel, onSuccess }: FormProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1998,14 +1881,14 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   const [formData, setFormData] = useState<Partial<Guide>>({
     title_en: '',
     title_it: '',
-    summary_en: '',
-    summary_it: '',
     content_en: '',
     content_it: '',
+    excerpt_en: '',
+    excerpt_it: '',
     slug: '',
-    category: '',
-    difficulty: 'BEGINNER',
-    coverImage: ''
+    publishDate: new Date(),
+    featuredImage: '',
+    tags: []
   });
   
   const { data: guide, isLoading, isError } = useQuery<Guide>({
@@ -2029,6 +1912,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
   
   const saveMutation = useMutation({
     mutationFn: async (data: Partial<Guide>) => {
+      // Ensure the date is properly formatted
       const dataToSend = {
         ...data,
         publishDate: data.publishDate instanceof Date 
@@ -2060,57 +1944,37 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       });
     }
   });
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Make sure slug is filled
-    if (!formData.slug) {
-      setFormData(prev => ({
-        ...prev,
-        slug: generateSlug(formData.title_en || '')
-      }));
-    }
-    
     saveMutation.mutate(formData);
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : name === 'publishDate' && value
+          ? new Date(value)
+          : name === 'slug' && prev.title_en && !value
+            ? generateSlug(prev.title_en as string)
+            : value
     }));
   };
-  
-  // Auto-generate slug when title changes
-  useEffect(() => {
-    if (formData.title_en && !id) {
+
+  // Generate slug when title changes
+  React.useEffect(() => {
+    if (formData.title_en && (!formData.slug || !id)) {
       setFormData(prev => ({
         ...prev,
-        slug: generateSlug(formData.title_en)
+        slug: generateSlug(prev.title_en as string)
       }));
     }
   }, [formData.title_en, id]);
-  
-  // Guide categories
-  const categories = [
-    'betting-strategies',
-    'casino-games',
-    'sports-betting',
-    'poker-guides',
-    'responsible-gambling'
-  ];
-  
-  // Guide difficulty levels
-  const difficultyLevels = [
-    'beginner',
-    'intermediate',
-    'advanced',
-    'expert'
-  ];
-  
+
   // Show loading spinner when loading data
   if (isLoading && id) {
     return (
@@ -2139,7 +2003,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
       </Card>
     );
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -2169,14 +2033,14 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_en">{t('admin.summary')} (EN)</Label>
+                <Label htmlFor="excerpt_en">{t('admin.excerpt')} (EN)</Label>
                 <Textarea
-                  id="summary_en"
-                  name="summary_en"
-                  value={formData.summary_en || ''}
+                  id="excerpt_en"
+                  name="excerpt_en"
+                  value={formData.excerpt_en || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -2188,7 +2052,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_en || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -2209,14 +2073,14 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="summary_it">{t('admin.summary')} (IT)</Label>
+                <Label htmlFor="excerpt_it">{t('admin.excerpt')} (IT)</Label>
                 <Textarea
-                  id="summary_it"
-                  name="summary_it"
-                  value={formData.summary_it || ''}
+                  id="excerpt_it"
+                  name="excerpt_it"
+                  value={formData.excerpt_it || ''}
                   onChange={handleChange}
                   required
-                  rows={2}
+                  rows={3}
                 />
               </div>
               
@@ -2228,7 +2092,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
                   value={formData.content_it || ''}
                   onChange={handleChange}
                   required
-                  rows={6}
+                  rows={8}
                 />
               </div>
             </div>
@@ -2238,7 +2102,7 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
           <div className="space-y-4">
             <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="slug">{t('admin.slug')}</Label>
                 <Input
@@ -2251,86 +2115,59 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="category">{t('admin.category')}</Label>
-                <Select 
-                  name="category" 
-                  value={formData.category || ""}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'category', value, type: 'select' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectCategory')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category} value={category}>
-                        {t(`admin.category.${category}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="difficulty">{t('admin.difficulty')}</Label>
-                <Select 
-                  name="difficulty" 
-                  value={formData.difficulty || "BEGINNER"}
-                  onValueChange={(value) => handleChange({
-                    target: { name: 'difficulty', value, type: 'select' }
-                  } as any)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('admin.selectDifficulty')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {difficultyLevels.map(level => (
-                      <SelectItem key={level} value={level.toUpperCase()}>
-                        {t(`admin.difficulty.${level}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
                 <Label htmlFor="publishDate">{t('admin.publishDate')}</Label>
                 <Input
                   id="publishDate"
                   name="publishDate"
                   type="date"
-                  value={formData.publishDate instanceof Date 
-                    ? formData.publishDate.toISOString().split('T')[0] 
-                    : String(formData.publishDate || new Date().toISOString().split('T')[0])}
+                  value={formData.publishDate instanceof Date ? formData.publishDate.toISOString().split('T')[0] : ''}
                   onChange={handleChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="coverImage">{t('admin.coverImage')}</Label>
-                <Input
-                  id="coverImage"
-                  name="coverImage"
-                  value={formData.coverImage || ''}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.png"
                   required
                 />
               </div>
             </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="featuredImage">{t('admin.featuredImage')}</Label>
+              <Input
+                id="featuredImage"
+                name="featuredImage"
+                value={formData.featuredImage || ''}
+                onChange={handleChange}
+                placeholder="https://..."
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="tags">{t('admin.tags')}</Label>
+              <Input
+                id="tags"
+                name="tags"
+                value={formData.tags?.join(', ') || ''}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)
+                }))}
+                placeholder="casino, guide, tutorial"
+              />
+            </div>
           </div>
           
           <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={onCancel}>
+            <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
+            <Button 
+              type="submit" 
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {t('admin.save')}
             </Button>
           </div>
@@ -2342,158 +2179,126 @@ function GuideForm({ id, onCancel, onSuccess }: PromoCodeFormProps) {
 
 // ===== OUTLETS =====
 function OutletsList({ onEdit }: { onEdit: (id: number) => void }) {
-  const { language, t, getLocalizedField } = useLanguage();
+  const { t, getLocalizedField } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/admin/outlets'],
+    meta: {
+      errorMessage: t('admin.outletLoadError')
+    }
   });
-
+  
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       await apiRequest('DELETE', `/api/admin/outlets/${id}`);
     },
     onSuccess: () => {
-      // Invalidate both admin and public outlet queries
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
-      
       toast({
-        title: language === 'it' ? 'Punto Vendita Eliminato' : 'Outlet Deleted',
-        description: language === 'it' 
-          ? 'Il punto vendita è stato eliminato con successo.'
-          : 'The outlet has been successfully deleted.',
+        title: t('admin.outletDeletedTitle'),
+        description: t('admin.outletDeletedDesc'),
       });
     },
     onError: (error: Error) => {
       toast({
-        title: language === 'it' ? 'Errore' : 'Error',
+        title: t('admin.outletDeleteErrorTitle'),
         description: error.message,
-        variant: 'destructive',
+        variant: 'destructive'
       });
-    },
+    }
   });
-
-  const toggleStatusMutation = useMutation({
-    mutationFn: async ({ id, isActive }: { id: number, isActive: boolean }) => {
-      // First get the full outlet data
-      const response = await apiRequest('GET', `/api/admin/outlets/${id}`);
-      const outletData = await response.json();
-      
-      // Then update only the status
-      await apiRequest('PUT', `/api/admin/outlets/${id}`, { 
-        ...outletData,
-        isActive 
-      });
-    },
-    onSuccess: () => {
-      // Invalidate both admin and public outlet queries
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
-      
-      toast({
-        title: language === 'it' ? 'Stato Aggiornato' : 'Status Updated',
-        description: language === 'it' 
-          ? 'Lo stato del punto vendita è stato aggiornato con successo.'
-          : 'The outlet status has been successfully updated.',
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: language === 'it' ? 'Errore' : 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
+  
   if (isLoading) {
     return (
-      <div className="flex justify-center p-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-
+  
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{language === 'it' ? 'Gestione Punti Vendita' : 'Outlets Management'}</CardTitle>
-        <CardDescription>
-          {language === 'it' 
-            ? 'Gestisci i punti vendita visualizzati sul sito.'
-            : 'Manage the outlets displayed on the website.'}
-        </CardDescription>
+        <CardTitle>{t('admin.outlets')}</CardTitle>
+        <CardDescription>{t('admin.outletsDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[calc(100vh-300px)]">
+        <ScrollArea className="h-[600px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{language === 'it' ? 'Nome' : 'Name'}</TableHead>
-                <TableHead>{language === 'it' ? 'Indirizzo' : 'Address'}</TableHead>
-                <TableHead>{language === 'it' ? 'Stato' : 'Status'}</TableHead>
-                <TableHead>{language === 'it' ? 'Ordine' : 'Order'}</TableHead>
-                <TableHead className="text-right">{language === 'it' ? 'Azioni' : 'Actions'}</TableHead>
+                <TableHead>{t('admin.name')}</TableHead>
+                <TableHead>{t('admin.active')}</TableHead>
+                <TableHead>{t('admin.featured')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {outlets && outlets.length > 0 ? (
-                outlets
-                  .sort((a, b) => (a.order || 0) - (b.order || 0))
-                  .map((outlet) => (
-                    <TableRow key={outlet.id}>
-                      <TableCell className="font-medium">{getLocalizedField(outlet, 'title')}</TableCell>
-                      <TableCell>{getLocalizedField(outlet, 'address') || '-'}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <div className={`h-2.5 w-2.5 rounded-full mr-2 ${outlet.isActive ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                          {outlet.isActive 
-                            ? (language === 'it' ? 'Attivo' : 'Active') 
-                            : (language === 'it' ? 'Inattivo' : 'Inactive')}
-                        </div>
-                      </TableCell>
-                      <TableCell>{outlet.order}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => toggleStatusMutation.mutate({ id: outlet.id, isActive: !outlet.isActive })}
-                          >
-                            {outlet.isActive 
-                              ? (language === 'it' ? 'Disattiva' : 'Deactivate') 
-                              : (language === 'it' ? 'Attiva' : 'Activate')}
+              {outlets?.length ? (
+                outlets.map((outlet) => (
+                  <TableRow key={outlet.id}>
+                    <TableCell>{getLocalizedField(outlet, 'name')}</TableCell>
+                    <TableCell>
+                      {outlet.active ? (
+                        <ShieldCheck className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <ShieldAlert className="h-4 w-4 text-red-500" />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {outlet.featured ? (
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => onEdit(outlet.id)}
+                      >
+                        {t('admin.edit')}
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            <Trash className="h-4 w-4 mr-1" />
+                            {t('admin.delete')}
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onEdit(outlet.id)}
-                          >
-                            {language === 'it' ? 'Modifica' : 'Edit'}
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => {
-                              if (window.confirm(language === 'it' 
-                                ? 'Sei sicuro di voler eliminare questo punto vendita?' 
-                                : 'Are you sure you want to delete this outlet?')) {
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('admin.confirmDeleteTitle')}</DialogTitle>
+                            <DialogDescription>
+                              {t('admin.confirmDeleteOutlet')}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.querySelector('dialog')?.close()}>
+                              {t('admin.cancel')}
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={() => {
                                 deleteMutation.mutate(outlet.id);
-                              }
-                            }}
-                          >
-                            {language === 'it' ? 'Elimina' : 'Delete'}
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                                document.querySelector('dialog')?.close();
+                              }}
+                            >
+                              {t('admin.confirmDelete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center">
-                    {language === 'it' ? 'Nessun punto vendita trovato.' : 'No outlets found.'}
+                  <TableCell colSpan={4} className="text-center py-6">
+                    {t('admin.noOutlets')}
                   </TableCell>
                 </TableRow>
               )}
@@ -2512,679 +2317,249 @@ type OutletFormProps = {
 };
 
 function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = useState({
-    title_en: '',
-    title_it: '',
+  const [formData, setFormData] = useState<Partial<Outlet>>({
+    name_en: '',
+    name_it: '',
     description_en: '',
     description_it: '',
-    address_en: '',
-    address_it: '',
-    imageUrl: '',
-    additionalImages: [] as string[],
-    order: 0,
-    isActive: true
+    logo: '',
+    affiliateLink: '',
+    featured: false,
+    active: true
   });
   
-  // Fetch outlet data if editing
-  const { isLoading } = useQuery<Outlet>({
+  const { data: outlet, isLoading, isError } = useQuery<Outlet>({
     queryKey: [`/api/admin/outlets/${id}`],
-    enabled: id !== null,
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.outletLoadError')
+    },
+    retry: false
   });
   
+  // Initialize form with outlet data when loaded (editing mode)
   React.useEffect(() => {
-    const fetchOutlet = async () => {
-      if (id !== null) {
-        try {
-          const response = await apiRequest('GET', `/api/admin/outlets/${id}`);
-          const data = await response.json();
-          
-          // Initialize with default images if none exist
-          let imageUrl = data.imageUrl;
-          let additionalImages = data.additionalImages || [];
-          
-          // Use different default images for each outlet
-          // We found that redmoon1.jpg and redmoon5.jpg are identical files, 
-          // and redmoon2.jpg and redmoon-3.jpg are identical
-          if (!imageUrl && id === 1) {
-            imageUrl = 'redmoon-1'; // Different from redmoon1
-            additionalImages = ['redmoon3', 'redmoon4', 'redmoon2'];
-          } else if (!imageUrl && id === 2) {
-            imageUrl = 'redmoon4';
-            additionalImages = ['redmoon-1', 'redmoon3'];
-          } else if (!imageUrl && id === 3) {
-            imageUrl = 'redmoon2';
-            additionalImages = ['redmoon3'];
-          }
-          
-          setFormData({
-            title_en: data.title_en,
-            title_it: data.title_it,
-            description_en: data.description_en || '',
-            description_it: data.description_it || '',
-            address_en: data.address_en || '',
-            address_it: data.address_it || '',
-            imageUrl: imageUrl,
-            additionalImages: additionalImages,
-            order: data.order || 0,
-            isActive: data.isActive
-          });
-        } catch (error) {
-          console.error('Error fetching outlet:', error);
-        }
-      }
-    };
-    
-    fetchOutlet();
-  }, [id]);
+    if (outlet) {
+      setFormData(outlet);
+    }
+  }, [outlet]);
   
   const saveMutation = useMutation({
-    mutationFn: async (data: any) => {
-      if (id === null) {
-        // Create new outlet
-        await apiRequest('POST', '/api/admin/outlets', data);
-      } else {
-        // Update existing outlet
+    mutationFn: async (data: Partial<Outlet>) => {
+      if (id) {
+        // Update existing
         await apiRequest('PUT', `/api/admin/outlets/${id}`, data);
+      } else {
+        // Create new
+        await apiRequest('POST', '/api/admin/outlets', data);
       }
     },
     onSuccess: () => {
-      // Invalidate both admin and public outlet queries
       queryClient.invalidateQueries({ queryKey: ['/api/admin/outlets'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/outlets'] });
-      
       toast({
-        title: id === null
-          ? (language === 'it' ? 'Punto Vendita Creato' : 'Outlet Created')
-          : (language === 'it' ? 'Punto Vendita Aggiornato' : 'Outlet Updated'),
-        description: id === null
-          ? (language === 'it' ? 'Il punto vendita è stato creato con successo.' : 'The outlet has been successfully created.')
-          : (language === 'it' ? 'Il punto vendita è stato aggiornato con successo.' : 'The outlet has been successfully updated.'),
+        title: id ? t('admin.outletUpdatedTitle') : t('admin.outletCreatedTitle'),
+        description: id ? t('admin.outletUpdatedDesc') : t('admin.outletCreatedDesc'),
       });
       onSuccess();
     },
     onError: (error: Error) => {
       toast({
-        title: language === 'it' ? 'Errore' : 'Error',
+        title: t('admin.savingErrorTitle'),
         description: error.message,
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
-  
-  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: parseInt(value) || 0 }));
-  };
-  
-  // Handle image management is now handled by the DragDropImageGallery component
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Debug log to see what data we're submitting
-    console.log("Submitting outlet form data:", formData);
-    
-    // Make a deep copy of the form data
-    const dataToSubmit = {
-      ...formData,
-      // Ensure imageUrl is a string (not undefined/null)
-      imageUrl: formData.imageUrl || '',
-      // Ensure additionalImages is always an array
-      additionalImages: Array.isArray(formData.additionalImages) ? [...formData.additionalImages] : []
-    };
-    
-    console.log("Processed data to submit:", {
-      imageUrl: dataToSubmit.imageUrl,
-      additionalImages: dataToSubmit.additionalImages
-    });
-    
-    saveMutation.mutate(dataToSubmit);
+    saveMutation.mutate(formData);
   };
-  
-  if (isLoading) {
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : value
+    }));
+  };
+
+  // Show loading spinner when loading data
+  if (isLoading && id) {
     return (
-      <div className="flex justify-center p-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
   
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>
-          {id === null 
-            ? (language === 'it' ? 'Aggiungi Punto Vendita' : 'Add Outlet')
-            : (language === 'it' ? 'Modifica Punto Vendita' : 'Edit Outlet')}
+          {id ? t('admin.editOutlet') : t('admin.addOutlet')}
         </CardTitle>
         <CardDescription>
-          {id === null 
-            ? (language === 'it' ? 'Inserisci i dettagli del nuovo punto vendita.' : 'Enter the details for the new outlet.')
-            : (language === 'it' ? 'Modifica i dettagli del punto vendita esistente.' : 'Edit the details of the existing outlet.')}
+          {t('admin.outletFormDesc')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Italian Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title_it">
-                {language === 'it' ? 'Nome (Italiano)' : 'Name (Italian)'}
-                <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="title_it"
-                name="title_it"
-                value={formData.title_it}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            {/* English Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title_en">
-                {language === 'it' ? 'Nome (Inglese)' : 'Name (English)'}
-                <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="title_en"
-                name="title_en"
-                value={formData.title_en}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            {/* Italian Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description_it">
-                {language === 'it' ? 'Descrizione (Italiano)' : 'Description (Italian)'}
-              </Label>
-              <Textarea
-                id="description_it"
-                name="description_it"
-                value={formData.description_it}
-                onChange={handleChange}
-                rows={3}
-              />
-            </div>
-            
-            {/* English Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description_en">
-                {language === 'it' ? 'Descrizione (Inglese)' : 'Description (English)'}
-              </Label>
-              <Textarea
-                id="description_en"
-                name="description_en"
-                value={formData.description_en}
-                onChange={handleChange}
-                rows={3}
-              />
-            </div>
-            
-            {/* Italian Address */}
-            <div className="space-y-2">
-              <Label htmlFor="address_it">
-                {language === 'it' ? 'Indirizzo (Italiano)' : 'Address (Italian)'}
-              </Label>
-              <Input
-                id="address_it"
-                name="address_it"
-                value={formData.address_it}
-                onChange={handleChange}
-              />
-            </div>
-            
-            {/* English Address */}
-            <div className="space-y-2">
-              <Label htmlFor="address_en">
-                {language === 'it' ? 'Indirizzo (Inglese)' : 'Address (English)'}
-              </Label>
-              <Input
-                id="address_en"
-                name="address_en"
-                value={formData.address_en}
-                onChange={handleChange}
-              />
-            </div>
-            
-            {/* Image Management */}
-            <div className="space-y-2">
-              <Label htmlFor="imageManagement">
-                {language === 'it' ? 'Gestione Immagini' : 'Image Management'}
-                <span className="text-red-500">*</span>
-              </Label>
-              <p className="text-xs text-muted-foreground mb-2">
-                {language === 'it' 
-                  ? 'Aggiungi e gestisci le immagini della galleria. La prima immagine è quella principale.'
-                  : 'Add and manage gallery images. The first image is used as the primary image.'}
-              </p>
-            </div>
-            
-            {/* Order */}
-            <div className="space-y-2">
-              <Label htmlFor="order">
-                {language === 'it' ? 'Ordine di Visualizzazione' : 'Display Order'}
-              </Label>
-              <div className="flex items-center space-x-4">
-                <Input
-                  id="order"
-                  name="order"
-                  type="number"
-                  min="0"
-                  value={formData.order}
-                  onChange={handleNumberChange}
-                  className="w-24"
-                />
-                <div className="flex-1">
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary" 
-                      style={{ width: `${Math.min(100, (formData.order / 10) * 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>0 ({language === 'it' ? 'Primo' : 'First'})</span>
-                <span>5</span>
-                <span>10+ ({language === 'it' ? 'Ultimo' : 'Last'})</span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {language === 'it' 
-                  ? 'I punti vendita vengono visualizzati in ordine crescente (0 appare per primo)'
-                  : 'Outlets are displayed in ascending order (0 appears first)'}
-              </p>
-            </div>
-          </div>
-          
-          {/* Drag and Drop Image Gallery */}
-          <div className="space-y-4 border-t pt-6 mt-4">
-            <div className="flex flex-col space-y-2">
-              <Label className="text-lg font-medium">
-                {language === 'it' ? 'Galleria Immagini' : 'Image Gallery'}
-              </Label>
-              <p className="text-sm text-muted-foreground mb-2">
-                {language === 'it' 
-                  ? 'Aggiungi, riordina e gestisci le immagini della galleria. Usa i pulsanti su/giù sul lato sinistro per riordinare. Seleziona la stella per impostare un\'immagine come principale.'
-                  : 'Add, reorder and manage gallery images. Use the up/down buttons on the left side to reorder. Click the star to set an image as primary.'}
-              </p>
+            {/* English Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.englishContent')}</h3>
               
-              <div className="border rounded-md p-4 space-y-4">
-                <div className="text-sm text-muted-foreground">
-                  <div className="flex justify-between mb-2">
-                    <strong>Gallery Management</strong>
-                    <Button 
-                      type="button" 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => {
-                        // Create a hidden file input element
-                        const fileInput = document.createElement('input');
-                        fileInput.type = 'file';
-                        fileInput.accept = 'image/*';
-                        fileInput.style.display = 'none';
-                        document.body.appendChild(fileInput);
-                        
-                        // Handle file selection
-                        fileInput.onchange = async (e) => {
-                          const files = fileInput.files;
-                          if (!files || files.length === 0) return;
-                          
-                          // Create a FormData object
-                          const uploadData = new FormData();
-                          uploadData.append('image', files[0]);
-                          
-                          try {
-                            // Show loading state
-                            toast({
-                              title: "Uploading image...",
-                              description: "Please wait while your image is being uploaded.",
-                            });
-                            
-                            // Upload the file
-                            const response = await fetch('/api/upload', {
-                              method: 'POST',
-                              body: uploadData,
-                              credentials: 'include'
-                            });
-                            
-                            if (!response.ok) {
-                              throw new Error('Failed to upload image');
-                            }
-                            
-                            const result = await response.json();
-                            
-                            if (result.success) {
-                              // Log successful upload for debugging
-                              console.log('Upload successful:', result);
-                              
-                              // Use fullFilename if available, fallback to filename for backwards compatibility
-                              const newImageId = result.fullFilename || result.filename;
-                              
-                              if (!formData.imageUrl || formData.imageUrl === '') {
-                                setFormData(prev => ({
-                                  ...prev,
-                                  imageUrl: newImageId
-                                }));
-                              } else {
-                                setFormData(prev => ({
-                                  ...prev,
-                                  additionalImages: [...prev.additionalImages, newImageId]
-                                }));
-                              }
-                              
-                              toast({
-                                title: "Image uploaded",
-                                description: `Image ${newImageId} uploaded successfully.`,
-                              });
-                            } else {
-                              throw new Error(result.message || 'Failed to upload image');
-                            }
-                          } catch (error) {
-                            console.error('Error uploading image:', error);
-                            toast({
-                              title: "Upload failed",
-                              description: error.message || "There was an error uploading your image.",
-                              variant: "destructive",
-                            });
-                          } finally {
-                            // Clean up the input element
-                            document.body.removeChild(fileInput);
-                          }
-                        };
-                        
-                        // Trigger the file input
-                        fileInput.click();
-                      }}
-                    >
-                      <Plus size={14} className="mr-1" /> Upload New Image
-                    </Button>
-                  </div>
-                  
-                  <p className="mb-2">Use the Upload button to add new images or enter predefined image names: redmoon1, redmoon2, redmoon3, redmoon4, redmoon5</p>
-                  
-                  {/* Primary Image */}
-                  <div className="mb-4">
-                    <Label className="mb-1 block text-sm font-medium">Primary Image</Label>
-                    {formData.imageUrl ? (
-                      <div className="relative w-full max-w-[200px] h-40 border rounded-md overflow-hidden">
-                        <img 
-                          src={
-                            // Handle various image path cases
-                            formData.imageUrl.startsWith('http') ? formData.imageUrl : // External URL
-                            formData.imageUrl.includes('-') ? 
-                              formData.imageUrl.includes('.') ? `/uploads/${formData.imageUrl}` : `/uploads/${formData.imageUrl}.jpg` : // Handle both with and without extension
-                            `/assets/${formData.imageUrl}.jpg` // Default asset path
-                          } 
-                          alt="Primary" 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            // Try different paths if the image fails to load
-                            const target = e.target as HTMLImageElement;
-                            const currentSrc = target.src;
-                            const img = formData.imageUrl;
-                            
-                            // Log error for debugging
-                            console.log('Image load error in admin panel:', {
-                              imageUrl: img,
-                              failedSrc: currentSrc,
-                              hasHyphens: img.includes('-'),
-                              attemptingFallback: true
-                            });
-                            
-                            // Simplify fallback approach - if it contains hyphens (UUID format),
-                            // then we're dealing with an uploaded image with extension
-                            if (img.includes('-')) {
-                              // Try both upload paths
-                              if (currentSrc.includes('/uploads/')) {
-                                // If /uploads/UUID failed, try with .jpg extension
-                                target.src = `/uploads/${img}.jpg`;
-                              } else {
-                                // Default fallback
-                                target.src = '/assets/redmoon1.jpg';
-                              }
-                            } else {
-                              // For asset images
-                              target.src = '/assets/redmoon1.jpg';
-                            }
-                          }}
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2 w-6 h-6"
-                          onClick={() => {
-                            // Handle removing primary image
-                            if (formData.additionalImages.length > 0) {
-                              // If there are additional images, move the first one to primary
-                              const [newPrimary, ...rest] = formData.additionalImages;
-                              setFormData(prev => ({
-                                ...prev,
-                                imageUrl: newPrimary,
-                                additionalImages: rest
-                              }));
-                            } else {
-                              // No more images, clear primary
-                              setFormData(prev => ({
-                                ...prev,
-                                imageUrl: '',
-                              }));
-                            }
-                          }}
-                        >
-                          <X size={14} />
-                        </Button>
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1">
-                          {formData.imageUrl}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center p-4 border border-dashed rounded-md text-muted-foreground">
-                        No primary image set
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Additional Images */}
-                  <div>
-                    <Label className="mb-1 block text-sm font-medium">Additional Images</Label>
-                    {formData.additionalImages.length > 0 ? (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                        {formData.additionalImages.map((img, index) => (
-                          <div key={index} className="relative border rounded-md overflow-hidden h-32">
-                            <img 
-                              src={
-                                // Handle various image path cases
-                                img.startsWith('http') ? img : // External URL
-                                img.includes('-') ? 
-                                  img.includes('.') ? `/uploads/${img}` : `/uploads/${img}.jpg` : // Handle both with and without extension
-                                `/assets/${img}.jpg` // Default asset path
-                              } 
-                              alt={`Image ${index + 1}`} 
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                // Try different paths if the image fails to load
-                                const target = e.target as HTMLImageElement;
-                                const currentSrc = target.src;
-                                
-                                // Log error for debugging
-                                console.log('Additional image load error:', {
-                                  imageUrl: img,
-                                  failedSrc: currentSrc,
-                                  hasHyphens: img.includes('-'),
-                                  attemptingFallback: true
-                                });
-                                
-                                // Simplify fallback approach - if it contains hyphens (UUID format),
-                                // then we're dealing with an uploaded image with extension
-                                if (img.includes('-')) {
-                                  // Try both upload paths
-                                  if (currentSrc.includes('/uploads/')) {
-                                    // If /uploads/UUID failed, try with .jpg extension
-                                    target.src = `/uploads/${img}.jpg`;
-                                  } else {
-                                    // Default fallback
-                                    target.src = '/assets/redmoon1.jpg';
-                                  }
-                                } else {
-                                  // For asset images
-                                  target.src = '/assets/redmoon1.jpg';
-                                }
-                              }}
-                            />
-                            {/* Top-right buttons */}
-                            <div className="absolute top-0 right-0 p-1 flex gap-1">
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="secondary"
-                                className="w-6 h-6 bg-white"
-                                onClick={() => {
-                                  // Set this as primary
-                                  const newAdditional = [...formData.additionalImages];
-                                  const oldPrimary = formData.imageUrl;
-                                  newAdditional.splice(index, 1);
-                                  
-                                  if (oldPrimary) {
-                                    newAdditional.unshift(oldPrimary);
-                                  }
-                                  
-                                  setFormData(prev => ({
-                                    ...prev,
-                                    imageUrl: img,
-                                    additionalImages: newAdditional
-                                  }));
-                                }}
-                              >
-                                <Star size={12} />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="destructive"
-                                size="icon"
-                                className="w-6 h-6"
-                                onClick={() => {
-                                  // Simple direct image removal
-                                  const newAdditional = [...formData.additionalImages];
-                                  newAdditional.splice(index, 1);
-                                  setFormData(prev => ({
-                                    ...prev,
-                                    additionalImages: newAdditional
-                                  }));
-                                }}
-                              >
-                                <X size={12} />
-                              </Button>
-                            </div>
-                            
-                            {/* Image name overlay */}
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1">
-                              {img}
-                            </div>
-                            
-                            {/* Reordering buttons */}
-                            <div className="absolute top-1/2 transform -translate-y-1/2 left-0 flex flex-col gap-1 p-1">
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="secondary"
-                                className="w-6 h-6 bg-white/80 backdrop-blur-sm"
-                                disabled={index === 0}
-                                onClick={() => {
-                                  if (index > 0) {
-                                    const newAdditional = [...formData.additionalImages];
-                                    // Swap with previous image
-                                    [newAdditional[index], newAdditional[index - 1]] = 
-                                      [newAdditional[index - 1], newAdditional[index]];
-                                    
-                                    setFormData(prev => ({
-                                      ...prev,
-                                      additionalImages: newAdditional
-                                    }));
-                                  }
-                                }}
-                              >
-                                <ChevronUp size={12} />
-                              </Button>
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="secondary"
-                                className="w-6 h-6 bg-white/80 backdrop-blur-sm"
-                                disabled={index >= formData.additionalImages.length - 1}
-                                onClick={() => {
-                                  if (index < formData.additionalImages.length - 1) {
-                                    const newAdditional = [...formData.additionalImages];
-                                    // Swap with next image
-                                    [newAdditional[index], newAdditional[index + 1]] = 
-                                      [newAdditional[index + 1], newAdditional[index]];
-                                    
-                                    setFormData(prev => ({
-                                      ...prev,
-                                      additionalImages: newAdditional
-                                    }));
-                                  }
-                                }}
-                              >
-                                <ChevronDown size={12} />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center p-4 border border-dashed rounded-md text-muted-foreground">
-                        No additional images
-                      </div>
-                    )}
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="name_en">{t('admin.name')} (EN)</Label>
+                <Input
+                  id="name_en"
+                  name="name_en"
+                  value={formData.name_en || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="description_en">{t('admin.description')} (EN)</Label>
+                <Textarea
+                  id="description_en"
+                  name="description_en"
+                  value={formData.description_en || ''}
+                  onChange={handleChange}
+                  required
+                  rows={4}
+                />
+              </div>
+            </div>
+            
+            {/* Italian Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">{t('admin.italianContent')}</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="name_it">{t('admin.name')} (IT)</Label>
+                <Input
+                  id="name_it"
+                  name="name_it"
+                  value={formData.name_it || ''}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="description_it">{t('admin.description')} (IT)</Label>
+                <Textarea
+                  id="description_it"
+                  name="description_it"
+                  value={formData.description_it || ''}
+                  onChange={handleChange}
+                  required
+                  rows={4}
+                />
               </div>
             </div>
           </div>
           
-          {/* Active Status */}
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isActive"
-              name="isActive"
-              checked={formData.isActive}
-              onCheckedChange={(checked) => 
-                setFormData((prev) => ({ ...prev, isActive: checked === true }))
-              }
-            />
-            <Label htmlFor="isActive" className="font-normal">
-              {language === 'it' ? 'Attivo' : 'Active'}
-            </Label>
+          {/* Common Fields */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">{t('admin.commonFields')}</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="logo">{t('admin.logo')}</Label>
+              <Input
+                id="logo"
+                name="logo"
+                value={formData.logo || ''}
+                onChange={handleChange}
+                placeholder="https://..."
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="affiliateLink">{t('admin.affiliateLink')}</Label>
+              <Input
+                id="affiliateLink"
+                name="affiliateLink"
+                value={formData.affiliateLink || ''}
+                onChange={handleChange}
+                placeholder="https://..."
+                required
+              />
+            </div>
+            
+            <div className="flex items-center gap-6">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="active"
+                  name="active"
+                  checked={formData.active || false}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, active: checked as boolean }))
+                  }
+                />
+                <Label htmlFor="active">{t('admin.active')}</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="featured"
+                  name="featured"
+                  checked={formData.featured || false}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, featured: checked as boolean }))
+                  }
+                />
+                <Label htmlFor="featured">{t('admin.featured')}</Label>
+              </div>
+            </div>
           </div>
           
-          {/* Form Actions */}
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>
-              {language === 'it' ? 'Annulla' : 'Cancel'}
+              {t('admin.cancel')}
             </Button>
-            <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <Save className="mr-2 h-4 w-4" />
-              {language === 'it' ? 'Salva' : 'Save'}
+            <Button 
+              type="submit" 
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {t('admin.save')}
             </Button>
           </div>
         </form>
@@ -3196,202 +2571,36 @@ function OutletForm({ id, onCancel, onSuccess }: OutletFormProps) {
 // ===== ADMINISTRATORS =====
 function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
   const { t } = useLanguage();
+  const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   
-  // Check if current user is site owner (username: 'admin')
-  const isSiteOwner = user?.username === 'admin';
-  
-  // State for role selection dialog
-  const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [selectedRole, setSelectedRole] = useState<string>('superadmin');
-  
-  // State for ownership transfer
-  const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
-  const [transferTargetId, setTransferTargetId] = useState<number | null>(null);
-  const [transferPendingUserId, setTransferPendingUserId] = useState<number | null>(null);
-  const [transferDeadline, setTransferDeadline] = useState<Date | null>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  
-  // Check for any pending transfers on component mount
-  useEffect(() => {
-    const storedTransfer = localStorage.getItem('ownershipTransfer');
-    if (storedTransfer) {
-      try {
-        const { userId, deadline } = JSON.parse(storedTransfer);
-        setTransferPendingUserId(userId);
-        setTransferDeadline(new Date(deadline));
-      } catch (e) {
-        console.error('Error parsing stored transfer', e);
-        localStorage.removeItem('ownershipTransfer');
-      }
-    }
-  }, []);
-  
-  // Effect to check if transfer deadline has passed
-  useEffect(() => {
-    if (transferDeadline && transferPendingUserId) {
-      const checkDeadline = () => {
-        const now = new Date();
-        if (now >= transferDeadline) {
-          // Transfer is complete
-          completeOwnershipTransfer();
-        }
-      };
-      
-      // Check now and set interval
-      checkDeadline();
-      const interval = setInterval(checkDeadline, 30000); // Check every 30 seconds
-      
-      return () => clearInterval(interval);
-    }
-  }, [transferDeadline, transferPendingUserId]);
-  
-  const { data: admins, isLoading, error } = useQuery<User[]>({
+  const { data: users, isLoading } = useQuery<User[]>({
     queryKey: ['/api/admin/users'],
     meta: {
-      errorMessage: t('admin.usersLoadError')
+      errorMessage: t('admin.userLoadError')
     }
   });
   
-  const toggleBlockMutation = useMutation({
+  const blockMutation = useMutation({
     mutationFn: async ({ id, isBlocked }: { id: number; isBlocked: boolean }) => {
-      await apiRequest('PUT', `/api/admin/users/${id}/status`, { isBlocked });
-      return { id, isBlocked };
-    },
-    onSuccess: (data) => {
-      // Update the cached data directly to ensure the UI reflects the change
-      const previousData = queryClient.getQueryData<User[]>(['/api/admin/users']);
-      if (previousData) {
-        const updatedData = previousData.map(user => 
-          user.id === data.id ? { ...user, isBlocked: data.isBlocked } : user
-        );
-        queryClient.setQueryData(['/api/admin/users'], updatedData);
-      } else {
-        // If there's no cached data yet, invalidate to fetch fresh data
-        queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
-      }
-      
-      toast({
-        title: t('admin.statusUpdatedTitle'),
-        description: t('admin.statusUpdatedDesc'),
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: t('admin.error'),
-        description: error.message,
-        variant: 'destructive'
-      });
-    }
-  });
-  
-  const approveAdminMutation = useMutation({
-    mutationFn: async ({ id, role }: { id: number; role: string }) => {
-      // In a real implementation, you would send the role to the backend
-      await apiRequest('PUT', `/api/admin/users/${id}/approve`, { role });
+      await apiRequest('PATCH', `/api/admin/users/${id}/block`, { isBlocked });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       toast({
-        title: t('admin.adminApprovedTitle'),
-        description: t('admin.adminApprovedDesc'),
+        title: t('admin.userStatusUpdatedTitle'),
+        description: t('admin.userStatusUpdatedDesc'),
       });
-      setIsRoleDialogOpen(false);
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       toast({
-        title: t('admin.adminApproveErrorTitle'),
-        description: error.message,
+        title: t('admin.userStatusUpdateErrorTitle'),
+        description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'destructive'
       });
     }
   });
-  
-  // Handle opening the role selection dialog
-  const handleApproveClick = (userId: number) => {
-    setSelectedUserId(userId);
-    setIsRoleDialogOpen(true);
-  };
-  
-  // Handle role selection and admin approval
-  const handleRoleConfirm = () => {
-    if (selectedUserId) {
-      approveAdminMutation.mutate({ id: selectedUserId, role: selectedRole });
-    }
-  };
-  
-  // Handle opening the transfer ownership dialog
-  const handleTransferClick = (userId: number) => {
-    setTransferTargetId(userId);
-    setIsTransferDialogOpen(true);
-  };
-  
-  // Initialize ownership transfer
-  const initializeOwnershipTransfer = () => {
-    if (transferTargetId) {
-      // Set 24 hour deadline
-      const deadline = new Date();
-      deadline.setHours(deadline.getHours() + 24);
-      
-      // Save to state and localStorage
-      setTransferPendingUserId(transferTargetId);
-      setTransferDeadline(deadline);
-      localStorage.setItem('ownershipTransfer', JSON.stringify({
-        userId: transferTargetId,
-        deadline: deadline.toISOString()
-      }));
-      
-      setIsTransferDialogOpen(false);
-      
-      toast({
-        title: t('admin.transferOwnershipPending'),
-        description: t('admin.transferOwnershipTimer').replace('{hours}', '24').replace('{minutes}', '00'),
-      });
-    }
-  };
-  
-  // Cancel ownership transfer
-  const cancelOwnershipTransfer = () => {
-    localStorage.removeItem('ownershipTransfer');
-    setTransferPendingUserId(null);
-    setTransferDeadline(null);
-    
-    toast({
-      title: t('admin.transferCancelled'),
-    });
-  };
-  
-  // Complete ownership transfer (would need backend implementation)
-  const completeOwnershipTransfer = () => {
-    // In real implementation, make API call to transfer ownership
-    localStorage.removeItem('ownershipTransfer');
-    setTransferPendingUserId(null);
-    setTransferDeadline(null);
-    
-    toast({
-      title: t('admin.transferCompleted'),
-    });
-  };
-  
-  // Format remaining time for display
-  const formatRemainingTime = () => {
-    if (!transferDeadline) return '';
-    
-    const now = new Date();
-    const diff = transferDeadline.getTime() - now.getTime();
-    
-    if (diff <= 0) return '';
-    
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    return t('admin.transferOwnershipTimer')
-      .replace('{hours}', hours.toString())
-      .replace('{minutes}', minutes.toString());
-  };
   
   if (isLoading) {
     return (
@@ -3401,270 +2610,100 @@ function AdminsList({ onEdit }: { onEdit: (id: number) => void }) {
     );
   }
   
+  const admins = users?.filter(user => user.isAdmin) || [];
+  
   return (
-    <>
-      {/* Ownership transfer banner (if transfer is in progress) */}
-      {transferPendingUserId && transferDeadline && isSiteOwner && (
-        <div 
-          className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md relative"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
-          <div className="flex items-center">
-            <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-            <div>
-              <h3 className="text-sm font-medium text-yellow-800">
-                {t('admin.transferInProgress')}
-              </h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                {formatRemainingTime()}
-              </p>
-            </div>
-          </div>
-          
-          {isHovering && (
-            <Button 
-              className="absolute right-2 top-2" 
-              size="sm" 
-              variant="destructive"
-              onClick={cancelOwnershipTransfer}
-            >
-              {t('admin.cancelTransfer')}
-            </Button>
-          )}
-        </div>
-      )}
-    
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.administrators')}</CardTitle>
-          <CardDescription>{t('admin.administratorsDesc')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-[600px]">
-            <div className="w-full overflow-auto">
-              <Table className="min-w-[650px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[25%]">{t('admin.administratorName')}</TableHead>
-                    <TableHead className="w-[15%]">{t('admin.status')}</TableHead>
-                    <TableHead className="w-[15%]">{t('admin.createdAt')}</TableHead>
-                    <TableHead className="w-[45%]">{t('admin.actions')}</TableHead>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('admin.administrators')}</CardTitle>
+        <CardDescription>{t('admin.administratorsDesc')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="h-[600px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('admin.username')}</TableHead>
+                <TableHead>{t('admin.email')}</TableHead>
+                <TableHead>{t('admin.role')}</TableHead>
+                <TableHead>{t('admin.status')}</TableHead>
+                <TableHead>{t('admin.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {admins.length ? (
+                admins.map((admin) => (
+                  <TableRow key={admin.id}>
+                    <TableCell className="font-medium">{admin.username}</TableCell>
+                    <TableCell>{admin.email}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Crown className="h-4 w-4 text-yellow-500" />
+                        {admin.role || t('admin.administrator')}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {admin.isBlocked ? (
+                          <>
+                            <Lock className="h-4 w-4 text-red-500" />
+                            <span className="text-red-600">{t('admin.blocked')}</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="h-4 w-4 text-green-500" />
+                            <span className="text-green-600">{t('admin.active')}</span>
+                          </>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      {currentUser?.id !== admin.id && (
+                        <>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => onEdit(admin.id)}
+                          >
+                            {t('admin.edit')}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant={admin.isBlocked ? "default" : "destructive"}
+                            onClick={() => blockMutation.mutate({ id: admin.id, isBlocked: !admin.isBlocked })}
+                            disabled={blockMutation.isPending}
+                          >
+                            {blockMutation.isPending ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : admin.isBlocked ? (
+                              <>
+                                <ShieldCheck className="h-4 w-4 mr-1" />
+                                {t('admin.unblock')}
+                              </>
+                            ) : (
+                              <>
+                                <Lock className="h-4 w-4 mr-1" />
+                                {t('admin.block')}
+                              </>
+                            )}
+                          </Button>
+                        </>
+                      )}
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {admins?.length ? (
-                    admins.map((admin) => (
-                      <TableRow key={admin.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex flex-col xs:flex-row xs:items-center gap-1">
-                            <span>{admin.username}</span>
-                            <div className="flex flex-wrap gap-1 mt-1 xs:mt-0">
-                              {admin.username === 'admin' && (
-                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-primary/20 text-primary">
-                                  {t('admin.siteOwner')}
-                                </span>
-                              )}
-                              {admin.username === 'superadmin' && (
-                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-blue-100 text-blue-700">
-                                  {t('admin.superAdmin')}
-                                </span>
-                              )}
-                              {!admin.isAdmin && (
-                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-muted text-muted-foreground">
-                                  {t('admin.pendingApproval')}
-                                </span>
-                              )}
-                              
-                              {/* Show indicator if this is the user with pending ownership transfer */}
-                              {transferPendingUserId === admin.id && (
-                                <span className="text-xs font-normal px-2 py-1 rounded-md bg-amber-100 text-amber-700 animate-pulse">
-                                  <Clock className="inline-block h-3 w-3 mr-1" />
-                                  {t('admin.pendingTransfer')}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          {admin.isBlocked ? (
-                            <span className="inline-flex items-center text-destructive text-xs whitespace-nowrap">
-                              <Lock className="h-3 w-3 mr-1 flex-shrink-0" />
-                              {t('admin.blocked')}
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center text-green-600 text-xs whitespace-nowrap">
-                              <ShieldCheck className="h-3 w-3 mr-1 flex-shrink-0" />
-                              {t('admin.active')}
-                            </span>
-                          )}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap text-xs">
-                          {format(new Date(admin.createdAt), 'dd/MM/yyyy')}
-                        </TableCell>
-                        <TableCell>
-                          {/* Don't show action buttons for site owner or for current user */}
-                          {admin.username !== 'admin' && admin.id !== user?.id ? (
-                            <div className="flex flex-wrap gap-2">
-                              {!admin.isAdmin && isSiteOwner && (
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  className="h-7 text-xs px-2"
-                                  onClick={() => handleApproveClick(admin.id)}
-                                >
-                                  <ShieldCheck className="h-3 w-3 mr-1 flex-shrink-0" />
-                                  <span className="truncate">{t('admin.approve')}</span>
-                                </Button>
-                              )}
-                              
-                              {admin.isAdmin && isSiteOwner && (
-                                <>
-                                  <Button 
-                                    size="icon" 
-                                    variant={admin.isBlocked ? 'outline' : 'destructive'}
-                                    className="h-7 w-7"
-                                    onClick={() => toggleBlockMutation.mutate({ 
-                                      id: admin.id, 
-                                      isBlocked: !admin.isBlocked 
-                                    })}
-                                    title={admin.isBlocked ? t('admin.unblock') : t('admin.block')}
-                                  >
-                                    {admin.isBlocked ? (
-                                      <ShieldCheck className="h-3 w-3 flex-shrink-0" />
-                                    ) : (
-                                      <Lock className="h-3 w-3 flex-shrink-0" />
-                                    )}
-                                    <span className="sr-only">
-                                      {admin.isBlocked ? t('admin.unblock') : t('admin.block')}
-                                    </span>
-                                  </Button>
-                                  
-                                  {/* Transfer ownership button (only for active Super Admins) */}
-                                  {isSiteOwner && 
-                                   !admin.isBlocked && 
-                                   admin.username === 'superadmin' && 
-                                   !transferPendingUserId && (
-                                    <Button
-                                      size="icon"
-                                      variant="outline"
-                                      className="h-7 w-7 border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100"
-                                      onClick={() => handleTransferClick(admin.id)}
-                                      title={t('admin.transferOwnership')}
-                                    >
-                                      <Crown className="h-3 w-3 flex-shrink-0" />
-                                      <span className="sr-only">{t('admin.transferOwnership')}</span>
-                                    </Button>
-                                  )}
-                                </>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">—</span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-6">
-                        {t('admin.noAdministrators')}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
-      
-      {/* Role Selection Dialog */}
-      <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('admin.selectRoleTitle')}</DialogTitle>
-            <DialogDescription>
-              {t('admin.selectRoleDescription')}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <Select
-              value={selectedRole}
-              onValueChange={setSelectedRole}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t('admin.selectRole')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="admin">{t('admin.regularAdmin')}</SelectItem>
-                <SelectItem value="superadmin">{t('admin.superAdmin')}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <div className="mt-4">
-              <p className="text-sm text-muted-foreground">
-                {selectedRole === 'superadmin' 
-                  ? t('admin.superAdminDescription')
-                  : t('admin.regularAdminDescription')}
-              </p>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRoleDialogOpen(false)}>
-              {t('admin.cancel')}
-            </Button>
-            <Button onClick={handleRoleConfirm} disabled={approveAdminMutation.isPending}>
-              {approveAdminMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('admin.confirm')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Ownership Transfer Dialog */}
-      <Dialog open={isTransferDialogOpen} onOpenChange={setIsTransferDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('admin.transferOwnershipTitle')}</DialogTitle>
-            <DialogDescription>
-              {t('admin.transferOwnershipDescription')}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4 space-y-4">
-            <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200">
-              <AlertTriangle className="h-5 w-5 text-yellow-600 mb-2" />
-              <p className="text-sm font-medium text-yellow-800">
-                {t('admin.transferWarningTitle')}
-              </p>
-              <p className="text-sm text-yellow-700 mt-1">
-                {t('admin.transferWarningDesc')}
-              </p>
-            </div>
-            
-            <p className="text-sm font-medium">
-              {t('admin.transferTimerExplanation')}
-            </p>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsTransferDialogOpen(false)}>
-              {t('admin.cancel')}
-            </Button>
-            <Button 
-              variant="destructive" 
-              onClick={initializeOwnershipTransfer}
-            >
-              <Crown className="mr-2 h-4 w-4" />
-              {t('admin.initiateTransfer')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-6">
+                    {t('admin.noAdministrators')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -3681,9 +2720,9 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
   
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
     email: '',
-    isAdmin: true
+    password: '',
+    role: ''
   });
   
   const inviteMutation = useMutation({
@@ -3700,87 +2739,101 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
     },
     onError: (error) => {
       toast({
-        title: t('admin.adminInviteErrorTitle'),
+        title: t('admin.inviteErrorTitle'),
         description: error.message,
         variant: 'destructive'
       });
     }
   });
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     inviteMutation.mutate(formData);
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
   };
-  
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('admin.inviteAdmin')}</CardTitle>
-        <CardDescription>{t('admin.inviteAdminDesc')}</CardDescription>
+        <CardTitle className="flex items-center gap-2">
+          <UserPlus className="h-5 w-5" />
+          {t('admin.inviteAdmin')}
+        </CardTitle>
+        <CardDescription>
+          {t('admin.inviteAdminDesc')}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">{t('admin.administratorName')}</Label>
-              <Input
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">{t('admin.initialPassword')}</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <p className="text-sm text-muted-foreground">
-                {t('admin.passwordRequirements')}
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">{t('admin.email')}</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email || ''}
-                onChange={handleChange}
-                placeholder={t('admin.emailOptional')}
-              />
-              <p className="text-sm text-muted-foreground">
-                {t('admin.emailDescription')}
-              </p>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username">{t('admin.username')}</Label>
+            <Input
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
           </div>
           
-          <div className="flex justify-end gap-4 pt-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">{t('admin.email')}</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="password">{t('admin.password')}</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={6}
+              required
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="role">{t('admin.role')}</Label>
+            <Input
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              placeholder={t('admin.administrator')}
+            />
+          </div>
+          
+          <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>
               {t('admin.cancel')}
             </Button>
             <Button 
               type="submit" 
               disabled={inviteMutation.isPending}
+              className="flex items-center gap-2"
             >
-              {inviteMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('admin.sendInvite')}
+              {inviteMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <UserPlus className="h-4 w-4" />
+              )}
+              {t('admin.invite')}
             </Button>
           </div>
         </form>
@@ -3791,20 +2844,154 @@ function AdminInviteForm({ onCancel, onSuccess }: AdminFormProps) {
 
 function AdminEditForm({ id, onCancel, onSuccess }: AdminFormProps) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
+  const [formData, setFormData] = useState({
+    role: ''
+  });
+  
+  const { data: admin, isLoading, isError } = useQuery<User>({
+    queryKey: [`/api/admin/users/${id}`],
+    enabled: !!id,
+    meta: {
+      errorMessage: t('admin.userLoadError')
+    },
+    retry: false
+  });
+  
+  // Initialize form with admin data when loaded
+  React.useEffect(() => {
+    if (admin) {
+      setFormData({
+        role: admin.role || ''
+      });
+    }
+  }, [admin]);
+  
+  const updateMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      await apiRequest('PUT', `/api/admin/users/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      toast({
+        title: t('admin.adminUpdatedTitle'),
+        description: t('admin.adminUpdatedDesc'),
+      });
+      onSuccess();
+    },
+    onError: (error) => {
+      toast({
+        title: t('admin.updateErrorTitle'),
+        description: error.message,
+        variant: 'destructive'
+      });
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateMutation.mutate(formData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Show loading spinner when loading data
+  if (isLoading && id) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // Handle errors (like 404 Not Found)
+  if (isError && id) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('admin.error')}</CardTitle>
+          <CardDescription>{t('admin.itemNotFound')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p>{t('admin.itemNotFoundDesc')}</p>
+            <Button variant="outline" className="mt-4" onClick={onCancel}>
+              {t('admin.back')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('admin.editAdmin')}</CardTitle>
-        <CardDescription>{t('admin.editAdminDesc')}</CardDescription>
+        <CardTitle className="flex items-center gap-2">
+          <Crown className="h-5 w-5" />
+          {t('admin.editAdmin')}
+        </CardTitle>
+        <CardDescription>
+          {admin && t('admin.editingAdmin', { username: admin.username })}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8">
-          <p>{t('admin.implementationPending')}</p>
-          <Button variant="outline" className="mt-4" onClick={onCancel}>
-            {t('admin.back')}
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label>{t('admin.username')}</Label>
+            <Input
+              value={admin?.username || ''}
+              disabled
+              className="bg-gray-50"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label>{t('admin.email')}</Label>
+            <Input
+              value={admin?.email || ''}
+              disabled
+              className="bg-gray-50"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="role">{t('admin.role')}</Label>
+            <Input
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              placeholder={t('admin.administrator')}
+            />
+          </div>
+          
+          <div className="flex justify-end gap-4">
+            <Button type="button" variant="outline" onClick={onCancel}>
+              {t('admin.cancel')}
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={updateMutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {updateMutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {t('admin.save')}
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   );
