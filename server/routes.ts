@@ -130,11 +130,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   app.get('/api/news/:slug', async (req, res) => {
-    const newsItem = await storage.getNewsBySlug(req.params.slug);
-    if (!newsItem) {
-      return res.status(404).json({ message: 'News not found' });
+    try {
+      const slug = req.params.slug;
+      
+      // First try to find in local storage
+      const localNewsItem = await storage.getNewsBySlug(slug);
+      if (localNewsItem) {
+        return res.json(localNewsItem);
+      }
+      
+      // If not found locally, search in GNews articles
+      const gNewsArticles = await fetchGNews('sports', 'it');
+      
+      // Convert all articles and find the one with matching slug
+      const convertedArticles = gNewsArticles.map((article, index) => 
+        convertGNewsToNews(article, index + 3000)
+      );
+      
+      // Debug logging
+      console.log('Looking for slug:', slug);
+      console.log('Available slugs:', convertedArticles.map(a => a.slug));
+      
+      const matchingArticle = convertedArticles.find(article => article.slug === slug);
+      
+      if (matchingArticle) {
+        return res.json(matchingArticle);
+      }
+      
+      return res.status(404).json({ message: 'News article not found' });
+    } catch (error) {
+      console.error('Error fetching news article:', error);
+      res.status(500).json({ message: 'Error fetching news article' });
     }
-    res.json(newsItem);
   });
 
   // Sports news endpoint - fetches real Italian sports news from GNews API
