@@ -300,6 +300,12 @@ const translations: Record<Language, Record<string, string>> = {
     'sportsNews.trending': 'Trending',
     'sportsNews.badge': 'Sports',
     
+    'news.notFound': 'Article Not Found',
+    'news.notFoundDesc': 'The article you are looking for could not be found.',
+    'news.backToHome': 'Back to Home',
+    'news.featured': 'Featured',
+    'news.detail': 'News',
+    
     'responsible.title': 'Responsible Gambling',
     'responsible.description': 'Play responsibly and know your limits. Gambling should be entertaining, not a way to make money.',
     'responsible.principle1.title': 'Set Time Limits',
@@ -599,6 +605,12 @@ const translations: Record<Language, Record<string, string>> = {
     'sportsNews.breaking': 'Ultima Ora',
     'sportsNews.trending': 'Tendenza',
     'sportsNews.badge': 'Sport',
+    
+    'news.notFound': 'Articolo Non Trovato',
+    'news.notFoundDesc': 'L\'articolo che stai cercando non è stato trovato.',
+    'news.backToHome': 'Torna alla Home',
+    'news.featured': 'In Evidenza',
+    'news.detail': 'Notizie',
     
     'responsible.title': 'Gioco Responsabile',
     'responsible.description': 'Gioca responsabilmente e conosci i tuoi limiti. Il gioco dovrebbe essere un divertimento, non un modo per fare soldi.',
