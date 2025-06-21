@@ -7,6 +7,7 @@ import RatingStars from "./RatingStars";
 import PromoCodeModal from "./PromoCodeModal";
 import { formatDate } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAgeVerification } from "@/contexts/AgeVerificationContext";
 import { motion } from "framer-motion";
 import { Shield, AlertTriangle } from "lucide-react";
 
@@ -36,8 +37,8 @@ export default function CasinoCard({
   isLoading = false
 }: CasinoCardProps) {
   const [promoModalOpen, setPromoModalOpen] = useState(false);
-  const [ageVerified, setAgeVerified] = useState(false);
   const { t, language } = useLanguage();
+  const { isAgeVerified, setAgeVerified } = useAgeVerification();
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -87,7 +88,7 @@ export default function CasinoCard({
         variants={cardVariants}
       >
         <Card className="overflow-hidden relative">
-          {!ageVerified && (
+          {!isAgeVerified && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
