@@ -740,6 +740,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin advertisement banner management endpoints
+  app.get('/api/admin/advertisement-banners', requireAdmin, async (req, res) => {
+    try {
+      const banners = await storage.getAllAdvertisementBanners();
+      res.json(banners);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching advertisement banners', error });
+    }
+  });
+
+  app.get('/api/admin/advertisement-banners/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const banner = await storage.getAdvertisementBannerById(id);
+      
+      if (!banner) {
+        return res.status(404).json({ message: 'Advertisement banner not found' });
+      }
+      
+      res.json(banner);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching advertisement banner', error });
+    }
+  });
+
+  app.post('/api/admin/advertisement-banners', requireAdmin, async (req, res) => {
+    try {
+      const { title, imageUrl, clickUrl, position, isActive, order } = req.body;
+      
+      const banner = await storage.createAdvertisementBanner({
+        title,
+        imageUrl,
+        clickUrl,
+        position,
+        isActive,
+        order
+      });
+      
+      res.status(201).json(banner);
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid advertisement banner data', error });
+    }
+  });
+
+  app.put('/api/admin/advertisement-banners/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { title, imageUrl, clickUrl, position, isActive, order } = req.body;
+      
+      const banner = await storage.updateAdvertisementBanner(id, {
+        title,
+        imageUrl,
+        clickUrl,
+        position,
+        isActive,
+        order
+      });
+      
+      res.json(banner);
+    } catch (error) {
+      if (error.message && error.message.includes('not found')) {
+        return res.status(404).json({ message: 'Advertisement banner not found' });
+      }
+      res.status(400).json({ message: 'Invalid advertisement banner data', error });
+    }
+  });
+
+  app.delete('/api/admin/advertisement-banners/:id', requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteAdvertisementBanner(id);
+      res.json({ message: 'Advertisement banner deleted successfully' });
+    } catch (error) {
+      if (error.message && error.message.includes('not found')) {
+        return res.status(404).json({ message: 'Advertisement banner not found' });
+      }
+      res.status(500).json({ message: 'Error deleting advertisement banner', error });
+    }
+  });
+
   // Admin outlet management endpoints
   app.get('/api/admin/outlets', requireAdmin, async (req, res) => {
     try {

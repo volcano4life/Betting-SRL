@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Game, News, Review, Guide, User, Outlet } from "@shared/schema";
+import { Game, News, Review, Guide, User, Outlet, AdvertisementBanner } from "@shared/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Loader2, Save, Trash, UserPlus, ShieldAlert, ShieldCheck, Lock, Crown, Clock, AlertTriangle, Users, Store, MapPin, Plus, X, Star, ChevronUp, ChevronDown } from "lucide-react";
@@ -32,7 +32,7 @@ import { DragDropImageGallery } from "@/components/ui/drag-drop-image-gallery";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
 
-type ContentType = "games" | "reviews" | "news" | "guides" | "administrators" | "outlets";
+type ContentType = "games" | "reviews" | "news" | "guides" | "administrators" | "outlets" | "banners";
 
 export default function AdminPage() {
   const { t, language, setLanguage } = useLanguage();
@@ -182,7 +182,7 @@ export default function AdminPage() {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="games" className="flex items-center gap-2">
                 <Star className="h-4 w-4" />
                 {t('admin.games')}
@@ -202,6 +202,10 @@ export default function AdminPage() {
               <TabsTrigger value="outlets" className="flex items-center gap-2">
                 <Store className="h-4 w-4" />
                 {t('admin.outlets')}
+              </TabsTrigger>
+              <TabsTrigger value="banners" className="flex items-center gap-2">
+                <Star className="h-4 w-4" />
+                Banners
               </TabsTrigger>
               <TabsTrigger value="administrators" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
@@ -310,6 +314,27 @@ export default function AdminPage() {
                     </Button>
                   </div>
                   <OutletsList onEdit={handleEdit} />
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="banners" className="space-y-6">
+              {editingItemId || isAdding ? (
+                <BannerForm 
+                  id={editingItemId} 
+                  onCancel={handleCancel} 
+                  onSuccess={handleSuccess}
+                />
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">Advertisement Banners</h2>
+                    <Button onClick={handleAdd} className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      Add Banner
+                    </Button>
+                  </div>
+                  <BannersList onEdit={handleEdit} />
                 </div>
               )}
             </TabsContent>
