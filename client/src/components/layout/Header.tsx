@@ -23,21 +23,28 @@ import { useLogo } from "@/contexts/LogoContext";
 
 // Scroll functions for navigation
 const scrollToSection = (sectionId: string, navigate: (path: string) => void, currentLocation: string) => {
+  console.log('Attempting to scroll to:', sectionId, 'Current location:', currentLocation);
+  
   // If we're not on the home page, navigate to home first
   if (currentLocation !== '/') {
+    console.log('Navigating to home page first');
     navigate('/');
     // Wait for navigation to complete, then scroll
     setTimeout(() => {
       const element = document.getElementById(sectionId);
+      console.log('Element found after navigation:', element);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 300);
+    }, 500);
   } else {
     // Already on home page, just scroll
     const element = document.getElementById(sectionId);
+    console.log('Element found on home page:', element);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.error('Element not found:', sectionId);
     }
   }
 };
