@@ -3052,6 +3052,30 @@ function BannersList({ onEdit }: { onEdit: (id: number) => void }) {
     },
   });
 
+  const toggleMutation = useMutation({
+    mutationFn: async ({ id, isActive }: { id: number; isActive: boolean }) => {
+      const response = await apiRequest('PUT', `/api/admin/advertisement-banners/${id}`, {
+        isActive
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/advertisement-banners'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/advertisement-banners'] });
+      toast({
+        title: "Success",
+        description: "Advertisement banner status updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update advertisement banner status",
+        variant: "destructive",
+      });
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -3098,6 +3122,20 @@ function BannersList({ onEdit }: { onEdit: (id: number) => void }) {
                 <TableCell>{banner.order}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
+                    <Button 
+                      variant={banner.isActive ? "secondary" : "default"}
+                      size="sm"
+                      onClick={() => toggleMutation.mutate({ id: banner.id, isActive: !banner.isActive })}
+                      disabled={toggleMutation.isPending}
+                    >
+                      {toggleMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : banner.isActive ? (
+                        "Deactivate"
+                      ) : (
+                        "Activate"
+                      )}
+                    </Button>
                     <Button 
                       variant="outline" 
                       size="sm" 
