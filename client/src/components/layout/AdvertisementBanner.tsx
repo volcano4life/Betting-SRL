@@ -31,51 +31,52 @@ export default function AdvertisementBanner({ position }: AdvertisementBannerPro
     return null;
   }
 
+  // Show only the first banner for each position
+  const banner = validBanners[0];
+
   return (
-    <div className={`fixed top-20 ${position === 'left' ? 'left-4' : 'right-4'} w-64 z-40 space-y-4`}>
-      {validBanners.map((banner) => (
-        <div
-          key={banner.id}
-          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-        >
-          {banner.clickUrl ? (
-            <a
-              href={banner.clickUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
-              <img
-                src={banner.imageUrl}
-                alt={banner.title}
-                className="w-full h-auto object-cover"
-                loading="lazy"
-                onError={() => handleImageError(banner.id)}
-              />
-              <div className="p-2 bg-gradient-to-r from-primary to-secondary">
-                <p className="text-white text-xs font-medium text-center truncate">
-                  {banner.title}
-                </p>
-              </div>
-            </a>
-          ) : (
-            <>
-              <img
-                src={banner.imageUrl}
-                alt={banner.title}
-                className="w-full h-auto object-cover"
-                loading="lazy"
-                onError={() => handleImageError(banner.id)}
-              />
-              <div className="p-2 bg-gradient-to-r from-primary to-secondary">
-                <p className="text-white text-xs font-medium text-center truncate">
-                  {banner.title}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
-      ))}
+    <div className={`fixed top-24 ${position === 'left' ? 'left-4' : 'right-4'} w-72 z-40`}>
+      <div
+        key={banner.id}
+        className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+      >
+        {banner.clickUrl ? (
+          <a
+            href={banner.clickUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <img
+              src={banner.imageUrl}
+              alt={banner.title}
+              className="w-full h-auto object-cover max-h-96"
+              loading="lazy"
+              onError={() => handleImageError(banner.id)}
+            />
+            <div className="p-3 bg-gradient-to-r from-primary to-secondary">
+              <p className="text-white text-sm font-medium text-center truncate">
+                {banner.title}
+              </p>
+            </div>
+          </a>
+        ) : (
+          <>
+            <img
+              src={banner.imageUrl}
+              alt={banner.title}
+              className="w-full h-auto object-cover max-h-96"
+              loading="lazy"
+              onError={() => handleImageError(banner.id)}
+            />
+            <div className="p-3 bg-gradient-to-r from-primary to-secondary">
+              <p className="text-white text-sm font-medium text-center truncate">
+                {banner.title}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
