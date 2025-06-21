@@ -22,16 +22,29 @@ import LogoSelector from "./LogoSelector";
 import { useLogo } from "@/contexts/LogoContext";
 
 // Scroll functions for navigation
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
+const scrollToSection = (sectionId: string, navigate: (path: string) => void, currentLocation: string) => {
+  // If we're not on the home page, navigate to home first
+  if (currentLocation !== '/') {
+    navigate('/');
+    // Wait for navigation to complete, then scroll
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  } else {
+    // Already on home page, just scroll
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 };
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const { language, setLanguage, t } = useLanguage();
   const { user, logoutMutation } = useAuth();
   const { selectedLogo, setSelectedLogo, customLogoUrl } = useLogo();
@@ -129,7 +142,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <Button
                   variant="ghost"
-                  onClick={() => scrollToSection('outlets-section')}
+                  onClick={() => scrollToSection('outlets-section', navigate, location)}
                   className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
                   {t('nav.outlets')}
@@ -139,7 +152,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <Button
                   variant="ghost"
-                  onClick={() => scrollToSection('dealers-section')}
+                  onClick={() => scrollToSection('dealers-section', navigate, location)}
                   className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
                   {t('nav.dealers')}
@@ -149,7 +162,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <Button
                   variant="ghost"
-                  onClick={() => scrollToSection('bonuses-section')}
+                  onClick={() => scrollToSection('bonuses-section', navigate, location)}
                   className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
                   {t('nav.bonuses')}
@@ -159,7 +172,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <Button
                   variant="ghost"
-                  onClick={() => scrollToSection('news-section')}
+                  onClick={() => scrollToSection('news-section', navigate, location)}
                   className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
                   {t('nav.news')}
@@ -263,7 +276,7 @@ export default function Header() {
                   
                   <Button
                     variant="ghost"
-                    onClick={() => scrollToSection('outlets-section')}
+                    onClick={() => scrollToSection('outlets-section', navigate, location)}
                     className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
                   >
                     {t('nav.outlets')}
@@ -271,7 +284,7 @@ export default function Header() {
 
                   <Button
                     variant="ghost"
-                    onClick={() => scrollToSection('dealers-section')}
+                    onClick={() => scrollToSection('dealers-section', navigate, location)}
                     className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
                   >
                     {t('nav.dealers')}
@@ -279,7 +292,7 @@ export default function Header() {
 
                   <Button
                     variant="ghost"
-                    onClick={() => scrollToSection('bonuses-section')}
+                    onClick={() => scrollToSection('bonuses-section', navigate, location)}
                     className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
                   >
                     {t('nav.bonuses')}
@@ -287,7 +300,7 @@ export default function Header() {
 
                   <Button
                     variant="ghost"
-                    onClick={() => scrollToSection('news-section')}
+                    onClick={() => scrollToSection('news-section', navigate, location)}
                     className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
                   >
                     {t('nav.news')}
