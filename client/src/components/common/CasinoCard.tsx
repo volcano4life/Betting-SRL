@@ -8,6 +8,7 @@ import PromoCodeModal from "./PromoCodeModal";
 import { formatDate } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import { Shield, AlertTriangle } from "lucide-react";
 
 interface CasinoCardProps {
   id?: number;
@@ -35,6 +36,7 @@ export default function CasinoCard({
   isLoading = false
 }: CasinoCardProps) {
   const [promoModalOpen, setPromoModalOpen] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
   const { t, language } = useLanguage();
 
   const cardVariants = {
@@ -84,7 +86,71 @@ export default function CasinoCard({
         whileHover="hover"
         variants={cardVariants}
       >
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden relative">
+          {!ageVerified && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6"
+            >
+              <div className="text-center space-y-4">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="flex justify-center"
+                >
+                  <div className="bg-yellow-500 text-black rounded-full p-3">
+                    <AlertTriangle className="h-8 w-8" />
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-2"
+                >
+                  <h3 className="text-white font-bold text-lg">
+                    {language === 'it' ? 'Verifica dell\'Età' : 'Age Verification'}
+                  </h3>
+                  <p className="text-white/80 text-sm leading-relaxed">
+                    {language === 'it' 
+                      ? 'Devi avere almeno 18 anni per accedere ai contenuti relativi al gioco d\'azzardo. Il gioco può causare dipendenza.'
+                      : 'You must be at least 18 years old to access gambling-related content. Gambling can be addictive.'
+                    }
+                  </p>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex items-center justify-center space-x-2"
+                >
+                  <Shield className="h-4 w-4 text-green-400" />
+                  <span className="text-green-400 text-xs font-medium">
+                    {language === 'it' ? 'Gioco Responsabile' : 'Responsible Gaming'}
+                  </span>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="pt-2"
+                >
+                  <Button 
+                    onClick={() => setAgeVerified(true)}
+                    className="bg-white text-black hover:bg-gray-100 font-medium px-6"
+                  >
+                    {language === 'it' ? 'Ho almeno 18 anni' : 'I am 18 or older'}
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+          
           <div className="flex flex-col h-full">
             {featured && (
               <motion.div 
