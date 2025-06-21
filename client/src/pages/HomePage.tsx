@@ -32,17 +32,8 @@ export default function HomePage() {
         <FeaturedCasinosSection />
       </div>
       
-      <div id="bonuses-section" className="py-12 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#222236] mb-4">
-              {t('bonuses.title')}
-            </h2>
-            <p className="text-gray-600">
-              {t('bonuses.placeholder')}
-            </p>
-          </div>
-        </div>
+      <div id="bonuses-section">
+        {/* Bonuses section removed as requested */}
       </div>
       
       <div id="news-section">
