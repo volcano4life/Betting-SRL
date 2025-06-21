@@ -6,13 +6,19 @@ import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 
 import { OutletSlideshow } from "@/components/sections/OutletSlideshow";
 import { Helmet } from "react-helmet";
-import { getPageTitle, siteConfig } from "@/config/siteConfig";
+import { siteConfig } from "@/config/siteConfig";
+import { usePageTitle } from "@/hooks/use-page-title";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HomePage() {
+  const { t } = useLanguage();
+  
+  // Use the custom hook for cross-tab title synchronization
+  usePageTitle('home.title');
+
   return (
     <>
       <Helmet>
-        <title translate="no">{siteConfig.defaultTitle}</title>
         <meta name="description" content={siteConfig.defaultDescription} />
       </Helmet>
 

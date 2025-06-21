@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'it';
 
@@ -726,7 +726,50 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('it');
+  // Initialize language from localStorage or default to 'it'
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('preferred-language');
+      return (stored === 'en' || stored === 'it') ? stored as Language : 'it';
+    }
+    return 'it';
+  });
+
+  // Enhanced setLanguage function that persists to localStorage and syncs across tabs
+  const setLanguage = (newLanguage: Language) => {
+    setLanguageState(newLanguage);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferred-language', newLanguage);
+      
+      // Trigger a custom event for cross-tab synchronization
+      window.dispatchEvent(new CustomEvent('language-changed', { 
+        detail: { language: newLanguage } 
+      }));
+    }
+  };
+
+  // Listen for language changes from other tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'preferred-language' && e.newValue && (e.newValue === 'en' || e.newValue === 'it')) {
+        setLanguageState(e.newValue as Language);
+      }
+    };
+
+    const handleLanguageChange = (e: CustomEvent) => {
+      if (e.detail && e.detail.language && (e.detail.language === 'en' || e.detail.language === 'it')) {
+        setLanguageState(e.detail.language);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('language-changed', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('language-changed', handleLanguageChange as EventListener);
+    };
+  }, []);
 
   // Function to get translation for a key
   const t = (key: string): string => {
