@@ -122,8 +122,13 @@ export function OutletSlideshow() {
       return imageName;
     }
     
+    // Check if this is a new outlet image (redmoon-new-)
+    if (imageName.startsWith('redmoon-new-')) {
+      return `/assets/outlets/${imageName}.jpg`;
+    }
+    
     // Check if this is an uploaded image (UUID format with dashes)
-    if (imageName.includes('-')) {
+    if (imageName.includes('-') && imageName.length > 10) {
       // If it's an uploaded image, check if it already has an extension
       return imageName.includes('.') ? 
         `/uploads/${imageName}` : 
