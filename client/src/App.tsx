@@ -54,6 +54,7 @@ function Router() {
                 <Route path="/reviews/:slug" component={ReviewDetailPage} />
                 <Route path="/news" component={NewsListingPage} />
                 <Route path="/news/:slug" component={NewsDetailPage} />
+                <Route path="/chi-siamo" component={AboutUsPage} />
                 <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
                 {/* Fallback to 404 */}
                 <Route component={NotFound} />
