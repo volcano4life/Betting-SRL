@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AdvertisementBanner as Banner } from "@shared/schema";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface AdvertisementBannerProps {
   position: 'left' | 'right';
@@ -38,8 +39,16 @@ export default function AdvertisementBanner({ position }: AdvertisementBannerPro
     <div className={`fixed top-1/2 -translate-y-1/2 ${position === 'left' ? 'left-4' : 'right-4'} w-64 xl:w-72 z-40`}>
       <div
         key={banner.id}
-        className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative"
       >
+        {/* AD Badge */}
+        <Badge 
+          variant="secondary" 
+          className="absolute top-2 left-2 bg-black/80 text-white text-xs font-bold px-2 py-1 z-10 hover:bg-black/80"
+        >
+          AD
+        </Badge>
+        
         {banner.clickUrl ? (
           <a
             href={banner.clickUrl}
