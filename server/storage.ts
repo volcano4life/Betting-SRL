@@ -454,8 +454,8 @@ export class MemStorage implements IStorage {
       description_it: "La nostra sede Wincity a Trentola-Ducenta offre un'esperienza di scommesse moderna con strutture all'avanguardia e un'ampia gamma di opzioni di gioco.",
       address_en: "Via Nazionale 45, Trentola-Ducenta (CE)",
       address_it: "Via Nazionale 45, Trentola-Ducenta (CE)",
-      imageUrl: "redmoon3",
-      additionalImages: ["redmoon1", "redmoon4"],
+      imageUrl: "wincity1",
+      additionalImages: ["wincity2", "wincity3"],
       order: 2,
       isActive: true
     };
@@ -467,8 +467,8 @@ export class MemStorage implements IStorage {
       description_it: "Visita la nostra sede Matchpoint a Trentola-Ducenta per un'esperienza di scommesse sportive premium con quote in tempo reale e personale esperto per guidarti.",
       address_en: "Via Napoli 78, Trentola-Ducenta (CE)",
       address_it: "Via Napoli 78, Trentola-Ducenta (CE)",
-      imageUrl: "redmoon2",
-      additionalImages: ["redmoon5"],
+      imageUrl: "matchpoint1",
+      additionalImages: ["matchpoint2", "matchpoint3"],
       order: 3,
       isActive: true
     };

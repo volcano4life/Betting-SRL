@@ -122,8 +122,8 @@ export function OutletSlideshow() {
       return imageName;
     }
     
-    // Check if this is a new outlet image (redmoon-new-)
-    if (imageName.startsWith('redmoon-new-')) {
+    // Check if this is a new outlet image (redmoon-new-, wincity, matchpoint)
+    if (imageName.startsWith('redmoon-new-') || imageName.startsWith('wincity') || imageName.startsWith('matchpoint')) {
       return `/assets/outlets/${imageName}.jpg`;
     }
     
