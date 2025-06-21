@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { AdvertisementBanner as AdvertisementBannerType } from "@shared/schema";
 import AdvertisementBanner from "./AdvertisementBanner";
 
 interface PageWithSidebarsProps {
@@ -5,22 +7,45 @@ interface PageWithSidebarsProps {
 }
 
 export default function PageWithSidebars({ children }: PageWithSidebarsProps) {
+  // Check if there are any active advertisement banners
+  const { data: banners = [] } = useQuery<AdvertisementBannerType[]>({
+    queryKey: ['/api/advertisement-banners'],
+  });
+
+  const leftBanners = banners.filter(banner => banner.position === 'left' && banner.isActive);
+  const rightBanners = banners.filter(banner => banner.position === 'right' && banner.isActive);
+  const hasLeftBanners = leftBanners.length > 0;
+  const hasRightBanners = rightBanners.length > 0;
+  const hasBanners = hasLeftBanners || hasRightBanners;
+
+  // Dynamic padding based on banner availability
+  const getContentPadding = () => {
+    if (!hasBanners) return "px-4"; // No banners, use normal padding
+    if (hasLeftBanners && hasRightBanners) return "xl:px-80 px-4"; // Both sides
+    if (hasLeftBanners || hasRightBanners) return "xl:px-40 px-4"; // One side only
+    return "px-4";
+  };
+
   return (
     <div className="relative">
       {/* Left Advertisement Banners */}
-      <div className="hidden xl:block">
-        <AdvertisementBanner position="left" />
-      </div>
+      {hasLeftBanners && (
+        <div className="hidden xl:block">
+          <AdvertisementBanner position="left" />
+        </div>
+      )}
 
       {/* Main Content */}
-      <div className="xl:px-80 px-4">
+      <div className={getContentPadding()}>
         {children}
       </div>
 
       {/* Right Advertisement Banners */}
-      <div className="hidden xl:block">
-        <AdvertisementBanner position="right" />
-      </div>
+      {hasRightBanners && (
+        <div className="hidden xl:block">
+          <AdvertisementBanner position="right" />
+        </div>
+      )}
     </div>
   );
 }
