@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { AdvertisementBanner as Banner } from "@shared/schema";
+import { useState } from "react";
 
 interface AdvertisementBannerProps {
   position: 'left' | 'right';
@@ -14,16 +15,28 @@ export default function AdvertisementBanner({ position }: AdvertisementBannerPro
     },
   });
 
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+
+  const handleImageError = (bannerId: number) => {
+    setImageErrors(prev => new Set([...prev, bannerId]));
+  };
+
   if (isLoading || banners.length === 0) {
+    return null;
+  }
+
+  const validBanners = banners.filter(banner => !imageErrors.has(banner.id));
+
+  if (validBanners.length === 0) {
     return null;
   }
 
   return (
     <div className={`fixed top-20 ${position === 'left' ? 'left-4' : 'right-4'} w-64 z-40 space-y-4`}>
-      {banners.map((banner) => (
+      {validBanners.map((banner) => (
         <div
           key={banner.id}
-          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
         >
           {banner.clickUrl ? (
             <a
@@ -37,15 +50,29 @@ export default function AdvertisementBanner({ position }: AdvertisementBannerPro
                 alt={banner.title}
                 className="w-full h-auto object-cover"
                 loading="lazy"
+                onError={() => handleImageError(banner.id)}
               />
+              <div className="p-2 bg-gradient-to-r from-primary to-secondary">
+                <p className="text-white text-xs font-medium text-center truncate">
+                  {banner.title}
+                </p>
+              </div>
             </a>
           ) : (
-            <img
-              src={banner.imageUrl}
-              alt={banner.title}
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
+            <>
+              <img
+                src={banner.imageUrl}
+                alt={banner.title}
+                className="w-full h-auto object-cover"
+                loading="lazy"
+                onError={() => handleImageError(banner.id)}
+              />
+              <div className="p-2 bg-gradient-to-r from-primary to-secondary">
+                <p className="text-white text-xs font-medium text-center truncate">
+                  {banner.title}
+                </p>
+              </div>
+            </>
           )}
         </div>
       ))}
