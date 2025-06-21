@@ -21,22 +21,13 @@ import CasinoChipLogo from "./CasinoChipLogo";
 import LogoSelector from "./LogoSelector";
 import { useLogo } from "@/contexts/LogoContext";
 
-const casinoCategories = [
-  { label: "Slot Machines", href: "/casinos?category=slots" },
-  { label: "Roulette", href: "/casinos?category=roulette" },
-  { label: "Blackjack", href: "/casinos?category=blackjack" },
-  { label: "Poker", href: "/casinos?category=poker" },
-  { label: "Baccarat", href: "/casinos?category=baccarat" },
-];
-
-
-
-const sportsCategories = [
-  { label: "Football", href: "/sports?category=football" },
-  { label: "Basketball", href: "/sports?category=basketball" },
-  { label: "Tennis", href: "/sports?category=tennis" },
-  { label: "F1", href: "/sports?category=f1" },
-];
+// Scroll functions for navigation
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -136,56 +127,53 @@ export default function Header() {
           <NavigationMenu className="hidden lg:flex mx-6">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger 
-                  className={cn(
-                    "text-[#222236] hover:text-primary font-semibold transition duration-200"
-                  )}
+                <Button
+                  variant="ghost"
+                  onClick={() => scrollToSection('outlets-section')}
+                  className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
-                  {t('nav.casinos')}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[200px] gap-1 p-2">
-                    {casinoCategories.map((category) => (
-                      <li key={category.href}>
-                        <Link
-                          href={category.href}
-                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                        >
-                          {category.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
+                  {t('nav.outlets')}
+                </Button>
               </NavigationMenuItem>
-
-
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger 
-                  className={cn(
-                    "text-[#222236] hover:text-primary font-semibold transition duration-200"
-                  )}
+                <Button
+                  variant="ghost"
+                  onClick={() => scrollToSection('dealers-section')}
+                  className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
-                  {t('nav.sportsBetting')}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[200px] gap-1 p-2">
-                    {sportsCategories.map((category) => (
-                      <li key={category.href}>
-                        <Link
-                          href={category.href}
-                          className="block p-2 hover:bg-muted rounded-md hover:text-primary text-sm"
-                        >
-                          {category.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
+                  {t('nav.dealers')}
+                </Button>
               </NavigationMenuItem>
 
+              <NavigationMenuItem>
+                <Button
+                  variant="ghost"
+                  onClick={() => scrollToSection('bonuses-section')}
+                  className="text-[#222236] hover:text-primary font-semibold transition duration-200"
+                >
+                  {t('nav.bonuses')}
+                </Button>
+              </NavigationMenuItem>
 
+              <NavigationMenuItem>
+                <Button
+                  variant="ghost"
+                  onClick={() => scrollToSection('news-section')}
+                  className="text-[#222236] hover:text-primary font-semibold transition duration-200"
+                >
+                  {t('nav.news')}
+                </Button>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link
+                  href="/chi-siamo"
+                  className="text-[#222236] hover:text-primary font-semibold transition duration-200 px-4 py-2 rounded-md hover:bg-accent"
+                >
+                  {t('nav.aboutUs')}
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -272,41 +260,41 @@ export default function Header() {
                   <Link href="/" className="text-[#222236] hover:text-primary font-semibold py-2">
                     {t('nav.home')}
                   </Link>
-                  <div className="py-2">
-                    <h3 className="font-semibold mb-2">{t('nav.casinos')}</h3>
-                    <div className="flex flex-col space-y-2 pl-2">
-                      {casinoCategories.map((category) => (
-                        <Link 
-                          key={category.href} 
-                          href={category.href} 
-                          className="text-sm text-[#222236] hover:text-primary"
-                        >
-                          {category.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                  
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollToSection('outlets-section')}
+                    className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
+                  >
+                    {t('nav.outlets')}
+                  </Button>
 
-                  <div className="py-2">
-                    <h3 className="font-semibold mb-2">{t('nav.sportsBetting')}</h3>
-                    <div className="flex flex-col space-y-2 pl-2">
-                      {sportsCategories.map((category) => (
-                        <Link 
-                          key={category.href} 
-                          href={category.href} 
-                          className="text-sm text-[#222236] hover:text-primary"
-                        >
-                          {category.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                  <Link href="/casinos" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    {t('nav.casinos')}
-                  </Link>
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollToSection('dealers-section')}
+                    className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
+                  >
+                    {t('nav.dealers')}
+                  </Button>
 
-                  <Link href="/sports" className="text-[#222236] hover:text-primary font-semibold py-2">
-                    {t('nav.sportsBetting')}
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollToSection('bonuses-section')}
+                    className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
+                  >
+                    {t('nav.bonuses')}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollToSection('news-section')}
+                    className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
+                  >
+                    {t('nav.news')}
+                  </Button>
+
+                  <Link href="/chi-siamo" className="text-[#222236] hover:text-primary font-semibold py-2">
+                    {t('nav.aboutUs')}
                   </Link>
                   
                   {/* Authentication Links in Mobile Menu */}

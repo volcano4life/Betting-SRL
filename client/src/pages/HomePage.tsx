@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedCasinosSection from "@/components/home/FeaturedCasinosSection";
 import SportsNewsSection from "@/components/home/SportsNewsSection";
+import PromoCodesSection from "@/components/home/PromoCodesSection";
 import ResponsibleGamblingSection from "@/components/home/ResponsibleGamblingSection";
 import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 
@@ -22,10 +23,24 @@ export default function HomePage() {
         <meta name="description" content={siteConfig.defaultDescription} />
       </Helmet>
 
-      <OutletSlideshow />
+      <div id="outlets-section">
+        <OutletSlideshow />
+      </div>
+      
       <HeroSection />
-      <FeaturedCasinosSection />
-      <SportsNewsSection />
+      
+      <div id="dealers-section">
+        <FeaturedCasinosSection />
+      </div>
+      
+      <div id="bonuses-section">
+        <PromoCodesSection />
+      </div>
+      
+      <div id="news-section">
+        <SportsNewsSection />
+      </div>
+      
       <ResponsibleGamblingSection />
       <GamblingFAQSection />
 
