@@ -467,8 +467,8 @@ export class MemStorage implements IStorage {
       description_it: "Visita la nostra sede Matchpoint a Trentola-Ducenta per un'esperienza di scommesse sportive premium con quote in tempo reale e personale esperto per guidarti.",
       address_en: "Via Napoli 78, Trentola-Ducenta (CE)",
       address_it: "Via Napoli 78, Trentola-Ducenta (CE)",
-      imageUrl: "matchpoint1",
-      additionalImages: ["matchpoint2", "matchpoint3"],
+      imageUrl: "matchpoint-new-1",
+      additionalImages: ["matchpoint-new-2", "matchpoint-new-3", "matchpoint-new-4", "matchpoint-new-5", "matchpoint-new-6"],
       order: 3,
       isActive: true
     };
