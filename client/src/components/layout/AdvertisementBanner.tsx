@@ -35,7 +35,7 @@ export default function AdvertisementBanner({ position }: AdvertisementBannerPro
   const banner = validBanners[0];
 
   return (
-    <div className={`fixed top-1/2 -translate-y-1/2 ${position === 'left' ? 'left-4' : 'right-4'} w-72 z-40`}>
+    <div className={`fixed top-1/2 -translate-y-1/2 ${position === 'left' ? 'left-4' : 'right-4'} w-64 xl:w-72 z-40`}>
       <div
         key={banner.id}
         className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
