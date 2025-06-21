@@ -441,8 +441,8 @@ export class MemStorage implements IStorage {
       description_it: "Il nostro punto vendita premium ad Aversa, con scommesse sportive live, giochi virtuali e un'atmosfera accogliente per tutti gli appassionati di scommesse.",
       address_en: "Via Roma 123, Aversa (CE)",
       address_it: "Via Roma 123, Aversa (CE)",
-      imageUrl: "redmoon1",
-      additionalImages: ["redmoon2", "redmoon3", "redmoon4", "redmoon5"],
+      imageUrl: "redmoon-new-3",
+      additionalImages: ["redmoon-new-1", "redmoon-new-2", "redmoon-new-4", "redmoon-new-5"],
       order: 1,
       isActive: true
     };
