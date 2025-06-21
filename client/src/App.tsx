@@ -12,6 +12,7 @@ import NewsListingPage from "@/pages/NewsListingPage";
 import AuthPage from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
+import AboutUsPage from "@/pages/AboutUsPage";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageWithSidebars from "@/components/layout/PageWithSidebars";

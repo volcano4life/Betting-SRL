@@ -248,6 +248,23 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.changePassword': 'Change Password',
     'nav.logout': 'Logout',
 
+    // About Us Page
+    'aboutUs.title': 'About Us',
+    'aboutUs.subtitle': 'Learn more about Betting SRL and our commitment to providing exceptional gaming experiences.',
+    'aboutUs.description': 'Discover Betting SRL - your trusted partner for sports betting and gaming in Italy.',
+    'aboutUs.ourStory': 'Our Story',
+    'aboutUs.storyText1': 'Betting SRL has been a cornerstone of the Italian gaming industry, providing reliable and exciting betting experiences across multiple locations in the Campania region.',
+    'aboutUs.storyText2': 'Our journey began with a simple mission: to create welcoming spaces where gaming enthusiasts can enjoy their passion in a safe, regulated environment.',
+    'aboutUs.ourMission': 'Our Mission',
+    'aboutUs.missionText1': 'We are dedicated to offering the highest quality gaming and betting services while maintaining the strictest standards of responsible gaming.',
+    'aboutUs.missionText2': 'Our team of experienced professionals ensures every visitor receives personalized attention and expert guidance.',
+    'aboutUs.ourOutlets': 'Our Locations',
+    'aboutUs.contactUs': 'Contact Information',
+    'aboutUs.companyInfo': 'Company Information',
+    'aboutUs.legalNotice': 'Licensed and regulated gaming operator in Italy',
+    'aboutUs.responsibleGaming': 'Responsible Gaming',
+    'aboutUs.responsibleGamingText': 'We are committed to promoting responsible gaming and providing support for those who need it.',
+
     // Homepage Sections
     'hero.title': 'Find your favorite gaming concessionaire',
     'hero.subtitle': 'Exclusive Bonuses & Expert Reviews',
@@ -573,6 +590,23 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.adminPanel': 'Pannello Admin',
     'nav.changePassword': 'Cambia Password',
     'nav.logout': 'Disconnetti',
+
+    // About Us Page
+    'aboutUs.title': 'Chi Siamo',
+    'aboutUs.subtitle': 'Scopri di più su Betting SRL e il nostro impegno nel fornire esperienze di gioco eccezionali.',
+    'aboutUs.description': 'Scopri Betting SRL - il tuo partner di fiducia per scommesse sportive e gioco in Italia.',
+    'aboutUs.ourStory': 'La Nostra Storia',
+    'aboutUs.storyText1': 'Betting SRL è stata una pietra miliare dell\'industria del gioco italiana, fornendo esperienze di scommesse affidabili ed emozionanti attraverso diverse sedi nella regione Campania.',
+    'aboutUs.storyText2': 'Il nostro viaggio è iniziato con una missione semplice: creare spazi accoglienti dove gli appassionati di gioco possono godersi la loro passione in un ambiente sicuro e regolamentato.',
+    'aboutUs.ourMission': 'La Nostra Missione',
+    'aboutUs.missionText1': 'Siamo dedicati ad offrire servizi di gioco e scommesse della più alta qualità mantenendo i più rigorosi standard di gioco responsabile.',
+    'aboutUs.missionText2': 'Il nostro team di professionisti esperti assicura che ogni visitatore riceva attenzione personalizzata e guida esperta.',
+    'aboutUs.ourOutlets': 'Le Nostre Sedi',
+    'aboutUs.contactUs': 'Informazioni di Contatto',
+    'aboutUs.companyInfo': 'Informazioni Aziendali',
+    'aboutUs.legalNotice': 'Operatore di gioco autorizzato e regolamentato in Italia',
+    'aboutUs.responsibleGaming': 'Gioco Responsabile',
+    'aboutUs.responsibleGamingText': 'Siamo impegnati a promuovere il gioco responsabile e a fornire supporto per coloro che ne hanno bisogno.',
 
     // Homepage Sections
     'hero.title': 'Trova il tuo concessionario di gioco preferito',
