@@ -3021,3 +3021,302 @@ function AdminEditForm({ id, onCancel, onSuccess }: AdminFormProps) {
     </Card>
   );
 }
+
+// Advertisement Banner Components
+function BannersList({ onEdit }: { onEdit: (id: number) => void }) {
+  const { toast } = useToast();
+  
+  const { data: banners = [], isLoading } = useQuery<AdvertisementBanner[]>({
+    queryKey: ['/api/admin/advertisement-banners'],
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest('DELETE', `/api/admin/advertisement-banners/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/advertisement-banners'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/advertisement-banners'] });
+      toast({
+        title: "Success",
+        description: "Advertisement banner deleted successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete advertisement banner",
+        variant: "destructive",
+      });
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <Card>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Image</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Position</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Order</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {banners.map((banner) => (
+              <TableRow key={banner.id}>
+                <TableCell>
+                  <img 
+                    src={banner.imageUrl} 
+                    alt={banner.title}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                </TableCell>
+                <TableCell className="font-medium">{banner.title}</TableCell>
+                <TableCell className="capitalize">{banner.position}</TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    banner.isActive 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {banner.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </TableCell>
+                <TableCell>{banner.order}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => onEdit(banner.id)}
+                    >
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => deleteMutation.mutate(banner.id)}
+                      disabled={deleteMutation.isPending}
+                    >
+                      {deleteMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BannerForm({ 
+  id, 
+  onCancel, 
+  onSuccess 
+}: { 
+  id: number | null; 
+  onCancel: () => void; 
+  onSuccess: () => void; 
+}) {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    title: '',
+    imageUrl: '',
+    clickUrl: '',
+    position: 'left' as 'left' | 'right',
+    isActive: true,
+    order: 1
+  });
+
+  const { data: banner } = useQuery<AdvertisementBanner>({
+    queryKey: ['/api/admin/advertisement-banners', id],
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (banner) {
+      setFormData({
+        title: banner.title,
+        imageUrl: banner.imageUrl,
+        clickUrl: banner.clickUrl || '',
+        position: banner.position as 'left' | 'right',
+        isActive: banner.isActive,
+        order: banner.order
+      });
+    }
+  }, [banner]);
+
+  const mutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      const url = id ? `/api/admin/advertisement-banners/${id}` : '/api/admin/advertisement-banners';
+      const method = id ? 'PUT' : 'POST';
+      const response = await apiRequest(method, url, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/advertisement-banners'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/advertisement-banners'] });
+      toast({
+        title: "Success",
+        description: `Advertisement banner ${id ? 'updated' : 'created'} successfully`,
+      });
+      onSuccess();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || `Failed to ${id ? 'update' : 'create'} advertisement banner`,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate(formData);
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{id ? 'Edit' : 'Add'} Advertisement Banner</CardTitle>
+        <CardDescription>
+          {id ? 'Update' : 'Create'} advertisement banner settings
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                placeholder="Banner title"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="position">Position</Label>
+              <Select
+                value={formData.position}
+                onValueChange={(value) => handleChange('position', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="imageUrl">Image URL</Label>
+            <Input
+              id="imageUrl"
+              value={formData.imageUrl}
+              onChange={(e) => handleChange('imageUrl', e.target.value)}
+              placeholder="https://example.com/banner-image.jpg"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="clickUrl">Click URL (Optional)</Label>
+            <Input
+              id="clickUrl"
+              value={formData.clickUrl}
+              onChange={(e) => handleChange('clickUrl', e.target.value)}
+              placeholder="https://example.com/landing-page"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="order">Order</Label>
+              <Input
+                id="order"
+                type="number"
+                min="1"
+                value={formData.order}
+                onChange={(e) => handleChange('order', parseInt(e.target.value))}
+                required
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isActive"
+                checked={formData.isActive}
+                onCheckedChange={(checked) => handleChange('isActive', checked)}
+              />
+              <Label htmlFor="isActive">Active</Label>
+            </div>
+          </div>
+
+          {formData.imageUrl && (
+            <div className="space-y-2">
+              <Label>Preview</Label>
+              <div className="w-32 h-32 border border-gray-200 rounded">
+                <img 
+                  src={formData.imageUrl} 
+                  alt="Banner preview"
+                  className="w-full h-full object-cover rounded"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          
+          <div className="flex justify-end gap-4">
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={mutation.isPending}
+              className="flex items-center gap-2"
+            >
+              {mutation.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {id ? 'Update' : 'Create'} Banner
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
