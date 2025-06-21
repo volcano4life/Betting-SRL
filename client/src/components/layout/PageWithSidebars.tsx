@@ -21,8 +21,9 @@ export default function PageWithSidebars({ children }: PageWithSidebarsProps) {
   // Dynamic padding based on banner availability
   const getContentPadding = () => {
     if (!hasBanners) return "px-4"; // No banners, use normal padding
-    if (hasLeftBanners && hasRightBanners) return "xl:px-80 px-4"; // Both sides
-    if (hasLeftBanners || hasRightBanners) return "xl:px-40 px-4"; // One side only
+    if (hasLeftBanners && hasRightBanners) return "xl:px-80 lg:px-72 px-4"; // Both sides
+    if (hasLeftBanners) return "xl:pl-80 lg:pl-72 pl-4 pr-4"; // Left only
+    if (hasRightBanners) return "xl:pr-80 lg:pr-72 pr-4 pl-4"; // Right only
     return "px-4";
   };
 
@@ -33,7 +34,7 @@ export default function PageWithSidebars({ children }: PageWithSidebarsProps) {
     <div className="relative" key={bannerKey}>
       {/* Left Advertisement Banners */}
       {hasLeftBanners && (
-        <div className="hidden xl:block">
+        <div className="hidden lg:block">
           <AdvertisementBanner position="left" />
         </div>
       )}
@@ -45,7 +46,7 @@ export default function PageWithSidebars({ children }: PageWithSidebarsProps) {
 
       {/* Right Advertisement Banners */}
       {hasRightBanners && (
-        <div className="hidden xl:block">
+        <div className="hidden lg:block">
           <AdvertisementBanner position="right" />
         </div>
       )}
