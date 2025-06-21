@@ -454,8 +454,8 @@ export class MemStorage implements IStorage {
       description_it: "La nostra sede Wincity a Trentola-Ducenta offre un'esperienza di scommesse moderna con strutture all'avanguardia e un'ampia gamma di opzioni di gioco.",
       address_en: "Via Nazionale 45, Trentola-Ducenta (CE)",
       address_it: "Via Nazionale 45, Trentola-Ducenta (CE)",
-      imageUrl: "wincity1",
-      additionalImages: ["wincity2", "wincity3"],
+      imageUrl: "wincity-new-1",
+      additionalImages: ["wincity-new-2", "wincity-new-3", "wincity-new-4", "wincity-new-5", "wincity-new-6"],
       order: 2,
       isActive: true
     };
