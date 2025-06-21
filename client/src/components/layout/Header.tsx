@@ -152,7 +152,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <Button
                   variant="ghost"
-                  onClick={() => scrollToSection('dealers-section', navigate, location)}
+                  onClick={() => scrollToSection('hero-section', navigate, location)}
                   className="text-[#222236] hover:text-primary font-semibold transition duration-200"
                 >
                   {t('nav.dealers')}
@@ -284,7 +284,7 @@ export default function Header() {
 
                   <Button
                     variant="ghost"
-                    onClick={() => scrollToSection('dealers-section', navigate, location)}
+                    onClick={() => scrollToSection('hero-section', navigate, location)}
                     className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
                   >
                     {t('nav.dealers')}
