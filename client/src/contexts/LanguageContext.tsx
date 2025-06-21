@@ -248,7 +248,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.logout': 'Logout',
 
     // Homepage Sections
-    'hero.title': 'Find the Best Italian Online Casinos',
+    'hero.title': 'Find your favorite gaming concessionaire',
     'hero.subtitle': 'Exclusive Bonuses & Expert Reviews',
     'hero.cta': 'Claim Bonus',
     'hero.featuredReview': 'Featured Review',
@@ -260,7 +260,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.news1Title': 'Italian Gambling Authority Announces New Regulation Changes',
     'hero.news2Title': 'Top Sports Betting Trends for Football Season 2025',
     
-    'featured.title': 'Top Rated Casinos',
+    'featured.title': 'The Best Italian Books',
     'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
     'featured.viewAll': 'View All Casinos',
     'featured.empty': 'No featured casinos available',
@@ -573,7 +573,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.logout': 'Disconnetti',
 
     // Homepage Sections
-    'hero.title': 'Trova i Migliori Casinò Online Italiani',
+    'hero.title': 'Trova il tuo concessionario di gioco preferito',
     'hero.subtitle': 'Bonus Esclusivi & Recensioni di Esperti',
     'hero.cta': 'Ottieni Bonus',
     'hero.featuredReview': 'Recensione in Evidenza',
@@ -585,7 +585,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.news1Title': 'L\'Autorità Italiana di Gioco Annuncia Nuovi Cambiamenti Normativi',
     'hero.news2Title': 'Principali Tendenze nelle Scommesse Sportive per la Stagione Calcistica 2025',
     
-    'featured.title': 'Casinò Più Votati',
+    'featured.title': 'I Migliori Book Italiani',
     'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
     'featured.viewAll': 'Vedi Tutti i Casinò',
     'featured.empty': 'Nessun casinò in evidenza disponibile',
