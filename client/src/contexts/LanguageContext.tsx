@@ -175,6 +175,9 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.promoCodeCreatedTitle': 'Promo Code Created',
     'admin.promoCodeCreatedDesc': 'The promo code has been created successfully',
     
+    // Page titles
+    'home.title': 'Best Italian Online Casinos & Sports Betting',
+    
     // Additional admin table headers and form fields
     'admin.confirmDeleteGame': 'Are you sure you want to delete this game? This action cannot be undone.',
     'admin.confirmDeleteReview': 'Are you sure you want to delete this review? This action cannot be undone.',
@@ -545,6 +548,9 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.rolePromptDesc': 'Seleziona un ruolo per questo utente',
     'admin.inviteAdmin': 'Invita Amministratore',
     'admin.approvalPending': 'Approvazione in Attesa',
+    
+    // Page titles
+    'home.title': 'I Migliori Casinò Online e Scommesse Sportive Italiane',
     // All admin table headers and notifications are defined in the English section
     'admin.titleColumn': 'Titolo',
     'admin.slug': 'URL Slug',
