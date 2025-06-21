@@ -127,6 +127,11 @@ export function OutletSlideshow() {
       return `/assets/outlets/${imageName}.jpg`;
     }
     
+    // Check if this is a timestamped image (like 1_1750514327472)
+    if (imageName.match(/^\d+_\d+$/)) {
+      return `/assets/${imageName}.jpg`;
+    }
+    
     // Check if this is an uploaded image (UUID format with dashes)
     if (imageName.includes('-') && imageName.length > 10) {
       // If it's an uploaded image, check if it already has an extension
