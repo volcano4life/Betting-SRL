@@ -480,7 +480,7 @@ export class MemStorage implements IStorage {
     // Add demo advertisement banners
     const leftBanner1: InsertAdvertisementBanner = {
       title: "Casino Bonus 200%",
-      imageUrl: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=600&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=600&q=80",
       clickUrl: "https://example-casino.com/bonus",
       position: "left",
       isActive: true,
@@ -490,7 +490,7 @@ export class MemStorage implements IStorage {
 
     const leftBanner2: InsertAdvertisementBanner = {
       title: "Sports Betting Welcome Offer",
-      imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80",
       clickUrl: "https://example-sportsbook.com/welcome",
       position: "left",
       isActive: true,
@@ -500,7 +500,7 @@ export class MemStorage implements IStorage {
 
     const rightBanner1: InsertAdvertisementBanner = {
       title: "Live Casino Experience",
-      imageUrl: "https://images.unsplash.com/photo-1511193311914-0346f16ede32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=500&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=500&q=80",
       clickUrl: "https://example-livecasino.com/play",
       position: "right",
       isActive: true,
@@ -510,7 +510,7 @@ export class MemStorage implements IStorage {
 
     const rightBanner2: InsertAdvertisementBanner = {
       title: "Poker Tournament €10,000",
-      imageUrl: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=350&q=80",
+      imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=350&q=80",
       clickUrl: "https://example-poker.com/tournament",
       position: "right",
       isActive: true,
