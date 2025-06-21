@@ -480,7 +480,7 @@ export class MemStorage implements IStorage {
       description_it: "Un bar e ristorante accogliente che offre esperienze culinarie e di gioco. Goditi ottimo cibo e bevande mentre scommetti in un'atmosfera rilassata e sociale.",
       address_en: "Via delle Rose 15, Aversa (CE)",
       address_it: "Via delle Rose 15, Aversa (CE)",
-      imageUrl: "1_1750514189628",
+      imageUrl: "1_1750514327472",
       additionalImages: [],
       order: 4,
       isActive: true
