@@ -40,6 +40,17 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')
   }
 }));
 
+// Serve attached assets
+app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (filePath.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    }
+  }
+}));
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

@@ -129,7 +129,7 @@ export function OutletSlideshow() {
     
     // Check if this is a timestamped image (like 1_1750514327472)
     if (imageName.match(/^\d+_\d+$/)) {
-      return `/assets/${imageName}.jpg`;
+      return `/attached_assets/${imageName}.jpg`;
     }
     
     // Check if this is an uploaded image (UUID format with dashes)
