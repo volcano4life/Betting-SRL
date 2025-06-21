@@ -18,6 +18,7 @@ import PageWithSidebars from "@/components/layout/PageWithSidebars";
 import CookieConsent from "@/components/common/CookieConsent";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LogoProvider } from "./contexts/LogoContext";
+import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PageTransition from "@/components/ui/page-transition";
@@ -78,15 +79,17 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <LanguageProvider>
-          <LogoProvider>
-            <TooltipProvider>
-              <Toaster />
-              <div className="min-h-screen flex flex-col">
-                <Router />
-                <CookieConsent />
-              </div>
-            </TooltipProvider>
-          </LogoProvider>
+          <AgeVerificationProvider>
+            <LogoProvider>
+              <TooltipProvider>
+                <Toaster />
+                <div className="min-h-screen flex flex-col">
+                  <Router />
+                  <CookieConsent />
+                </div>
+              </TooltipProvider>
+            </LogoProvider>
+          </AgeVerificationProvider>
         </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>
