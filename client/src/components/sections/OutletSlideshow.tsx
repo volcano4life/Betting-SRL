@@ -172,7 +172,7 @@ export function OutletSlideshow() {
     <section className="py-4 bg-gradient-to-r from-[#2a293e] to-[#222236] border-b border-gray-800">
       <div className="container mx-auto px-4">
         <div className="mb-6 pt-4 text-center">
-          <h1 className="md:text-4xl text-white mb-2 tracking-tight text-[48px] font-bold">
+          <h1 className="md:text-4xl text-white mb-2 tracking-tight font-bold text-[48px]">
             {language === 'it' ? 'Scopri I nostri punti vendita' : 'Check out our betting outlets'}
           </h1>
           <p className="text-lg text-white/80 font-medium">
