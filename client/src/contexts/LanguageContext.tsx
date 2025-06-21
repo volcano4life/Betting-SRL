@@ -585,7 +585,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.news1Title': 'L\'Autorità Italiana di Gioco Annuncia Nuovi Cambiamenti Normativi',
     'hero.news2Title': 'Principali Tendenze nelle Scommesse Sportive per la Stagione Calcistica 2025',
     
-    'featured.title': 'I Migliori Book Italiani',
+    'featured.title': 'I Migliori Siti Scommesse e Bookmaker in Italia',
     'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
     'featured.viewAll': 'Vedi Tutti i Casinò',
     'featured.empty': 'Nessun casinò in evidenza disponibile',
