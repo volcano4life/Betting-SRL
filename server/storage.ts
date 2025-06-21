@@ -103,7 +103,8 @@ export class MemStorage implements IStorage {
   // Caching for GNews data
   private cachedNews: News[] | null = null;
   private newsCacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+  private readonly CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+  private isLoadingNews: boolean = false;
   
   private userId: number;
   private gameId: number;
@@ -600,11 +601,23 @@ export class MemStorage implements IStorage {
       return;
     }
     
+    // If already loading, wait for it to complete
+    if (this.isLoadingNews) {
+      // Wait for the current load to complete
+      while (this.isLoadingNews) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return;
+    }
+    
     // If cache is expired or doesn't exist, refresh it
     await this.loadCachedNews();
   }
 
   private async loadCachedNews(): Promise<void> {
+    if (this.isLoadingNews) return;
+    
+    this.isLoadingNews = true;
     try {
       console.log('Refreshing news cache from GNews API...');
       const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
@@ -615,14 +628,27 @@ export class MemStorage implements IStorage {
       console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
     } catch (error) {
       console.error('Failed to load news from GNews API:', error);
-      // Fallback to static news if API fails
-      this.cachedNews = Array.from(this.news.values());
+      // Only use fallback if we don't have any cached data
+      if (!this.cachedNews) {
+        this.cachedNews = Array.from(this.news.values());
+        console.log('Using fallback static news data');
+      } else {
+        console.log('Keeping existing cached news data');
+      }
       this.newsCacheTimestamp = Date.now();
-      console.log('Using fallback static news data');
+    } finally {
+      this.isLoadingNews = false;
     }
   }
 
   async refreshNewsCache(): Promise<void> {
+    // Only refresh if enough time has passed to avoid API limits
+    const now = Date.now();
+    if (this.newsCacheTimestamp && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
+      console.log('News cache refresh skipped - cache still valid');
+      return;
+    }
+    
     this.cachedNews = null;
     this.newsCacheTimestamp = 0;
     await this.loadCachedNews();
