@@ -122,8 +122,8 @@ export function OutletSlideshow() {
       return imageName;
     }
     
-    // Check if this is a new outlet image (redmoon-new-, wincity-new-, wincity, matchpoint)
-    if (imageName.startsWith('redmoon-new-') || imageName.startsWith('wincity-new-') || imageName.startsWith('wincity') || imageName.startsWith('matchpoint')) {
+    // Check if this is a new outlet image (redmoon-new-, wincity-new-, matchpoint-new-, wincity, matchpoint)
+    if (imageName.startsWith('redmoon-new-') || imageName.startsWith('wincity-new-') || imageName.startsWith('matchpoint-new-') || imageName.startsWith('wincity') || imageName.startsWith('matchpoint')) {
       return `/assets/outlets/${imageName}.jpg`;
     }
     
