@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface AgeVerificationContextType {
   isAgeVerified: boolean;
@@ -8,11 +8,33 @@ interface AgeVerificationContextType {
 const AgeVerificationContext = createContext<AgeVerificationContextType | undefined>(undefined);
 
 export function AgeVerificationProvider({ children }: { children: ReactNode }) {
-  const [isAgeVerified, setIsAgeVerified] = useState(false);
+  // Initialize from localStorage if available
+  const [isAgeVerified, setIsAgeVerifiedState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('ageVerified');
+      return stored === 'true';
+    }
+    return false;
+  });
 
   const setAgeVerified = (verified: boolean) => {
-    setIsAgeVerified(verified);
+    setIsAgeVerifiedState(verified);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ageVerified', verified.toString());
+    }
   };
+
+  // Sync with localStorage changes from other tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'ageVerified' && e.newValue !== null) {
+        setIsAgeVerifiedState(e.newValue === 'true');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   return (
     <AgeVerificationContext.Provider
@@ -29,7 +51,12 @@ export function AgeVerificationProvider({ children }: { children: ReactNode }) {
 export function useAgeVerification() {
   const context = useContext(AgeVerificationContext);
   if (!context) {
-    throw new Error('useAgeVerification must be used within an AgeVerificationProvider');
+    // Return a fallback instead of throwing error to prevent crashes
+    console.warn('useAgeVerification must be used within an AgeVerificationProvider');
+    return {
+      isAgeVerified: false,
+      setAgeVerified: () => {}
+    };
   }
   return context;
 }
