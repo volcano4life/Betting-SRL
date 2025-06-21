@@ -472,10 +472,24 @@ export class MemStorage implements IStorage {
       order: 3,
       isActive: true
     };
+    
+    const outlet4: InsertOutlet = {
+      title_en: "Caffeteria Nini",
+      title_it: "Caffeteria Nini",
+      description_en: "A welcoming bar and restaurant offering both dining and gaming experiences. Enjoy excellent food and drinks while betting in a relaxed, social atmosphere.",
+      description_it: "Un bar e ristorante accogliente che offre esperienze culinarie e di gioco. Goditi ottimo cibo e bevande mentre scommetti in un'atmosfera rilassata e sociale.",
+      address_en: "Via delle Rose 15, Aversa (CE)",
+      address_it: "Via delle Rose 15, Aversa (CE)",
+      imageUrl: "1_1750514189628",
+      additionalImages: [],
+      order: 4,
+      isActive: true
+    };
 
     this.createOutlet(outlet1);
     this.createOutlet(outlet2);
     this.createOutlet(outlet3);
+    this.createOutlet(outlet4);
 
     // Add demo advertisement banners - one per side
     const leftBanner: InsertAdvertisementBanner = {
