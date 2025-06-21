@@ -26,8 +26,11 @@ export default function PageWithSidebars({ children }: PageWithSidebarsProps) {
     return "px-4";
   };
 
+  // Force re-render when banner state changes
+  const bannerKey = `${hasLeftBanners}-${hasRightBanners}-${banners.length}`;
+
   return (
-    <div className="relative">
+    <div className="relative" key={bannerKey}>
       {/* Left Advertisement Banners */}
       {hasLeftBanners && (
         <div className="hidden xl:block">

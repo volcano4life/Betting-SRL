@@ -787,16 +787,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/admin/advertisement-banners/:id', requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { title, imageUrl, clickUrl, position, isActive, order } = req.body;
+      const updateData = req.body;
       
-      const banner = await storage.updateAdvertisementBanner(id, {
-        title,
-        imageUrl,
-        clickUrl,
-        position,
-        isActive,
-        order
-      });
+      // Only pass defined fields to avoid overwriting with undefined values
+      const filteredData = Object.fromEntries(
+        Object.entries(updateData).filter(([_, value]) => value !== undefined)
+      );
+      
+      const banner = await storage.updateAdvertisementBanner(id, filteredData);
       
       res.json(banner);
     } catch (error) {
