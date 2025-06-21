@@ -34,17 +34,22 @@ const scrollToSection = (sectionId: string, navigate: (path: string) => void, cu
       const element = document.getElementById(sectionId);
       console.log('Element found after navigation:', element);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        console.error('Element not found after navigation:', sectionId);
       }
-    }, 500);
+    }, 800);
   } else {
     // Already on home page, just scroll
     const element = document.getElementById(sectionId);
     console.log('Element found on home page:', element);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      console.error('Element not found:', sectionId);
+      console.error('Element not found on home page:', sectionId);
+      // Try to find all available sections for debugging
+      const allSections = document.querySelectorAll('[id*="section"]');
+      console.log('Available sections:', Array.from(allSections).map(el => el.id));
     }
   }
 };

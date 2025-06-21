@@ -265,6 +265,10 @@ const translations: Record<Language, Record<string, string>> = {
     'aboutUs.responsibleGaming': 'Responsible Gaming',
     'aboutUs.responsibleGamingText': 'We are committed to promoting responsible gaming and providing support for those who need it.',
 
+    // Bonuses Section
+    'bonuses.title': 'Exclusive Bonuses',
+    'bonuses.placeholder': 'Coming soon - exclusive bonus offers and promotions.',
+
     // Homepage Sections
     'hero.title': 'Find your favorite gaming concessionaire',
     'hero.subtitle': 'Exclusive Bonuses & Expert Reviews',
@@ -607,6 +611,10 @@ const translations: Record<Language, Record<string, string>> = {
     'aboutUs.legalNotice': 'Operatore di gioco autorizzato e regolamentato in Italia',
     'aboutUs.responsibleGaming': 'Gioco Responsabile',
     'aboutUs.responsibleGamingText': 'Siamo impegnati a promuovere il gioco responsabile e a fornire supporto per coloro che ne hanno bisogno.',
+
+    // Bonuses Section
+    'bonuses.title': 'Bonus Esclusivi',
+    'bonuses.placeholder': 'In arrivo - offerte bonus esclusive e promozioni.',
 
     // Homepage Sections
     'hero.title': 'Trova il tuo concessionario di gioco preferito',
