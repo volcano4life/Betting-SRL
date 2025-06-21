@@ -1,7 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedCasinosSection from "@/components/home/FeaturedCasinosSection";
 import SportsNewsSection from "@/components/home/SportsNewsSection";
-import PromoCodesSection from "@/components/home/PromoCodesSection";
 import ResponsibleGamblingSection from "@/components/home/ResponsibleGamblingSection";
 import GamblingFAQSection from "@/components/home/GamblingFAQSection";
 
@@ -34,7 +33,7 @@ export default function HomePage() {
       </div>
       
       <div id="bonuses-section">
-        <PromoCodesSection />
+        {/* Bonuses section removed as requested */}
       </div>
       
       <div id="news-section">
