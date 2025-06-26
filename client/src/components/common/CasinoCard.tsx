@@ -149,19 +149,7 @@ export default function CasinoCard({
                 <p className="text-sm font-medium text-center">{bonus}</p>
               </motion.div>
               
-              <div className="mt-auto space-y-2">
-                {promoCode && (
-                  <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
-                    <Button 
-                      onClick={() => setPromoModalOpen(true)}
-                      variant="outline" 
-                      className="w-full"
-                    >
-                      {t('featured.showPromoCode')}
-                    </Button>
-                  </motion.div>
-                )}
-                
+              <div className="mt-auto">
                 {title === "Sisal" ? (
                   <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
                     <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
