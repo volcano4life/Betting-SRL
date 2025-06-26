@@ -583,7 +583,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.home': 'Home',
     'nav.outlets': 'Punti Vendita',
     'nav.dealers': 'Concessionari',
-
+    'nav.bonuses': 'Bonus',
     'nav.news': 'News',
     'nav.aboutUs': 'Chi Siamo',
     'nav.language': 'English',
