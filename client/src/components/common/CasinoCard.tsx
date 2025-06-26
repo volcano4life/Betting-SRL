@@ -98,7 +98,9 @@ export default function CasinoCard({
             )}
           
             {/* Logo banner across the top */}
-            <div className="w-full h-16 bg-white flex items-center justify-center">
+            <div className={`w-full h-16 flex items-center justify-center ${
+              title === "PokerStars" ? "bg-black" : "bg-white"
+            }`}>
               {logo && logo.includes('@assets') ? (
                 <img 
                   src={logo.replace('@assets', '/attached_assets')}

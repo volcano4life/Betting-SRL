@@ -237,7 +237,7 @@ export class MemStorage implements IStorage {
       slug: "pokerstars",
       description_en: "PokerStars offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
       description_it: "PokerStars offre ai giocatori italiani un ambiente di gioco sicuro e divertente con un'ampia gamma di giochi da casinò e opzioni di scommesse sportive.",
-      coverImage: "@assets/png-clipart-pokerstars-logo-online-poker-the-stars-group-pokerstars-logo-television-text_1750962548989.png",
+      coverImage: "@assets/PokerStars-Logo_1750962736007.png",
       releaseDate: new Date("2023-08-03"),
       platforms: ["Desktop", "Mobile", "App"],
       genres: ["Slots", "Poker", "Sports Betting"],
