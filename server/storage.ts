@@ -275,7 +275,7 @@ export class MemStorage implements IStorage {
       slug: "lottomatica",
       description_en: "Lottomatica is Italy's leading gaming operator offering lottery, sports betting, casino games, and innovative gaming solutions.",
       description_it: "Lottomatica è il principale operatore di gioco in Italia che offre lotterie, scommesse sportive, giochi da casinò e soluzioni di gioco innovative.",
-      coverImage: "@assets/lottomatica_logo-830_1750964430589.jpg",
+      coverImage: "@assets/Logo_Lottomatica_Col_RGB-e1684494644169_1750968051426.png",
       releaseDate: new Date("2018-06-30"),
       platforms: ["Desktop", "Mobile", "App", "Retail"],
       genres: ["Lottery", "Sports Betting", "Casino", "Slots"],
