@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
   // Caching for GNews data
   private cachedNews: News[] | null = null;
   private newsCacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+  private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds (frozen temporarily)
   private isLoadingNews: boolean = false;
   
   private userId: number;
