@@ -98,18 +98,18 @@ export default function CasinoCard({
             )}
           
             {/* Logo banner across the top */}
-            <div className="w-full h-16 bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
+            <div className="w-full h-16 bg-white flex items-center justify-center">
               {logo && logo.includes('@assets') ? (
                 <img 
                   src={logo.replace('@assets', '/attached_assets')}
                   alt={title} 
-                  className="h-12 object-contain filter brightness-0 invert"
+                  className="h-12 object-contain"
                 />
               ) : (
                 <img 
                   src={logo} 
                   alt={title} 
-                  className="h-12 object-contain filter brightness-0 invert" 
+                  className="h-12 object-contain" 
                 />
               )}
             </div>
