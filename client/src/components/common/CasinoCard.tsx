@@ -97,27 +97,31 @@ export default function CasinoCard({
               </motion.div>
             )}
           
+            {/* Logo banner across the top */}
+            <div className="w-full h-16 bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
+              {logo && logo.includes('@assets') ? (
+                <img 
+                  src={logo.replace('@assets', '/attached_assets')}
+                  alt={title} 
+                  className="h-12 object-contain filter brightness-0 invert"
+                />
+              ) : (
+                <img 
+                  src={logo} 
+                  alt={title} 
+                  className="h-12 object-contain filter brightness-0 invert" 
+                />
+              )}
+            </div>
+            
             <CardContent className="p-4 flex-grow flex flex-col">
-              <div className="flex justify-between items-start mb-4">
-                <Link href={`/casinos/${slug}`}>
-                  <img 
-                    src={logo} 
-                    alt={title} 
-                    className="h-14 object-contain" 
-                  />
-                </Link>
-                <motion.div variants={badgeVariants}>
-                  <Badge variant="outline" className="text-sm font-normal">
-                    {typeof validUntil === 'string' || validUntil instanceof Date 
-                      ? `${t('featured.validUntil')} ${formatDate(validUntil, language)}` 
-                      : t('featured.limitedTimeOffer')}
-                  </Badge>
-                </motion.div>
+              <div className="mb-4">
+                {/* Remove validity date badge completely */}
               </div>
               
-              <Link href={`/casinos/${slug}`}>
+              <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
                 <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
-              </Link>
+              </a>
               
               <div className="flex items-center mb-4">
                 <RatingStars rating={rating} size="md" />
@@ -146,13 +150,13 @@ export default function CasinoCard({
                   </motion.div>
                 )}
                 
-                <Link href={`/casinos/${slug}`}>
+                <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
                   <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
                     <Button className="w-full">
                       {t('featured.visitCasino')}
                     </Button>
                   </motion.div>
-                </Link>
+                </a>
               </div>
             </CardContent>
           </div>
