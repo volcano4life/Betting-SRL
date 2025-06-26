@@ -119,9 +119,15 @@ export default function CasinoCard({
                 {/* Remove validity date badge completely */}
               </div>
               
-              <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
-                <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
-              </a>
+              {title === "Sisal" ? (
+                <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
+                  <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
+                </a>
+              ) : (
+                <Link href={`/casinos/${slug}`}>
+                  <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
+                </Link>
+              )}
               
               <div className="flex items-center mb-4">
                 <RatingStars rating={rating} size="md" />
@@ -150,13 +156,23 @@ export default function CasinoCard({
                   </motion.div>
                 )}
                 
-                <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
-                  <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
-                    <Button className="w-full">
-                      {t('featured.visitCasino')}
-                    </Button>
-                  </motion.div>
-                </a>
+                {title === "Sisal" ? (
+                  <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </a>
+                ) : (
+                  <Link href={`/casinos/${slug}`}>
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </Link>
+                )}
               </div>
             </CardContent>
           </div>
