@@ -142,13 +142,13 @@ export default function CasinoCard({
                     <img 
                       src={logo.replace('@assets', '/attached_assets')}
                       alt={title} 
-                      className="h-16 object-contain max-w-full px-2"
+                      className="h-20 object-contain max-w-full px-2"
                     />
                   ) : (
                     <img 
                       src={logo} 
                       alt={title} 
-                      className="h-16 object-contain max-w-full px-2" 
+                      className="h-20 object-contain max-w-full px-2" 
                     />
                   )}
                 </a>
