@@ -84,40 +84,27 @@ export default function CasinoCard({
         whileHover="hover"
         variants={cardVariants}
       >
-        <Card className="overflow-hidden relative">
+        <Card className="overflow-hidden relative h-full">
           <div className="flex flex-col h-full">
-            {featured && (
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="bg-primary text-white text-xs font-bold py-1 px-3 text-center"
-              >
-                {t('featured.recommended')}
-              </motion.div>
-            )}
-          
-            {/* Logo banner across the top */}
-            <div className={`w-full bg-white flex items-center justify-center ${
-              title === "PokerStars" ? "h-32" : "h-16"
-            }`}>
+            {/* Logo banner across the top - standardized height */}
+            <div className="w-full h-20 bg-white flex items-center justify-center border-b">
               {logo && logo.includes('@assets') ? (
                 <img 
                   src={logo.replace('@assets', '/attached_assets')}
                   alt={title} 
-                  className={title === "PokerStars" ? "h-28 object-contain" : "h-12 object-contain"}
+                  className="h-16 object-contain max-w-full px-2"
                 />
               ) : (
                 <img 
                   src={logo} 
                   alt={title} 
-                  className="h-12 object-contain" 
+                  className="h-16 object-contain max-w-full px-2" 
                 />
               )}
             </div>
             
             <CardContent className="p-4 flex-grow flex flex-col">
-              <div className="mb-4">
+              <div className="mb-3">
                 {/* Remove validity date badge completely */}
               </div>
               
