@@ -103,7 +103,7 @@ export default function CasinoCard({
                 <img 
                   src={logo.replace('@assets', '/attached_assets')}
                   alt={title} 
-                  className="h-12 object-contain"
+                  className={title === "PokerStars" ? "h-14 object-contain" : "h-12 object-contain"}
                 />
               ) : (
                 <img 
