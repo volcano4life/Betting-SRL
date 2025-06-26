@@ -98,12 +98,14 @@ export default function CasinoCard({
             )}
           
             {/* Logo banner across the top */}
-            <div className="w-full h-16 bg-white flex items-center justify-center">
+            <div className={`w-full bg-white flex items-center justify-center ${
+              title === "PokerStars" ? "h-32" : "h-16"
+            }`}>
               {logo && logo.includes('@assets') ? (
                 <img 
                   src={logo.replace('@assets', '/attached_assets')}
                   alt={title} 
-                  className={title === "PokerStars" ? "h-14 object-contain" : "h-12 object-contain"}
+                  className={title === "PokerStars" ? "h-28 object-contain" : "h-12 object-contain"}
                 />
               ) : (
                 <img 
