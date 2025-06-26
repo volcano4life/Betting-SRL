@@ -87,7 +87,7 @@ export default function CasinoCard({
         <Card className="overflow-hidden relative h-full">
           <div className="flex flex-col h-full">
             {/* Logo banner across the top - standardized height */}
-            <div className="w-full h-20 bg-white flex items-center justify-center border-b">
+            <div className="w-full h-20 bg-white flex items-center justify-center border-b overflow-hidden">
               {title === "Sisal" ? (
                 <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
                   {logo && logo.includes('@assets') ? (
@@ -142,13 +142,13 @@ export default function CasinoCard({
                     <img 
                       src={logo.replace('@assets', '/attached_assets')}
                       alt={title} 
-                      className="h-20 object-contain max-w-full px-2"
+                      className="h-40 object-contain max-w-full px-2"
                     />
                   ) : (
                     <img 
                       src={logo} 
                       alt={title} 
-                      className="h-20 object-contain max-w-full px-2" 
+                      className="h-40 object-contain max-w-full px-2" 
                     />
                   )}
                 </a>
