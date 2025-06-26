@@ -289,20 +289,20 @@ export class MemStorage implements IStorage {
     this.createGame(game4);
 
     const game5: InsertGame = {
-      title_en: "Betflag",
-      title_it: "Betflag",
-      slug: "betflag",
-      description_en: "Betflag offers Italian players a comprehensive betting platform with sports wagering, virtual games, and an extensive casino section.",
-      description_it: "Betflag offre ai giocatori italiani una piattaforma di scommesse completa con scommesse sportive, giochi virtuali e una sezione casinò estesa.",
-      coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
-      releaseDate: new Date("2021-08-15"),
-      platforms: ["Desktop", "Mobile"],
-      genres: ["Sports Betting", "Virtual Games", "Slots"],
-      overallRating: 8.7,
-      gameplayRating: 8.8,
-      graphicsRating: 8.6,
-      storyRating: 8.5,
-      valueRating: 8.9,
+      title_en: "Betfair",
+      title_it: "Betfair",
+      slug: "betfair",
+      description_en: "Betfair is a leading global betting exchange offering innovative sports betting, casino games, and exchange betting with competitive odds.",
+      description_it: "Betfair è un exchange di scommesse globale leader che offre scommesse sportive innovative, giochi da casinò e scommesse exchange con quote competitive.",
+      coverImage: "@assets/Betfair-Logo_1750965384418.png",
+      releaseDate: new Date("2020-09-12"),
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Exchange Betting", "Sports Betting", "Casino"],
+      overallRating: 9.2,
+      gameplayRating: 9.3,
+      graphicsRating: 9.0,
+      storyRating: 9.1,
+      valueRating: 9.4,
       featured: 0
     };
     this.createGame(game5);
