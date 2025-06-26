@@ -268,6 +268,101 @@ export class MemStorage implements IStorage {
       featured: 0
     };
     this.createGame(game3);
+
+    const game4: InsertGame = {
+      title_en: "Betflag",
+      title_it: "Betflag",
+      slug: "betflag",
+      description_en: "Betflag offers Italian players a comprehensive betting platform with sports wagering, virtual games, and an extensive casino section.",
+      description_it: "Betflag offre ai giocatori italiani una piattaforma di scommesse completa con scommesse sportive, giochi virtuali e una sezione casinò estesa.",
+      coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      releaseDate: new Date("2021-08-15"),
+      platforms: ["Desktop", "Mobile"],
+      genres: ["Sports Betting", "Virtual Games", "Slots"],
+      overallRating: 8.7,
+      gameplayRating: 8.8,
+      graphicsRating: 8.6,
+      storyRating: 8.5,
+      valueRating: 8.9,
+      featured: 0
+    };
+    this.createGame(game4);
+
+    const game5: InsertGame = {
+      title_en: "Snai",
+      title_it: "Snai",
+      slug: "snai",
+      description_en: "Snai is a well-established Italian gaming brand offering sports betting, casino games, and poker with decades of experience.",
+      description_it: "Snai è un marchio di gioco italiano ben consolidato che offre scommesse sportive, giochi da casinò e poker con decenni di esperienza.",
+      coverImage: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      releaseDate: new Date("2020-11-20"),
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Sports Betting", "Casino", "Poker"],
+      overallRating: 8.9,
+      gameplayRating: 9.0,
+      graphicsRating: 8.7,
+      storyRating: 8.8,
+      valueRating: 9.1,
+      featured: 0
+    };
+    this.createGame(game5);
+
+    const game6: InsertGame = {
+      title_en: "Eurobet",
+      title_it: "Eurobet",
+      slug: "eurobet",
+      description_en: "Eurobet provides a modern gaming experience with innovative features, competitive odds, and a user-friendly interface for Italian players.",
+      description_it: "Eurobet fornisce un'esperienza di gioco moderna con funzionalità innovative, quote competitive e un'interfaccia user-friendly per i giocatori italiani.",
+      coverImage: "https://images.unsplash.com/photo-1594736797933-d0400f5d7c93?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      releaseDate: new Date("2021-03-10"),
+      platforms: ["Desktop", "Mobile"],
+      genres: ["Sports Betting", "Live Casino", "Slots"],
+      overallRating: 8.8,
+      gameplayRating: 8.9,
+      graphicsRating: 8.8,
+      storyRating: 8.6,
+      valueRating: 8.9,
+      featured: 0
+    };
+    this.createGame(game6);
+
+    const game7: InsertGame = {
+      title_en: "William Hill",
+      title_it: "William Hill",
+      slug: "william-hill",
+      description_en: "William Hill brings its world-renowned betting expertise to Italy with premium sports betting and casino gaming options.",
+      description_it: "William Hill porta la sua esperienza di scommesse di fama mondiale in Italia con opzioni premium di scommesse sportive e giochi da casinò.",
+      coverImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      releaseDate: new Date("2019-12-01"),
+      platforms: ["Desktop", "Mobile", "App"],
+      genres: ["Sports Betting", "Live Casino", "Virtual Sports"],
+      overallRating: 9.1,
+      gameplayRating: 9.2,
+      graphicsRating: 9.0,
+      storyRating: 9.0,
+      valueRating: 9.2,
+      featured: 0
+    };
+    this.createGame(game7);
+
+    const game8: InsertGame = {
+      title_en: "Lottomatica",
+      title_it: "Lottomatica",
+      slug: "lottomatica",
+      description_en: "Lottomatica is Italy's leading gaming operator offering lottery, sports betting, casino games, and innovative gaming solutions.",
+      description_it: "Lottomatica è il principale operatore di gioco in Italia che offre lotterie, scommesse sportive, giochi da casinò e soluzioni di gioco innovative.",
+      coverImage: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      releaseDate: new Date("2018-06-30"),
+      platforms: ["Desktop", "Mobile", "App", "Retail"],
+      genres: ["Lottery", "Sports Betting", "Casino", "Slots"],
+      overallRating: 9.3,
+      gameplayRating: 9.4,
+      graphicsRating: 9.1,
+      storyRating: 9.2,
+      valueRating: 9.5,
+      featured: 0
+    };
+    this.createGame(game8);
     
     // Sample casino reviews
     const review1: InsertReview = {

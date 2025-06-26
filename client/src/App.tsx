@@ -13,6 +13,7 @@ import AuthPage from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import ChangePasswordPage from "@/pages/ChangePasswordPage";
 import AboutUsPage from "@/pages/AboutUsPage";
+import CasinosPage from "@/pages/CasinosPage";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageWithSidebars from "@/components/layout/PageWithSidebars";
@@ -55,6 +56,7 @@ function Router() {
                 <Route path="/news" component={NewsListingPage} />
                 <Route path="/news/:slug" component={NewsDetailPage} />
                 <Route path="/chi-siamo" component={AboutUsPage} />
+                <Route path="/casinos" component={CasinosPage} />
                 <ProtectedRoute path="/change-password" component={ChangePasswordPage} />
                 {/* Fallback to 404 */}
                 <Route component={NotFound} />
