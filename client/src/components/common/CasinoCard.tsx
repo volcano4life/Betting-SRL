@@ -200,6 +200,22 @@ export default function CasinoCard({
                     />
                   )}
                 </a>
+              ) : title === "Snai" ? (
+                <a href="https://informatoriads.snai.it/redirect.aspx?pid=40122&bid=1953" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+                  {logo && logo.includes('@assets') ? (
+                    <img 
+                      src={logo.replace('@assets', '/attached_assets')}
+                      alt={title} 
+                      className="h-16 object-contain max-w-full px-2"
+                    />
+                  ) : (
+                    <img 
+                      src={logo} 
+                      alt={title} 
+                      className="h-16 object-contain max-w-full px-2" 
+                    />
+                  )}
+                </a>
               ) : (
                 <Link href={`/casinos/${slug}`} className="cursor-pointer">
                   {logo && logo.includes('@assets') ? (
@@ -250,6 +266,10 @@ export default function CasinoCard({
                 </a>
               ) : title === "Eurobet" ? (
                 <a href="https://record.betpartners.it/_KrrQopPxr-1KqXDxdQZqW2Nd7ZgqdRLk/1/" target="_blank" rel="noopener noreferrer">
+                  <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
+                </a>
+              ) : title === "Snai" ? (
+                <a href="https://informatoriads.snai.it/redirect.aspx?pid=40122&bid=1953" target="_blank" rel="noopener noreferrer">
                   <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
                 </a>
               ) : (
@@ -323,6 +343,14 @@ export default function CasinoCard({
                   </a>
                 ) : title === "Eurobet" ? (
                   <a href="https://record.betpartners.it/_KrrQopPxr-1KqXDxdQZqW2Nd7ZgqdRLk/1/" target="_blank" rel="noopener noreferrer">
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </a>
+                ) : title === "Snai" ? (
+                  <a href="https://informatoriads.snai.it/redirect.aspx?pid=40122&bid=1953" target="_blank" rel="noopener noreferrer">
                     <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
                       <Button className="w-full">
                         {t('featured.visitCasino')}

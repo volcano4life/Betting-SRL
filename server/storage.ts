@@ -313,7 +313,7 @@ export class MemStorage implements IStorage {
       slug: "snai",
       description_en: "Snai is a well-established Italian gaming brand offering sports betting, casino games, and poker with decades of experience.",
       description_it: "Snai è un marchio di gioco italiano ben consolidato che offre scommesse sportive, giochi da casinò e poker con decenni di esperienza.",
-      coverImage: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      coverImage: "@assets/WhatsApp Image 2025-06-26 at 20.34.44_e48fa616_1750966539540.jpg",
       releaseDate: new Date("2020-11-20"),
       platforms: ["Desktop", "Mobile", "App"],
       genres: ["Sports Betting", "Casino", "Poker"],
