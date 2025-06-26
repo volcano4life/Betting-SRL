@@ -213,12 +213,12 @@ export class MemStorage implements IStorage {
   private initializeData() {
     // Initialize with sample game
     const game1: InsertGame = {
-      title_en: "Starcasino",
-      title_it: "Starcasino",
-      slug: "starcasino",
-      description_en: "Starcasino is a premier Italian online casino offering a comprehensive selection of games, generous bonuses, and excellent customer support.",
-      description_it: "Starcasino è un casinò online italiano di prim'ordine che offre una selezione completa di giochi, bonus generosi e un eccellente servizio clienti.",
-      coverImage: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80",
+      title_en: "Sisal",
+      title_it: "Sisal",
+      slug: "sisal",
+      description_en: "Sisal is a premier Italian online casino offering a comprehensive selection of games, generous bonuses, and excellent customer support.",
+      description_it: "Sisal è un casinò online italiano di prim'ordine che offre una selezione completa di giochi, bonus generosi e un eccellente servizio clienti.",
+      coverImage: "@assets/logo_Sisal_1750962171880.png",
       releaseDate: new Date("2023-05-12"),
       platforms: ["Desktop", "Mobile", "App"],
       genres: ["Slots", "Live Casino", "Table Games"],
