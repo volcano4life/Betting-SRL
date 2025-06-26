@@ -232,12 +232,12 @@ export class MemStorage implements IStorage {
     this.createGame(game1);
     
     const game2: InsertGame = {
-      title_en: "888Casino",
-      title_it: "888Casino",
-      slug: "888casino",
-      description_en: "888Casino offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
-      description_it: "888Casino offre ai giocatori italiani un ambiente di gioco sicuro e divertente con un'ampia gamma di giochi da casinò e opzioni di scommesse sportive.",
-      coverImage: "https://images.unsplash.com/photo-1596838132731-3301c3fd4527?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      title_en: "PokerStars",
+      title_it: "PokerStars",
+      slug: "pokerstars",
+      description_en: "PokerStars offers Italian players a secure and entertaining gaming environment with a wide range of casino games and sports betting options.",
+      description_it: "PokerStars offre ai giocatori italiani un ambiente di gioco sicuro e divertente con un'ampia gamma di giochi da casinò e opzioni di scommesse sportive.",
+      coverImage: "@assets/png-clipart-pokerstars-logo-online-poker-the-stars-group-pokerstars-logo-television-text_1750962548989.png",
       releaseDate: new Date("2023-08-03"),
       platforms: ["Desktop", "Mobile", "App"],
       genres: ["Slots", "Poker", "Sports Betting"],
