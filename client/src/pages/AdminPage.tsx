@@ -3181,7 +3181,7 @@ function BannerForm({
     imageUrl: '',
     clickUrl: '',
     position: 'left' as 'left' | 'right',
-    isActive: true,
+    isActive: false,
     order: 1
   });
 
