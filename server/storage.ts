@@ -346,20 +346,20 @@ export class MemStorage implements IStorage {
     this.createGame(game7);
 
     const game8: InsertGame = {
-      title_en: "William Hill",
-      title_it: "William Hill",
-      slug: "william-hill",
-      description_en: "William Hill brings its world-renowned betting expertise to Italy with premium sports betting and casino gaming options.",
-      description_it: "William Hill porta la sua esperienza di scommesse di fama mondiale in Italia con opzioni premium di scommesse sportive e giochi da casinò.",
-      coverImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
-      releaseDate: new Date("2019-12-01"),
+      title_en: "Netwin",
+      title_it: "Netwin",
+      slug: "netwin",
+      description_en: "Netwin is an innovative Italian gaming platform offering sports betting, casino games, and virtual sports with cutting-edge technology and competitive odds.",
+      description_it: "Netwin è una piattaforma di gioco italiana innovativa che offre scommesse sportive, giochi da casinò e sport virtuali con tecnologia all'avanguardia e quote competitive.",
+      coverImage: "@assets/Netwin-Logo-293x90_1750966253550.png",
+      releaseDate: new Date("2021-11-15"),
       platforms: ["Desktop", "Mobile", "App"],
-      genres: ["Sports Betting", "Live Casino", "Virtual Sports"],
-      overallRating: 9.1,
-      gameplayRating: 9.2,
-      graphicsRating: 9.0,
-      storyRating: 9.0,
-      valueRating: 9.2,
+      genres: ["Sports Betting", "Casino", "Virtual Sports"],
+      overallRating: 8.9,
+      gameplayRating: 9.0,
+      graphicsRating: 8.8,
+      storyRating: 8.7,
+      valueRating: 9.1,
       featured: 0
     };
     this.createGame(game8);
