@@ -1012,7 +1012,7 @@ export class MemStorage implements IStorage {
       id, 
       createdAt,
       order: banner.order ?? 0,
-      isActive: banner.isActive ?? true,
+      isActive: banner.isActive ?? false,
       clickUrl: banner.clickUrl ?? null
     };
     this.advertisementBanners.set(id, newBanner);
