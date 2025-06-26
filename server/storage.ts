@@ -619,39 +619,47 @@ export class MemStorage implements IStorage {
     
     this.isLoadingNews = true;
     try {
-      console.log('Refreshing news cache from GNews API...');
-      const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
-      const articles = await fetchGNews('sports', 'it');
+      // DEVELOPMENT MODE: API calls disabled to prevent charges
+      console.log('Development mode: Using static news data only');
+      this.cachedNews = Array.from(this.news.values());
+      this.newsCacheTimestamp = Date.now();
+      console.log(`Using static news data with ${this.cachedNews.length} articles`);
       
-      this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
-      this.newsCacheTimestamp = Date.now();
-      console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
+      // PRODUCTION CODE (commented out for development):
+      // console.log('Refreshing news cache from GNews API...');
+      // const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
+      // const articles = await fetchGNews('sports', 'it');
+      // this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
+      // this.newsCacheTimestamp = Date.now();
+      // console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
     } catch (error) {
-      console.error('Failed to load news from GNews API:', error);
-      // Only use fallback if we don't have any cached data
-      if (!this.cachedNews) {
-        this.cachedNews = Array.from(this.news.values());
-        console.log('Using fallback static news data');
-      } else {
-        console.log('Keeping existing cached news data');
-      }
+      console.error('Error in news loading:', error);
+      this.cachedNews = Array.from(this.news.values());
       this.newsCacheTimestamp = Date.now();
+      console.log('Using fallback static news data');
     } finally {
       this.isLoadingNews = false;
     }
   }
 
   async refreshNewsCache(): Promise<void> {
-    // Only refresh if enough time has passed to avoid API limits
-    const now = Date.now();
-    if (this.newsCacheTimestamp && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
-      console.log('News cache refresh skipped - cache still valid');
-      return;
+    // DEVELOPMENT MODE: API calls disabled to prevent charges
+    console.log('Development mode: News cache refresh disabled');
+    if (!this.cachedNews) {
+      this.cachedNews = Array.from(this.news.values());
+      this.newsCacheTimestamp = Date.now();
     }
+    return;
     
-    this.cachedNews = null;
-    this.newsCacheTimestamp = 0;
-    await this.loadCachedNews();
+    // PRODUCTION CODE (commented out for development):
+    // const now = Date.now();
+    // if (this.newsCacheTimestamp && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
+    //   console.log('News cache refresh skipped - cache still valid');
+    //   return;
+    // }
+    // this.cachedNews = null;
+    // this.newsCacheTimestamp = 0;
+    // await this.loadCachedNews();
   }
   
   async getNewsBySlug(slug: string): Promise<News | undefined> {
