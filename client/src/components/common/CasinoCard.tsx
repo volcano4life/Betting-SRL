@@ -123,6 +123,10 @@ export default function CasinoCard({
                 <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
                   <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
                 </a>
+              ) : title === "PokerStars" ? (
+                <a href="https://secure.starsaffiliateclub.com/C.ashx?btag=a_189389b_7227c_&affid=100980558&siteid=189389&adid=7227&c=" target="_blank" rel="noopener noreferrer">
+                  <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
+                </a>
               ) : (
                 <Link href={`/casinos/${slug}`}>
                   <h3 className="text-xl font-bold mb-2 hover:text-primary transition">{title}</h3>
@@ -158,6 +162,14 @@ export default function CasinoCard({
                 
                 {title === "Sisal" ? (
                   <a href="https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5" target="_blank" rel="noopener noreferrer">
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </a>
+                ) : title === "PokerStars" ? (
+                  <a href="https://secure.starsaffiliateclub.com/C.ashx?btag=a_189389b_7227c_&affid=100980558&siteid=189389&adid=7227&c=" target="_blank" rel="noopener noreferrer">
                     <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
                       <Button className="w-full">
                         {t('featured.visitCasino')}
