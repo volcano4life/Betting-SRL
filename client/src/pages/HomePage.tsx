@@ -34,7 +34,10 @@ export default function HomePage() {
         <FeaturedCasinosSection />
       </div>
       
-
+      <div id="bonuses-section">
+        {/* Bonuses section removed as requested */}
+      </div>
+      
       <div id="news-section">
         <SportsNewsSection />
       </div>
