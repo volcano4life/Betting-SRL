@@ -153,6 +153,14 @@ export default function CasinoCard({
                       </Button>
                     </motion.div>
                   </a>
+                ) : title === "GoldBet" ? (
+                  <a href="https://media.goldbetpartners.it/redirect.aspx?pid=16281&bid=1494" target="_blank" rel="noopener noreferrer">
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </a>
                 ) : (
                   <Link href={`/casinos/${slug}`}>
                     <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
