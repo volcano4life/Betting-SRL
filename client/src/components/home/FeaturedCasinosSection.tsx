@@ -47,32 +47,23 @@ export default function FeaturedCasinosSection() {
     >
       <div className="container mx-auto px-4">
         <motion.div 
-          className="flex justify-between items-center mb-8"
+          className="text-center mb-8"
           variants={headerVariants}
         >
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#222236]">
-              {t('featured.title')}
-            </h2>
-            <p className="text-gray-500 mt-2">
-              {t('featured.subtitle')}
-            </p>
-          </div>
-          <Link href="/casinos">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="outline" className="hidden md:inline-flex">
-                {t('featured.viewAll')}
-              </Button>
-            </motion.div>
-          </Link>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#222236]">
+            {t('featured.title')}
+          </h2>
+          <p className="text-gray-500 mt-2">
+            {t('featured.subtitle')}
+          </p>
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
           variants={sectionVariants}
         >
           {isLoading ? (
-            Array(3).fill(0).map((_, index) => (
+            Array(8).fill(0).map((_, index) => (
               <motion.div 
                 key={index} 
                 className="flex flex-col space-y-4"
@@ -115,7 +106,7 @@ export default function FeaturedCasinosSection() {
             ))
           ) : (
             <motion.div 
-              className="col-span-3 text-center py-12"
+              className="col-span-full text-center py-12"
               variants={headerVariants}
             >
               <p className="text-gray-500">{t('featured.empty')}</p>
