@@ -270,6 +270,25 @@ export class MemStorage implements IStorage {
     this.createGame(game3);
 
     const game4: InsertGame = {
+      title_en: "Lottomatica",
+      title_it: "Lottomatica",
+      slug: "lottomatica",
+      description_en: "Lottomatica is Italy's leading gaming operator offering lottery, sports betting, casino games, and innovative gaming solutions.",
+      description_it: "Lottomatica è il principale operatore di gioco in Italia che offre lotterie, scommesse sportive, giochi da casinò e soluzioni di gioco innovative.",
+      coverImage: "@assets/lottomatica_logo-830_1750964430589.jpg",
+      releaseDate: new Date("2018-06-30"),
+      platforms: ["Desktop", "Mobile", "App", "Retail"],
+      genres: ["Lottery", "Sports Betting", "Casino", "Slots"],
+      overallRating: 9.3,
+      gameplayRating: 9.4,
+      graphicsRating: 9.1,
+      storyRating: 9.2,
+      valueRating: 9.5,
+      featured: 0
+    };
+    this.createGame(game4);
+
+    const game5: InsertGame = {
       title_en: "Betflag",
       title_it: "Betflag",
       slug: "betflag",
@@ -286,9 +305,9 @@ export class MemStorage implements IStorage {
       valueRating: 8.9,
       featured: 0
     };
-    this.createGame(game4);
+    this.createGame(game5);
 
-    const game5: InsertGame = {
+    const game6: InsertGame = {
       title_en: "Snai",
       title_it: "Snai",
       slug: "snai",
@@ -305,9 +324,9 @@ export class MemStorage implements IStorage {
       valueRating: 9.1,
       featured: 0
     };
-    this.createGame(game5);
+    this.createGame(game6);
 
-    const game6: InsertGame = {
+    const game7: InsertGame = {
       title_en: "Eurobet",
       title_it: "Eurobet",
       slug: "eurobet",
@@ -324,9 +343,9 @@ export class MemStorage implements IStorage {
       valueRating: 8.9,
       featured: 0
     };
-    this.createGame(game6);
+    this.createGame(game7);
 
-    const game7: InsertGame = {
+    const game8: InsertGame = {
       title_en: "William Hill",
       title_it: "William Hill",
       slug: "william-hill",
@@ -341,25 +360,6 @@ export class MemStorage implements IStorage {
       graphicsRating: 9.0,
       storyRating: 9.0,
       valueRating: 9.2,
-      featured: 0
-    };
-    this.createGame(game7);
-
-    const game8: InsertGame = {
-      title_en: "Lottomatica",
-      title_it: "Lottomatica",
-      slug: "lottomatica",
-      description_en: "Lottomatica is Italy's leading gaming operator offering lottery, sports betting, casino games, and innovative gaming solutions.",
-      description_it: "Lottomatica è il principale operatore di gioco in Italia che offre lotterie, scommesse sportive, giochi da casinò e soluzioni di gioco innovative.",
-      coverImage: "@assets/lottomatica_logo-830_1750964430589.jpg",
-      releaseDate: new Date("2018-06-30"),
-      platforms: ["Desktop", "Mobile", "App", "Retail"],
-      genres: ["Lottery", "Sports Betting", "Casino", "Slots"],
-      overallRating: 9.3,
-      gameplayRating: 9.4,
-      graphicsRating: 9.1,
-      storyRating: 9.2,
-      valueRating: 9.5,
       featured: 0
     };
     this.createGame(game8);
