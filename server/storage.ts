@@ -332,7 +332,7 @@ export class MemStorage implements IStorage {
       slug: "eurobet",
       description_en: "Eurobet provides a modern gaming experience with innovative features, competitive odds, and a user-friendly interface for Italian players.",
       description_it: "Eurobet fornisce un'esperienza di gioco moderna con funzionalità innovative, quote competitive e un'interfaccia user-friendly per i giocatori italiani.",
-      coverImage: "https://images.unsplash.com/photo-1594736797933-d0400f5d7c93?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      coverImage: "@assets/Eurobet_Logo1_1750966301590.png",
       releaseDate: new Date("2021-03-10"),
       platforms: ["Desktop", "Mobile"],
       genres: ["Sports Betting", "Live Casino", "Slots"],
