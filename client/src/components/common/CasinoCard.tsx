@@ -289,7 +289,7 @@ export default function CasinoCard({
                 transition={{ delay: 0.3 }}
                 className="bg-muted p-3 rounded-lg mb-4"
               >
-                <p className="text-sm font-medium text-center">{bonus}</p>
+                <p className="text-sm font-medium text-center">{t('featured.welcomeBonus')}</p>
               </motion.div>
               
               <div className="mt-auto">

@@ -287,6 +287,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.limitedTimeOffer': 'Limited Time Offer',
     'featured.showPromoCode': 'Show Promo Code',
     'featured.visitCasino': 'Visit Casino',
+    'featured.welcomeBonus': 'Welcome Bonus: Please see terms and conditions',
     
     'promos.title': 'Exclusive Promo Codes',
     'promos.subtitle': 'Special bonuses only available through <span translate="no">Betting SRL</span>',
@@ -630,6 +631,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.limitedTimeOffer': 'Offerta a Tempo Limitato',
     'featured.showPromoCode': 'Mostra Codice Promo',
     'featured.visitCasino': 'Visita il Casinò',
+    'featured.welcomeBonus': 'Welcome Bonus: Vedi Termini e Condizioni',
     
     'promos.title': 'Codici Promo Esclusivi',
     'promos.subtitle': 'Bonus speciali disponibili solo tramite <span translate="no">Betting SRL</span>',
