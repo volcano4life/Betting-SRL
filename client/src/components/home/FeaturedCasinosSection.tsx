@@ -79,7 +79,7 @@ export default function FeaturedCasinosSection() {
               </motion.div>
             ))
           ) : featuredCasinos && featuredCasinos.length > 0 ? (
-            featuredCasinos.slice(0, 3).map((casino, index) => (
+            featuredCasinos.map((casino, index) => (
               <motion.div
                 key={casino.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -114,18 +114,7 @@ export default function FeaturedCasinosSection() {
           )}
         </motion.div>
 
-        <motion.div 
-          className="mt-8 text-center md:hidden"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Link href="/casinos">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="outline">{t('featured.viewAll')}</Button>
-            </motion.div>
-          </Link>
-        </motion.div>
+
       </div>
     </motion.section>
   );
