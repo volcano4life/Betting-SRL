@@ -152,6 +152,22 @@ export default function CasinoCard({
                     />
                   )}
                 </a>
+              ) : title === "Betfair" ? (
+                <a href="https://promotions.betfair.it/prs/it-betfair-exchange-benvenuto-50?utm_medium=Partnerships&utm_source=18070&utm_campaign=127033&utm_content=4660412&utm_ad=369307" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+                  {logo && logo.includes('@assets') ? (
+                    <img 
+                      src={logo.replace('@assets', '/attached_assets')}
+                      alt={title} 
+                      className="h-16 object-contain max-w-full px-2"
+                    />
+                  ) : (
+                    <img 
+                      src={logo} 
+                      alt={title} 
+                      className="h-16 object-contain max-w-full px-2" 
+                    />
+                  )}
+                </a>
               ) : (
                 <Link href={`/casinos/${slug}`} className="cursor-pointer">
                   {logo && logo.includes('@assets') ? (
@@ -231,6 +247,14 @@ export default function CasinoCard({
                   </a>
                 ) : title === "Lottomatica" ? (
                   <a href="https://media.lottomaticapartners.it/redirect.aspx?pid=16289&bid=1508" target="_blank" rel="noopener noreferrer">
+                    <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
+                      <Button className="w-full">
+                        {t('featured.visitCasino')}
+                      </Button>
+                    </motion.div>
+                  </a>
+                ) : title === "Betfair" ? (
+                  <a href="https://promotions.betfair.it/prs/it-betfair-exchange-benvenuto-50?utm_medium=Partnerships&utm_source=18070&utm_campaign=127033&utm_content=4660412&utm_ad=369307" target="_blank" rel="noopener noreferrer">
                     <motion.div whileHover="hover" whileTap="tap" variants={buttonVariants}>
                       <Button className="w-full">
                         {t('featured.visitCasino')}
