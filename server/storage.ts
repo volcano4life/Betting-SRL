@@ -251,20 +251,20 @@ export class MemStorage implements IStorage {
     this.createGame(game2);
     
     const game3: InsertGame = {
-      title_en: "LeoVegas",
-      title_it: "LeoVegas",
-      slug: "leovegas",
-      description_en: "LeoVegas stands out for its exceptional mobile casino experience, offering thousands of games and a user-friendly interface optimized for on-the-go play.",
-      description_it: "LeoVegas si distingue per la sua eccezionale esperienza di casinò mobile, offrendo migliaia di giochi e un'interfaccia user-friendly ottimizzata per il gioco in movimento.",
-      coverImage: "https://images.unsplash.com/photo-1560415755-bd80d06eda60?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&h=300&q=80",
+      title_en: "GoldBet",
+      title_it: "GoldBet",
+      slug: "goldbet",
+      description_en: "GoldBet provides Italian players with a comprehensive gaming platform featuring sports betting, casino games, and live dealer experiences.",
+      description_it: "GoldBet offre ai giocatori italiani una piattaforma di gioco completa con scommesse sportive, giochi da casinò ed esperienze con dealer dal vivo.",
+      coverImage: "@assets/GoldBet-500x500_dark_1750963481772.png",
       releaseDate: new Date("2022-02-25"),
       platforms: ["Desktop", "Mobile", "App"],
-      genres: ["Slots", "Live Casino", "Sports Betting"],
-      overallRating: 9.6,
-      gameplayRating: 9.7,
-      graphicsRating: 9.3,
-      storyRating: 9.4,
-      valueRating: 9.8,
+      genres: ["Sports Betting", "Slots", "Live Casino"],
+      overallRating: 9.0,
+      gameplayRating: 9.1,
+      graphicsRating: 8.8,
+      storyRating: 8.9,
+      valueRating: 9.0,
       featured: 0
     };
     this.createGame(game3);
