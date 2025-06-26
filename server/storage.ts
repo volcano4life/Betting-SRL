@@ -587,13 +587,13 @@ export class MemStorage implements IStorage {
     this.createOutlet(outlet3);
     this.createOutlet(outlet4);
 
-    // Add demo advertisement banners - one per side
+    // Add demo advertisement banners - one per side (disabled by default)
     const leftBanner: InsertAdvertisementBanner = {
       title: "Casino Bonus 200%",
       imageUrl: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80",
       clickUrl: "https://example-casino.com/bonus",
       position: "left",
-      isActive: true,
+      isActive: false,
       order: 1
     };
     this.createAdvertisementBanner(leftBanner);
@@ -603,7 +603,7 @@ export class MemStorage implements IStorage {
       imageUrl: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80",
       clickUrl: "https://example-livecasino.com/play",
       position: "right",
-      isActive: true,
+      isActive: false,
       order: 1
     };
     this.createAdvertisementBanner(rightBanner);
