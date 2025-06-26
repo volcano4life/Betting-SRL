@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 export default function FeaturedCasinosSection() {
   const { t, getLocalizedField } = useLanguage();
   const { data: featuredCasinos, isLoading } = useQuery<Game[]>({
-    queryKey: ['/api/games/top-rated'],
+    queryKey: ['/api/games/featured'],
   });
   
   // Animation variants
