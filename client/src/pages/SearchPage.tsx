@@ -174,7 +174,30 @@ function SearchSection({ title, items, type }: { title: string; items: any[]; ty
 }
 
 function SearchResultCard({ item, type }: { item: any; type: string }) {
-  const { getLocalizedField } = useLanguage();
+  const { getLocalizedField, t } = useLanguage();
+  
+  const getTrackingLink = (title: string) => {
+    switch (title) {
+      case "Sisal":
+        return "https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5";
+      case "PokerStars":
+        return "https://secure.starsaffiliateclub.com/C.ashx?btag=a_189389b_7227c_&affid=100980558&siteid=189389&adid=7227&c=";
+      case "GoldBet":
+        return "https://media.goldbetpartners.it/redirect.aspx?pid=16281&bid=1494";
+      case "Lottomatica":
+        return "https://media.lottomaticapartners.it/redirect.aspx?pid=16289&bid=1508";
+      case "Betfair":
+        return "https://promotions.betfair.it/prs/it-betfair-exchange-benvenuto-50?utm_medium=Partnerships&utm_source=18070&utm_campaign=127033&utm_content=4660412&utm_ad=369307";
+      case "Netwin":
+        return "https://www.netwin.it/signup?codAffiliato=BETTING";
+      case "Eurobet":
+        return "https://record.betpartners.it/_KrrQopPxr-1KqXDxdQZqW2Nd7ZgqdRLk/1/";
+      case "Snai":
+        return "https://informatoriads.snai.it/redirect.aspx?pid=40122&bid=1953";
+      default:
+        return null;
+    }
+  };
   
   const getItemLink = () => {
     switch (type) {
@@ -206,14 +229,23 @@ function SearchResultCard({ item, type }: { item: any; type: string }) {
     }
   };
 
+  const title = getLocalizedField(item, 'title');
+  const trackingLink = type === 'games' ? getTrackingLink(title) : null;
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">
-            <Link href={getItemLink()} className="hover:text-primary">
-              {getLocalizedField(item, 'title')}
-            </Link>
+            {trackingLink ? (
+              <a href={trackingLink} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                {title}
+              </a>
+            ) : (
+              <Link href={getItemLink()} className="hover:text-primary">
+                {title}
+              </Link>
+            )}
           </CardTitle>
           {getItemBadge()}
         </div>
@@ -231,6 +263,18 @@ function SearchResultCard({ item, type }: { item: any; type: string }) {
         {item.publishDate && (
           <div className="text-xs text-gray-500 mt-2">
             {new Date(item.publishDate).toLocaleDateString()}
+          </div>
+        )}
+        {trackingLink && (
+          <div className="mt-3">
+            <a
+              href={trackingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              {t('featured.visitCasino')}
+            </a>
           </div>
         )}
       </CardContent>
