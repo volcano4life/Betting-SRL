@@ -7,7 +7,7 @@ export default function HeroSection() {
   const mainBanner = {
     image: "/attached_assets/logo_Sisal_1750962171880.png",
     title: "Sisal Casino",
-    link: "#"
+    link: "https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5"
   };
   
   const secondaryBanners = [
