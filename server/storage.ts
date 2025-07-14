@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
   // Caching for GNews data
   private cachedNews: News[] | null = null;
   private newsCacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds (frozen temporarily)
+  private readonly CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
   private isLoadingNews: boolean = false;
   
   private userId: number;
@@ -714,24 +714,18 @@ export class MemStorage implements IStorage {
     
     this.isLoadingNews = true;
     try {
-      // DEVELOPMENT MODE: API calls disabled to prevent charges
-      console.log('Development mode: Using static news data only');
-      this.cachedNews = Array.from(this.news.values());
+      console.log('Refreshing news cache from GNews API...');
+      const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
+      const articles = await fetchGNews('sports', 'it');
+      this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
       this.newsCacheTimestamp = Date.now();
-      console.log(`Using static news data with ${this.cachedNews.length} articles`);
-      
-      // PRODUCTION CODE (commented out for development):
-      // console.log('Refreshing news cache from GNews API...');
-      // const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
-      // const articles = await fetchGNews('sports', 'it');
-      // this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
-      // this.newsCacheTimestamp = Date.now();
-      // console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
+      console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
     } catch (error) {
-      console.error('Error in news loading:', error);
+      console.error('Error fetching news from GNews API:', error);
+      // Fallback to static data only if API fails
       this.cachedNews = Array.from(this.news.values());
       this.newsCacheTimestamp = Date.now();
-      console.log('Using fallback static news data');
+      console.log('Using fallback static news data due to API error');
     } finally {
       this.isLoadingNews = false;
     }
