@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
   // Caching for GNews data
   private cachedNews: News[] | null = null;
   private newsCacheTimestamp: number = 0;
-  private readonly CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+  private readonly CACHE_DURATION = 20 * 60 * 1000; // 20 minutes in milliseconds
   private isLoadingNews: boolean = false;
   
   private userId: number;
@@ -710,14 +710,18 @@ export class MemStorage implements IStorage {
 
   private async ensureNewsCache(): Promise<void> {
     const now = Date.now();
+    const cacheAge = now - this.newsCacheTimestamp;
     
-    // If cache is valid, return immediately
-    if (this.cachedNews && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
+    // If cache is valid, return immediately (within 20 minutes)
+    if (this.cachedNews && cacheAge < this.CACHE_DURATION) {
+      const remainingTime = Math.round((this.CACHE_DURATION - cacheAge) / 1000 / 60);
+      console.log(`Using cached news data (expires in ${remainingTime} minutes)`);
       return;
     }
     
     // If already loading, wait for it to complete
     if (this.isLoadingNews) {
+      console.log('News cache refresh already in progress, waiting...');
       // Wait for the current load to complete
       while (this.isLoadingNews) {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -725,7 +729,13 @@ export class MemStorage implements IStorage {
       return;
     }
     
-    // If cache is expired or doesn't exist, refresh it
+    // Cache expired or doesn't exist - refresh it
+    if (this.cachedNews) {
+      console.log(`News cache expired (age: ${Math.round(cacheAge / 1000 / 60)} minutes), refreshing...`);
+    } else {
+      console.log('No cached news found, loading fresh data...');
+    }
+    
     await this.loadCachedNews();
   }
 
@@ -808,12 +818,12 @@ export class MemStorage implements IStorage {
         }
       }
       
-      // Only add if no repeated names or topics
-      if (!hasRepeatedName && !hasRepeatedTopic) {
+      // Only add if no repeated names AND topics (be less restrictive)
+      if (!hasRepeatedName || !hasRepeatedTopic) {
         diverseArticles.push(article);
       }
       
-      // Stop when we have enough diverse articles
+      // Stop when we have enough diverse articles (ensure 10+ for news page)
       if (diverseArticles.length >= 12) break;
     }
     
