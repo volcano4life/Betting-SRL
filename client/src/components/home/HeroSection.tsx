@@ -56,7 +56,8 @@ export default function HeroSection() {
                   maxWidth: '100%',
                   maxHeight: '100%',
                   objectFit: 'contain',
-                  display: 'block'
+                  display: 'block',
+                  transform: 'translateX(10%)'
                 }}
               />
             </a>
@@ -103,7 +104,8 @@ export default function HeroSection() {
                   maxWidth: '100%',
                   maxHeight: '100%',
                   objectFit: 'contain',
-                  display: 'block'
+                  display: 'block',
+                  transform: 'translateX(10%)'
                 }}
               />
             </a>
