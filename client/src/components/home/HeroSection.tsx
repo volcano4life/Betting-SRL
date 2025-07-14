@@ -35,16 +35,13 @@ export default function HeroSection() {
         {/* Desktop Hero */}
         <div className="hidden md:grid grid-cols-3 gap-6">
           {/* Main Banner */}
-          <div className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white">
+          <div className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white" style={{ display: 'grid', placeItems: 'center', padding: '20px' }}>
             <a 
               href={mainBanner.link} 
-              className="absolute inset-0 block"
+              className="absolute inset-0"
               style={{ 
-                display: 'table-cell',
-                textAlign: 'center',
-                verticalAlign: 'middle',
-                width: '100%',
-                height: '100%',
+                display: 'grid',
+                placeItems: 'center',
                 padding: '20px'
               }}
             >
@@ -55,9 +52,7 @@ export default function HeroSection() {
                 style={{ 
                   maxWidth: '100%',
                   maxHeight: '100%',
-                  height: 'auto',
-                  width: 'auto',
-                  display: 'inline-block'
+                  objectFit: 'contain'
                 }}
               />
             </a>
@@ -84,16 +79,13 @@ export default function HeroSection() {
 
         {/* Mobile Hero */}
         <div className="md:hidden">
-          <div className="relative rounded-lg overflow-hidden mb-6 h-80 bg-white">
+          <div className="relative rounded-lg overflow-hidden mb-6 h-80 bg-white" style={{ display: 'grid', placeItems: 'center', padding: '20px' }}>
             <a
               href={mainBanner.link}
-              className="absolute inset-0 block"
+              className="absolute inset-0"
               style={{ 
-                display: 'table-cell',
-                textAlign: 'center',
-                verticalAlign: 'middle',
-                width: '100%',
-                height: '100%',
+                display: 'grid',
+                placeItems: 'center',
                 padding: '20px'
               }}
             >
@@ -103,9 +95,7 @@ export default function HeroSection() {
                 style={{ 
                   maxWidth: '100%',
                   maxHeight: '100%',
-                  height: 'auto',
-                  width: 'auto',
-                  display: 'inline-block'
+                  objectFit: 'contain'
                 }}
               />
             </a>
