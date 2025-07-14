@@ -14,7 +14,7 @@ export default function HeroSection() {
     {
       image: "/attached_assets/image_2021_06_03T16_49_57_431Z_1750966673841.png",
       title: "Snai Casino",
-      link: "#"
+      link: "https://informatoriads.snai.it/redirect.aspx?pid=40122&bid=1953"
     },
     {
       image: "/attached_assets/PokerStars-Logo_1750962736007.png",
