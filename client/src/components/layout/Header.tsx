@@ -20,6 +20,7 @@ import SportsBettingLogo from "./SportsBettingLogo";
 import CasinoChipLogo from "./CasinoChipLogo";
 import LogoSelector from "./LogoSelector";
 import { useLogo } from "@/contexts/LogoContext";
+import SearchBar from "@/components/common/SearchBar";
 
 // Scroll functions for navigation
 const scrollToSection = (sectionId: string, navigate: (path: string) => void, currentLocation: string) => {
@@ -361,15 +362,7 @@ export default function Header() {
         {/* Search Bar */}
         {searchOpen && (
           <div className="py-4 border-t border-gray-100">
-            <div className="flex gap-2 items-center">
-              <Input 
-                placeholder="Search for casinos, bonuses, sports articles..." 
-                className="flex-grow"
-              />
-              <Button>
-                Search
-              </Button>
-            </div>
+            <SearchBar onSearchClose={() => setSearchOpen(false)} />
           </div>
         )}
       </div>
