@@ -615,7 +615,27 @@ export class MemStorage implements IStorage {
   }
   
   async getFeaturedGames(): Promise<Game[]> {
-    return Array.from(this.games.values()).filter(game => game.featured === 1);
+    const featuredGames = Array.from(this.games.values()).filter(game => game.featured === 1);
+    
+    // Custom sort order: Sisal, Pokerstars, Snai, Lottomatica, Betfair, Netwin, Eurobet, Goldbet
+    const sortOrder = ['sisal', 'pokerstars', 'snai', 'lottomatica', 'betfair', 'netwin', 'eurobet', 'goldbet'];
+    
+    return featuredGames.sort((a, b) => {
+      const aIndex = sortOrder.indexOf(a.slug);
+      const bIndex = sortOrder.indexOf(b.slug);
+      
+      // If both games are in the sort order, sort by their position
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      
+      // If only one is in the sort order, prioritize it
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      
+      // If neither is in the sort order, maintain original order
+      return 0;
+    });
   }
   
   async getTopRatedGames(limit: number = 10): Promise<Game[]> {
