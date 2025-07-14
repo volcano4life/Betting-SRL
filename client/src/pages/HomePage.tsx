@@ -26,9 +26,9 @@ export default function HomePage() {
         <OutletSlideshow />
       </div>
       
-      <div id="hero-section">
+      {/* <div id="hero-section">
         <HeroSection />
-      </div>
+      </div> */}
       
       <div id="dealers-section">
         <FeaturedCasinosSection />
