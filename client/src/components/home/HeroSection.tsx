@@ -35,18 +35,18 @@ export default function HeroSection() {
         {/* Desktop Hero */}
         <div className="hidden md:grid grid-cols-3 gap-6">
           {/* Main Banner */}
-          <a 
-            href={mainBanner.link} 
-            className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
-          >
-            <img 
-              src={mainBanner.image} 
-              alt={mainBanner.title} 
-              className="max-w-full max-h-full object-contain transition duration-300 transform group-hover:scale-105"
-              style={{ margin: 'auto' }}
-            />
-          </a>
+          <div className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white">
+            <a 
+              href={mainBanner.link} 
+              className="absolute inset-0 flex items-center justify-center p-8"
+            >
+              <img 
+                src={mainBanner.image} 
+                alt={mainBanner.title} 
+                className="max-w-full max-h-full object-contain transition duration-300 transform group-hover:scale-105"
+              />
+            </a>
+          </div>
 
           {/* Secondary Banners */}
           <div className="flex flex-col space-y-6">
@@ -69,18 +69,18 @@ export default function HeroSection() {
 
         {/* Mobile Hero */}
         <div className="md:hidden">
-          <a
-            href={mainBanner.link}
-            className="relative rounded-lg overflow-hidden mb-6 h-80 block bg-white"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
-          >
-            <img 
-              src={mainBanner.image} 
-              alt={mainBanner.title} 
-              className="max-w-full max-h-full object-contain"
-              style={{ margin: 'auto' }}
-            />
-          </a>
+          <div className="relative rounded-lg overflow-hidden mb-6 h-80 bg-white">
+            <a
+              href={mainBanner.link}
+              className="absolute inset-0 flex items-center justify-center p-6"
+            >
+              <img 
+                src={mainBanner.image} 
+                alt={mainBanner.title} 
+                className="max-w-full max-h-full object-contain"
+              />
+            </a>
+          </div>
           
           {/* Mobile Secondary Banners */}
           <div className="space-y-4">
