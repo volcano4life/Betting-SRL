@@ -19,7 +19,7 @@ export default function HeroSection() {
     {
       image: "/attached_assets/PokerStars-Logo_1750962736007.png",
       title: "PokerStars Casino", 
-      link: "https://ads.sisal.it/promoRedirect?key=ej0xMzUyNDE2MyZsPTE2MTY4NTcxJnA9MTM2Nzc5"
+      link: "https://secure.starsaffiliateclub.com/C.ashx?btag=a_189389b_7227c_&affid=100980558&siteid=189389&adid=7227&c="
     }
   ];
   
