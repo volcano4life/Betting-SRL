@@ -150,15 +150,7 @@ export default function Header() {
                 </Button>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <Button
-                  variant="ghost"
-                  onClick={() => scrollToSection('hero-section', navigate, location)}
-                  className="text-[#222236] hover:text-primary font-semibold transition duration-200"
-                >
-                  {t('nav.dealers')}
-                </Button>
-              </NavigationMenuItem>
+
 
               <NavigationMenuItem>
                 <Button
@@ -287,13 +279,7 @@ export default function Header() {
                     {t('nav.outlets')}
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    onClick={() => scrollToSection('hero-section', navigate, location)}
-                    className="text-[#222236] hover:text-primary font-semibold justify-start px-0"
-                  >
-                    {t('nav.dealers')}
-                  </Button>
+
 
                   <Button
                     variant="ghost"
