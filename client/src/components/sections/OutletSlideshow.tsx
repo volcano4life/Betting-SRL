@@ -230,8 +230,8 @@ export function OutletSlideshow() {
             </>
           )}
         
-          {/* Outlets grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 min-h-[160px] sm:min-h-[192px]">
+          {/* Desktop grid view */}
+          <div className="hidden sm:grid grid-cols-3 gap-4 min-h-[192px]">
             {displayOutlets.map((outlet, index) => (
               <div
                 key={outlet.id}
@@ -243,7 +243,7 @@ export function OutletSlideshow() {
                 }}
               >
                 <div 
-                  className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48 bg-gray-800"
+                  className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
                   onMouseEnter={() => {
                     setHoveredId(outlet.id);
                     setIsHovered(true);
@@ -295,35 +295,74 @@ export function OutletSlideshow() {
               </div>
             ))}
           </div>
-          
-          {/* Mobile pagination controls */}
-          {outlets && outlets.length > outletsPerPage && (
-            <div className="flex justify-center items-center mt-4 sm:hidden">
-              <Button 
-                onClick={goToPrevPage}
-                variant="outline"
-                size="sm"
-                className="mr-2 bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white"
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                {language === 'it' ? 'Prec' : 'Prev'}
-              </Button>
-              
-              <div className="text-xs text-white mx-2">
-                {currentPage + 1}/{totalPages}
-              </div>
-              
-              <Button 
-                onClick={goToNextPage}
-                variant="outline"
-                size="sm"
-                className="ml-2 bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white"
-              >
-                {language === 'it' ? 'Succ' : 'Next'}
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
+
+          {/* Mobile horizontal scroll view */}
+          <div className="sm:hidden">
+            <div 
+              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+              style={{
+                scrollSnapType: 'x mandatory',
+                scrollBehavior: 'smooth'
+              }}
+            >
+              {outlets && outlets.map((outlet) => (
+                <div
+                  key={outlet.id}
+                  className="flex-none w-80 transform transition-all duration-300 ease-in-out"
+                  style={{ scrollSnapAlign: 'start' }}
+                >
+                  <div 
+                    className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
+                    onTouchStart={() => {
+                      setHoveredId(outlet.id);
+                      setIsHovered(true);
+                    }}
+                    onTouchEnd={() => {
+                      setHoveredId(null);
+                      setIsHovered(false);
+                    }}
+                    onClick={() => handleOutletClick(outlet)}
+                  >
+                    <img 
+                      src={getOutletImage(outlet)}
+                      alt={getLocalizedField(outlet, 'title')} 
+                      className="w-full h-full object-cover object-center transition-transform duration-500 ease-in-out"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        const currentSrc = target.src;
+                        
+                        // Log error for debugging
+                        console.log('Image failed to load in slider:', currentSrc);
+                        
+                        // Simple fallback to known working image
+                        target.src = '/assets/redmoon1.jpg';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                      <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
+                        {language === 'it' ? 'Scorri per vedere tutto' : 'Swipe to view all'}
+                      </div>
+                      <div className="min-h-[48px] flex flex-col justify-end">
+                        <h3 className="text-white font-bold text-base mb-1">
+                          {getLocalizedField(outlet, 'title')}
+                        </h3>
+                        <p className="text-white/90 text-sm line-clamp-2">
+                          {getLocalizedField(outlet, 'description')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+          
+          {/* Mobile scroll indicator */}
+          <div className="sm:hidden mt-4 text-center">
+            <p className="text-white/60 text-sm">
+              {language === 'it' ? 'Scorri orizzontalmente per vedere tutti i punti vendita' : 'Scroll horizontally to see all outlets'}
+            </p>
+          </div>
           
           {/* Desktop pagination indicators */}
           {outlets && outlets.length > outletsPerPage && (
