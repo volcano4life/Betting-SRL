@@ -38,12 +38,13 @@ export default function HeroSection() {
           <a 
             href={mainBanner.link} 
             className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
           >
             <img 
               src={mainBanner.image} 
               alt={mainBanner.title} 
               className="max-w-full max-h-full object-contain transition duration-300 transform group-hover:scale-105"
+              style={{ margin: 'auto' }}
             />
           </a>
 
@@ -71,12 +72,13 @@ export default function HeroSection() {
           <a
             href={mainBanner.link}
             className="relative rounded-lg overflow-hidden mb-6 h-80 block bg-white"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
           >
             <img 
               src={mainBanner.image} 
               alt={mainBanner.title} 
               className="max-w-full max-h-full object-contain"
+              style={{ margin: 'auto' }}
             />
           </a>
           
