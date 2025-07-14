@@ -734,41 +734,25 @@ export class MemStorage implements IStorage {
     
     this.isLoadingNews = true;
     try {
-      console.log('Refreshing news cache from GNews API...');
-      const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
-      const articles = await fetchGNews('sports', 'it');
-      this.cachedNews = articles.map((article, index) => convertGNewsToNews(article, index));
-      this.newsCacheTimestamp = Date.now();
-      console.log(`News cache refreshed successfully with ${this.cachedNews.length} articles`);
-    } catch (error) {
-      console.error('Error fetching news from GNews API:', error);
-      // Fallback to static data only if API fails
+      console.log('Loading diverse static news content...');
+      // Use only our curated diverse static news content
       this.cachedNews = Array.from(this.news.values());
       this.newsCacheTimestamp = Date.now();
-      console.log('Using fallback static news data due to API error');
+      console.log(`News cache loaded successfully with ${this.cachedNews.length} diverse articles`);
+    } catch (error) {
+      console.error('Error loading news:', error);
+      this.cachedNews = Array.from(this.news.values());
+      this.newsCacheTimestamp = Date.now();
     } finally {
       this.isLoadingNews = false;
     }
   }
 
   async refreshNewsCache(): Promise<void> {
-    // DEVELOPMENT MODE: API calls disabled to prevent charges
-    console.log('Development mode: News cache refresh disabled');
-    if (!this.cachedNews) {
-      this.cachedNews = Array.from(this.news.values());
-      this.newsCacheTimestamp = Date.now();
-    }
-    return;
-    
-    // PRODUCTION CODE (commented out for development):
-    // const now = Date.now();
-    // if (this.newsCacheTimestamp && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
-    //   console.log('News cache refresh skipped - cache still valid');
-    //   return;
-    // }
-    // this.cachedNews = null;
-    // this.newsCacheTimestamp = 0;
-    // await this.loadCachedNews();
+    console.log('Refreshing news cache with diverse static content...');
+    this.cachedNews = null;
+    this.newsCacheTimestamp = 0;
+    await this.loadCachedNews();
   }
   
   async getNewsBySlug(slug: string): Promise<News | undefined> {
