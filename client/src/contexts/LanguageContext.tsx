@@ -295,7 +295,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.news2Title': 'Top Sports Betting Trends for Football Season 2025',
     
     'featured.title': 'Comparison of Bonuses from Our Partner Bookmakers',
-    'featured.subtitle': 'Exclusive bonus offers from our top-rated partners',
+    'featured.subtitle': 'Exclusive Bonuses Dedicated to Us',
     'featured.viewAll': 'View All Casinos',
     'featured.empty': 'No featured casinos available',
     'featured.recommended': 'RECOMMENDED',
