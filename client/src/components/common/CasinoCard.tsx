@@ -280,7 +280,6 @@ export default function CasinoCard({
               
               <div className="flex items-center mb-4">
                 <RatingStars rating={rating} size="md" />
-                <span className="ml-2 text-sm font-medium">{rating.toFixed(1)}/10</span>
               </div>
               
               <motion.div
