@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
@@ -29,6 +29,8 @@ export function OutletSlideshow() {
   // Pagination state for desktop
   const [currentPage, setCurrentPage] = useState(0);
   const outletsPerPage = 3; // Number of outlets to show per page
+  const [isHovered, setIsHovered] = useState(false);
+  const [lastInteraction, setLastInteraction] = useState(Date.now());
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -44,7 +46,27 @@ export function OutletSlideshow() {
     setSelectedOutlet(null);
   };
 
-  // Manual navigation only - no auto-rotation or progress tracking
+  // Auto-rotation with manual override support
+  useEffect(() => {
+    if (!outlets || outlets.length <= outletsPerPage) return;
+    
+    const totalPages = Math.ceil(outlets.length / outletsPerPage);
+    let interval: NodeJS.Timeout;
+    
+    // Only auto-rotate on desktop and when not hovered
+    const isDesktop = window.innerWidth >= 640;
+    const timeSinceLastInteraction = Date.now() - lastInteraction;
+    
+    if (isDesktop && !isHovered && timeSinceLastInteraction > 3000) {
+      interval = setInterval(() => {
+        setCurrentPage((prev) => (prev + 1) % totalPages);
+      }, 5000); // Rotate every 5 seconds
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [outlets, isHovered, lastInteraction, outletsPerPage]);
 
   if (isLoading) {
     return (
@@ -64,12 +86,14 @@ export function OutletSlideshow() {
   const endIndex = startIndex + outletsPerPage;
   const displayOutlets = outlets.slice(startIndex, endIndex);
   
-  // Navigation functions
+  // Navigation functions with interaction tracking
   const goToNextPage = () => {
+    setLastInteraction(Date.now());
     setCurrentPage((prev) => (prev + 1) % totalPages);
   };
 
   const goToPrevPage = () => {
+    setLastInteraction(Date.now());
     setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
   };
 
@@ -148,8 +172,12 @@ export function OutletSlideshow() {
           </p>
         </div>
         
-        <div className="relative max-w-6xl mx-auto">
-          {/* Remove pause/play button since auto-rotation is disabled */}
+        <div 
+          className="relative max-w-6xl mx-auto"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Auto-rotation enabled - pauses on hover and after manual interaction */}
         
           {/* Navigation buttons for desktop */}
           {outlets && outlets.length > outletsPerPage && (
@@ -363,7 +391,10 @@ export function OutletSlideshow() {
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentPage(index)}
+                  onClick={() => {
+                    setLastInteraction(Date.now());
+                    setCurrentPage(index);
+                  }}
                   className={`h-2 mx-1 rounded-full transition-all ${
                     currentPage === index ? 'w-6 bg-white' : 'w-2 bg-white/30'
                   }`}
