@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
@@ -32,6 +32,14 @@ export function OutletSlideshow() {
   const [isHovered, setIsHovered] = useState(false);
   const [lastInteraction, setLastInteraction] = useState(0);
   
+  // Use refs to access current values inside interval
+  const isHoveredRef = useRef(isHovered);
+  const lastInteractionRef = useRef(lastInteraction);
+  
+  // Update refs when state changes
+  useEffect(() => { isHoveredRef.current = isHovered; }, [isHovered]);
+  useEffect(() => { lastInteractionRef.current = lastInteraction; }, [lastInteraction]);
+  
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
   });
@@ -53,18 +61,18 @@ export function OutletSlideshow() {
     const totalPages = Math.ceil(outlets.length / outletsPerPage);
     const isDesktop = window.innerWidth >= 640;
     
-    // Don't auto-rotate if hovered or recently interacted
-    const timeSinceInteraction = Date.now() - lastInteraction;
-    if (isHovered || timeSinceInteraction < 2000 || !isDesktop) {
-      return;
-    }
+    if (!isDesktop) return;
     
     const interval = setInterval(() => {
-      setCurrentPage((prev) => (prev + 1) % totalPages);
-    }, 4000); // Rotate every 4 seconds
+      // Check conditions at the time of rotation using refs
+      const timeSinceInteraction = Date.now() - lastInteractionRef.current;
+      if (!isHoveredRef.current && timeSinceInteraction > 2000) {
+        setCurrentPage((prev) => (prev + 1) % totalPages);
+      }
+    }, 4000); // Check every 4 seconds
     
     return () => clearInterval(interval);
-  }, [outlets, isHovered, lastInteraction, outletsPerPage]);
+  }, [outlets, outletsPerPage]); // Only depend on outlets and outletsPerPage
 
   if (isLoading) {
     return (
