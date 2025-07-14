@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Outlet {
   id: number;
@@ -46,49 +47,13 @@ export function OutletSlideshow() {
     setSelectedOutlet(null);
   };
 
-  // Auto-rotation effect (only for desktop)
-  useEffect(() => {
-    if (!outlets || outlets.length <= outletsPerPage) return;
-    
-    let interval: NodeJS.Timeout;
-    
-    // Only auto-rotate on desktop (screen width >= 640px)
-    const isDesktop = window.innerWidth >= 640;
-    
-    // Don't rotate if paused, section is hovered, or on mobile
-    if (!isPaused && !isHovered && isDesktop) {
-      interval = setInterval(() => {
-        setCurrentPage((prev) => (prev + 1) % Math.ceil(outlets.length / outletsPerPage));
-      }, 8000); // Rotate every 8 seconds for less jarring experience
-    }
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [outlets, isPaused, isHovered, outletsPerPage]); // Removing currentPage dependency to prevent reset
+  // Remove auto-rotation - user wants manual control only
+  // Auto-rotation disabled per user request
   
   // Reference to track animation
   const progressRef = useRef<HTMLDivElement>(null);
   
-  // Reset animation when page changes or when pause state changes
-  useEffect(() => {
-    if (progressRef.current) {
-      // Reset animation by removing and re-adding it
-      progressRef.current.style.animation = 'none';
-      
-      // Force a reflow to ensure the animation restart properly
-      // eslint-disable-next-line no-unused-expressions
-      progressRef.current.offsetHeight;
-      
-      if (!isPaused && !isHovered) {
-        setTimeout(() => {
-          if (progressRef.current) {
-            progressRef.current.style.animation = 'progress 8s linear 1';
-          }
-        }, 10);
-      }
-    }
-  }, [currentPage, isPaused, isHovered]);
+  // Remove progress bar animation - not needed without auto-rotation
 
   if (isLoading) {
     return (
@@ -197,27 +162,14 @@ export function OutletSlideshow() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Auto-rotation control (desktop only) */}
-          {outlets && outlets.length > outletsPerPage && (
-            <button
-              onClick={() => setIsPaused(!isPaused)}
-              className="absolute right-2 top-2 z-20 bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-full shadow-md hidden sm:flex items-center justify-center"
-              aria-label={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
-            >
-              {isPaused ? (
-                <Play className="h-3.5 w-3.5" />
-              ) : (
-                <Pause className="h-3.5 w-3.5" />
-              )}
-            </button>
-          )}
+          {/* Remove pause/play button since auto-rotation is disabled */}
         
           {/* Navigation buttons for desktop */}
           {outlets && outlets.length > outletsPerPage && (
             <>
               <button 
                 onClick={goToPrevPage}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex items-center justify-center"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex items-center justify-center transition-all duration-300 hover:scale-110"
                 aria-label="Previous outlets"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -233,73 +185,110 @@ export function OutletSlideshow() {
             </>
           )}
         
-          {/* Desktop grid view */}
-          <div className="hidden sm:grid grid-cols-3 gap-4 min-h-[192px]">
-            {displayOutlets.map((outlet, index) => (
-              <div
-                key={outlet.id}
-                className="w-full transform transition-all duration-300 ease-in-out"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  opacity: 1,
-                  transform: 'translateY(0)'
+          {/* Desktop animated carousel view */}
+          <div className="hidden sm:block overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 300, 
+                  damping: 30,
+                  duration: 0.5 
                 }}
+                className="grid grid-cols-3 gap-4 min-h-[192px]"
               >
-                <div 
-                  className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
-                  onMouseEnter={() => {
-                    setHoveredId(outlet.id);
-                    setIsHovered(true);
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredId(null);
-                    setIsHovered(false);
-                  }}
-                  onClick={() => handleOutletClick(outlet)}
-                >
-                  <img 
-                    src={getOutletImage(outlet)}
-                    alt={getLocalizedField(outlet, 'title')} 
-                    className={`w-full h-full object-cover object-center transition-transform duration-500 ease-in-out ${
-                      hoveredId === outlet.id ? 'scale-110' : 'scale-100'
-                    }`}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      const currentSrc = target.src;
-                      
-                      // Log error for debugging
-                      console.log('Image failed to load in slider:', currentSrc);
-                      
-                      // Simple fallback to known working image
-                      target.src = '/assets/redmoon1.jpg';
+                {displayOutlets.map((outlet, index) => (
+                  <motion.div
+                    key={outlet.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: index * 0.1,
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 30 
                     }}
-                  />
-                  <div className={`absolute inset-0 transition-all duration-300 ${
-                    hoveredId === outlet.id ? 'bg-gradient-to-t from-black/90 via-black/60 to-transparent' 
-                    : 'bg-gradient-to-t from-black/80 to-transparent'
-                  } flex flex-col justify-end p-4`}>
-                    <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
-                      {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
-                    </div>
-                    <div className="min-h-[48px] flex flex-col justify-end">
-                      <h3 className="text-white font-bold text-base mb-1">
-                        {getLocalizedField(outlet, 'title')}
-                      </h3>
-                      <div className={`overflow-hidden transition-all duration-300 ${
-                        hoveredId === outlet.id ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'
-                      }`}>
-                        <p className="text-white/90 text-sm line-clamp-2">
-                          {getLocalizedField(outlet, 'description')}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                    className="w-full"
+                  >
+                    <motion.div 
+                      className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
+                      onMouseEnter={() => {
+                        setHoveredId(outlet.id);
+                        setIsHovered(true);
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredId(null);
+                        setIsHovered(false);
+                      }}
+                      onClick={() => handleOutletClick(outlet)}
+                      whileHover={{ 
+                        scale: 1.02,
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    >
+                      <motion.img 
+                        src={getOutletImage(outlet)}
+                        alt={getLocalizedField(outlet, 'title')} 
+                        className="w-full h-full object-cover object-center"
+                        animate={{
+                          scale: hoveredId === outlet.id ? 1.1 : 1
+                        }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          const currentSrc = target.src;
+                          
+                          // Log error for debugging
+                          console.log('Image failed to load in slider:', currentSrc);
+                          
+                          // Simple fallback to known working image
+                          target.src = '/assets/redmoon1.jpg';
+                        }}
+                      />
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4"
+                        animate={{
+                          background: hoveredId === outlet.id 
+                            ? 'linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6), transparent)'
+                            : 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)'
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
+                          {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
+                        </div>
+                        <div className="min-h-[48px] flex flex-col justify-end">
+                          <h3 className="text-white font-bold text-base mb-1">
+                            {getLocalizedField(outlet, 'title')}
+                          </h3>
+                          <motion.div 
+                            className="overflow-hidden"
+                            animate={{
+                              maxHeight: hoveredId === outlet.id ? 64 : 0,
+                              opacity: hoveredId === outlet.id ? 1 : 0
+                            }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <p className="text-white/90 text-sm line-clamp-2">
+                              {getLocalizedField(outlet, 'description')}
+                            </p>
+                          </motion.div>
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          {/* Mobile horizontal scroll view */}
+          {/* Mobile horizontal scroll view with smooth animations */}
           <div className="sm:hidden">
             <div 
               className="flex gap-4 overflow-x-auto scrollbar-hide mobile-scroll pb-4 px-4"
@@ -309,20 +298,32 @@ export function OutletSlideshow() {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {outlets && outlets.map((outlet) => (
-                <div
+              {outlets && outlets.map((outlet, index) => (
+                <motion.div
                   key={outlet.id}
-                  className="flex-none w-72 transform transition-all duration-300 ease-in-out"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ 
+                    delay: index * 0.1,
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 30 
+                  }}
+                  className="flex-none w-72"
                   style={{ scrollSnapAlign: 'start' }}
                 >
-                  <div 
+                  <motion.div 
                     className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
                     onClick={() => handleOutletClick(outlet)}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
-                    <img 
+                    <motion.img 
                       src={getOutletImage(outlet)}
                       alt={getLocalizedField(outlet, 'title')} 
-                      className="w-full h-full object-cover object-center transition-transform duration-500 ease-in-out"
+                      className="w-full h-full object-cover object-center"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         const currentSrc = target.src;
@@ -334,21 +335,36 @@ export function OutletSlideshow() {
                         target.src = '/assets/redmoon1.jpg';
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                      <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <motion.div 
+                        className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 30 }}
+                      >
                         {language === 'it' ? 'Scorri per vedere tutto' : 'Swipe to view all'}
-                      </div>
-                      <div className="min-h-[48px] flex flex-col justify-end">
+                      </motion.div>
+                      <motion.div 
+                        className="min-h-[48px] flex flex-col justify-end"
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                      >
                         <h3 className="text-white font-bold text-base mb-1">
                           {getLocalizedField(outlet, 'title')}
                         </h3>
                         <p className="text-white/90 text-sm line-clamp-2">
                           {getLocalizedField(outlet, 'description')}
                         </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
               ))}
             </div>
           </div>
