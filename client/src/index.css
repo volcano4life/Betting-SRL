@@ -22,6 +22,15 @@
   display: none;
 }
 
+/* Mobile scroll enhancements */
+@media (max-width: 640px) {
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+  }
+}
+
 /* Ensure elements with translate="no" attribute are not translated by browsers */
 [translate="no"] {
   -webkit-translate: none;

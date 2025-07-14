@@ -302,28 +302,21 @@ export function OutletSlideshow() {
           {/* Mobile horizontal scroll view */}
           <div className="sm:hidden">
             <div 
-              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+              className="flex gap-4 overflow-x-auto scrollbar-hide mobile-scroll pb-4 px-4"
               style={{
                 scrollSnapType: 'x mandatory',
-                scrollBehavior: 'smooth'
+                scrollBehavior: 'smooth',
+                WebkitOverflowScrolling: 'touch'
               }}
             >
               {outlets && outlets.map((outlet) => (
                 <div
                   key={outlet.id}
-                  className="flex-none w-80 transform transition-all duration-300 ease-in-out"
+                  className="flex-none w-72 transform transition-all duration-300 ease-in-out"
                   style={{ scrollSnapAlign: 'start' }}
                 >
                   <div 
                     className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
-                    onTouchStart={() => {
-                      setHoveredId(outlet.id);
-                      setIsHovered(true);
-                    }}
-                    onTouchEnd={() => {
-                      setHoveredId(null);
-                      setIsHovered(false);
-                    }}
                     onClick={() => handleOutletClick(outlet)}
                   >
                     <img 
