@@ -37,7 +37,8 @@ export default function HeroSection() {
           {/* Main Banner */}
           <a 
             href={mainBanner.link} 
-            className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white flex items-center justify-center"
+            className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             <img 
               src={mainBanner.image} 
@@ -69,7 +70,8 @@ export default function HeroSection() {
         <div className="md:hidden">
           <a
             href={mainBanner.link}
-            className="relative rounded-lg overflow-hidden mb-6 h-80 block bg-white flex items-center justify-center"
+            className="relative rounded-lg overflow-hidden mb-6 h-80 block bg-white"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             <img 
               src={mainBanner.image} 
