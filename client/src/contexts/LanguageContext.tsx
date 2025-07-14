@@ -653,7 +653,7 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.news2Title': 'Principali Tendenze nelle Scommesse Sportive per la Stagione Calcistica 2025',
     
     'featured.title': 'Comparazione Bonus dei Bookmakers Nostri Partner',
-    'featured.subtitle': 'Offerte bonus esclusive dai nostri partner migliori',
+    'featured.subtitle': 'Bonus Esclusivi a Noi Dedicati',
     'featured.viewAll': 'Vedi Tutti i Casinò',
     'featured.empty': 'Nessun casinò in evidenza disponibile',
     'featured.recommended': 'CONSIGLIATO',
