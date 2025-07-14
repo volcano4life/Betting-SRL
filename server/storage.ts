@@ -741,20 +741,19 @@ export class MemStorage implements IStorage {
       // Filter for diverse content - avoid repetitive articles about same people
       const diverseArticles = this.filterDiverseContent(articles);
       
-      // Convert to news format and combine with static content
+      // Convert to news format - use only authentic GNews content
       const gNewsArticles = diverseArticles.map((article, index) => convertGNewsToNews(article, index));
-      const staticNews = Array.from(this.news.values());
       
-      // Combine GNews articles with static news, prioritizing GNews for freshness
-      this.cachedNews = [...gNewsArticles, ...staticNews];
+      // Use only authentic GNews articles
+      this.cachedNews = gNewsArticles;
       this.newsCacheTimestamp = Date.now();
-      console.log(`News cache refreshed successfully with ${gNewsArticles.length} diverse GNews articles + ${staticNews.length} static articles`);
+      console.log(`News cache refreshed successfully with ${gNewsArticles.length} diverse authentic GNews articles`);
     } catch (error) {
       console.error('Error fetching news from GNews API:', error);
-      // Fallback to static data only if API fails
-      this.cachedNews = Array.from(this.news.values());
+      // No fallback - show empty if API fails to maintain authentic content only
+      this.cachedNews = [];
       this.newsCacheTimestamp = Date.now();
-      console.log('Using fallback static news data due to API error');
+      console.log('GNews API failed - no fallback to maintain authentic content only');
     } finally {
       this.isLoadingNews = false;
     }
@@ -815,7 +814,7 @@ export class MemStorage implements IStorage {
       }
       
       // Stop when we have enough diverse articles
-      if (diverseArticles.length >= 8) break;
+      if (diverseArticles.length >= 12) break;
     }
     
     return diverseArticles;
