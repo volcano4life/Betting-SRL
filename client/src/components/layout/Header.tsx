@@ -119,18 +119,18 @@ export default function Header() {
           : '-translate-y-full'
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 min-w-0">
+          <div className="flex items-center flex-shrink-0 min-w-0 max-w-[65%] sm:max-w-[70%] lg:max-w-none">
             <Link href="/" className="flex items-center">
               {getLogo()}
-              <span className="text-2xl font-bold text-[#222236] font-medium ml-2 whitespace-nowrap" translate="no">
+              <span className="text-lg sm:text-xl lg:text-2xl font-bold text-[#222236] font-medium ml-2 whitespace-nowrap" translate="no">
                 Betting <span className="text-primary">SRL</span>
               </span>
             </Link>
             {user?.isAdmin && (
-              <div className="ml-2">
+              <div className="ml-2 hidden sm:block">
                 <LogoSelector />
               </div>
             )}
@@ -191,19 +191,19 @@ export default function Header() {
           </NavigationMenu>
 
           {/* Search, Language, User Menu and Mobile Toggle */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-shrink-0 min-w-0">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setSearchOpen(!searchOpen)} 
-              className="text-[#222236] hover:text-primary"
+              className="text-[#222236] hover:text-primary hidden sm:flex"
             >
               <Search className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
               onClick={toggleLanguage}
-              className="flex items-center space-x-2 text-[#222236] hover:text-primary"
+              className="flex items-center space-x-2 text-[#222236] hover:text-primary hidden sm:flex"
             >
               <Globe className="h-5 w-5" />
               <span className="hidden md:inline">{t('nav.language')}</span>
@@ -211,7 +211,7 @@ export default function Header() {
             
             {/* User/Admin Menu */}
             {user ? (
-              <div className="relative flex items-center space-x-2">
+              <div className="relative flex items-center space-x-2 hidden lg:flex">
                 <NavigationMenu>
                   <NavigationMenuList>
                     <NavigationMenuItem>
@@ -264,7 +264,11 @@ export default function Header() {
             
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden text-[#222236] hover:text-primary">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="lg:hidden text-[#222236] hover:text-primary flex-shrink-0 min-w-[40px] h-10"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
