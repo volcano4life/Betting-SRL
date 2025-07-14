@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Outlet {
@@ -30,8 +29,6 @@ export function OutletSlideshow() {
   // Pagination state for desktop
   const [currentPage, setCurrentPage] = useState(0);
   const outletsPerPage = 3; // Number of outlets to show per page
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -47,13 +44,7 @@ export function OutletSlideshow() {
     setSelectedOutlet(null);
   };
 
-  // Remove auto-rotation - user wants manual control only
-  // Auto-rotation disabled per user request
-  
-  // Reference to track animation
-  const progressRef = useRef<HTMLDivElement>(null);
-  
-  // Remove progress bar animation - not needed without auto-rotation
+  // Manual navigation only - no auto-rotation or progress tracking
 
   if (isLoading) {
     return (
@@ -157,11 +148,7 @@ export function OutletSlideshow() {
           </p>
         </div>
         
-        <div 
-          className="relative max-w-6xl mx-auto"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="relative max-w-6xl mx-auto">
           {/* Remove pause/play button since auto-rotation is disabled */}
         
           {/* Navigation buttons for desktop */}
@@ -216,14 +203,8 @@ export function OutletSlideshow() {
                   >
                     <motion.div 
                       className="relative overflow-hidden rounded-md cursor-pointer h-48 bg-gray-800"
-                      onMouseEnter={() => {
-                        setHoveredId(outlet.id);
-                        setIsHovered(true);
-                      }}
-                      onMouseLeave={() => {
-                        setHoveredId(null);
-                        setIsHovered(false);
-                      }}
+                      onMouseEnter={() => setHoveredId(outlet.id)}
+                      onMouseLeave={() => setHoveredId(null)}
                       onClick={() => handleOutletClick(outlet)}
                       whileHover={{ 
                         scale: 1.02,
@@ -392,19 +373,7 @@ export function OutletSlideshow() {
             </div>
           )}
           
-          {/* Auto-rotation indicator (desktop only) */}
-          {outlets && outlets.length > outletsPerPage && (
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden hidden sm:block">
-              <div 
-                ref={progressRef}
-                className={`h-full transition-all ${isPaused || isHovered ? 'bg-white/20' : 'bg-white/50'}`}
-                style={{ 
-                  animation: (!isPaused && !isHovered) ? 'progress 8s linear 1' : 'none', 
-                  width: isPaused || isHovered ? '30%' : undefined
-                }}
-              />
-            </div>
-          )}
+          {/* Progress bar removed - using manual navigation only */}
         </div>
       </div>
       {/* Slideshow Modal */}
