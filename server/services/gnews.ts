@@ -16,9 +16,9 @@ interface GNewsResponse {
   articles: GNewsArticle[];
 }
 
-// Cache to store fetched news for 10 minutes
+// Cache to store fetched news for 15 minutes
 const newsCache = new Map<string, { data: GNewsArticle[]; timestamp: number }>();
-const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
 export async function fetchGNews(category: string = 'sports', country: string = 'it'): Promise<GNewsArticle[]> {
   if (!process.env.GNEWS_API_KEY) {
