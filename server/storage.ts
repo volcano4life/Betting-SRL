@@ -397,72 +397,72 @@ export class MemStorage implements IStorage {
     
     // Add casino news samples
     const news1: InsertNews = {
-      title_en: "Italian Gambling Authority Announces Stricter Regulations for 2024",
-      title_it: "L'Autorità Italiana del Gioco d'Azzardo Annuncia Regolamenti Più Severi per il 2024",
-      slug: "italian-gambling-authority-stricter-regulations-2024",
-      summary_en: "New regulations aimed at enhancing player protection will require additional identity verification steps and deposit limits.",
-      summary_it: "Nuove normative volte a migliorare la protezione dei giocatori richiederanno ulteriori passaggi di verifica dell'identità e limiti di deposito.",
-      content_en: "The Italian gambling regulatory authority (ADM) has announced significant changes to online gambling regulations, set to take effect in early 2024. The new framework will require operators to implement stricter identity verification procedures, mandatory deposit limits that players must set before gambling, and enhanced self-exclusion options. While the measures aim to combat problem gambling, industry experts suggest they may impact the user experience with additional verification steps. Licensed operators, including major brands like Starcasino and 888, have six months to implement the required changes.",
-      content_it: "L'autorità regolatoria italiana del gioco d'azzardo (ADM) ha annunciato significativi cambiamenti alle normative sul gioco d'azzardo online, che entreranno in vigore all'inizio del 2024. Il nuovo quadro richiederà agli operatori di implementare procedure di verifica dell'identità più rigide, limiti di deposito obbligatori che i giocatori devono impostare prima di giocare d'azzardo e opzioni di auto-esclusione migliorate. Mentre le misure mirano a combattere il gioco d'azzardo problematico, gli esperti del settore suggeriscono che potrebbero influire sull'esperienza utente con ulteriori passaggi di verifica. Gli operatori con licenza, inclusi i principali marchi come Starcasino e 888, hanno sei mesi per implementare le modifiche richieste.",
-      coverImage: "https://images.unsplash.com/photo-1563237023-b1e970526dcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "Regulation",
+      title_en: "New Live Casino Studio Opens in Milan: Revolutionary Gaming Experience",
+      title_it: "Nuovo Studio Live Casino Apre a Milano: Esperienza di Gioco Rivoluzionaria",
+      slug: "live-casino-studio-opens-milan-revolutionary-gaming",
+      summary_en: "Evolution Gaming unveils state-of-the-art live casino studio in Milan, featuring Italian dealers and localized games for Italian players.",
+      summary_it: "Evolution Gaming svela uno studio live casino all'avanguardia a Milano, con dealer italiani e giochi localizzati per i giocatori italiani.",
+      content_en: "Evolution Gaming has officially opened its new live casino studio in Milan, marking a significant milestone for the Italian gambling market. The 2,000 square meter facility features 15 live gaming tables with native Italian dealers, offering localized versions of popular games including Italian Roulette, Blackjack Italiano, and Baccarat Roma. The studio incorporates advanced streaming technology with 4K resolution and multiple camera angles to provide an immersive gaming experience. Italian players can now enjoy authentic live casino gaming with dealers who speak their language and understand local gaming preferences, available across all licensed operators in Italy.",
+      content_it: "Evolution Gaming ha ufficialmente aperto il suo nuovo studio live casino a Milano, segnando una pietra miliare significativa per il mercato del gioco d'azzardo italiano. La struttura di 2.000 metri quadrati presenta 15 tavoli da gioco dal vivo con dealer italiani nativi, offrendo versioni localizzate di giochi popolari tra cui Roulette Italiana, Blackjack Italiano e Baccarat Roma. Lo studio incorpora tecnologie di streaming avanzate con risoluzione 4K e angoli di telecamera multipli per fornire un'esperienza di gioco immersiva. I giocatori italiani possono ora godere di un autentico gioco live casino con dealer che parlano la loro lingua e capiscono le preferenze di gioco locali, disponibile su tutti gli operatori con licenza in Italia.",
+      coverImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Technology",
       featured: 1
     };
     this.createNews(news1);
 
     const news2: InsertNews = {
-      title_en: "Exclusive: LeoVegas Launches 'Leo Millions' €5M Guaranteed Jackpot",
-      title_it: "Esclusiva: LeoVegas Lancia il Jackpot Garantito 'Leo Millions' da €5M",
-      slug: "leovegas-launches-leo-millions-jackpot",
-      summary_en: "LeoVegas introduces a new progressive jackpot slot with a minimum guaranteed prize pool of €5 million.",
-      summary_it: "LeoVegas introduce una nuova slot a jackpot progressivo con un montepremi minimo garantito di €5 milioni.",
-      content_en: "LeoVegas has announced the launch of 'Leo Millions,' a proprietary progressive jackpot slot game with a guaranteed minimum prize pool of €5 million. The exclusive game, developed in partnership with Play'n GO, will be available only to Italian players for the first month before expanding to other European markets. The launch is accompanied by a promotion offering 50 free spins to all players who deposit €20 or more between October 15-31. Industry analysts note this represents one of the largest guaranteed jackpots ever offered by an online casino operating in the Italian market.",
-      content_it: "LeoVegas ha annunciato il lancio di 'Leo Millions', un gioco di slot a jackpot progressivo proprietario con un montepremi minimo garantito di €5 milioni. Il gioco esclusivo, sviluppato in collaborazione con Play'n GO, sarà disponibile solo per i giocatori italiani per il primo mese prima di espandersi ad altri mercati europei. Il lancio è accompagnato da una promozione che offre 50 giri gratuiti a tutti i giocatori che depositano €20 o più tra il 15 e il 31 ottobre. Gli analisti del settore notano che questo rappresenta uno dei jackpot garantiti più grandi mai offerti da un casinò online operante nel mercato italiano.",
-      coverImage: "https://images.unsplash.com/photo-1605870445919-838d190e8e1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "Promotions",
+      title_en: "Italy's Mobile Gaming Revenue Surges 45% in Q3 2024",
+      title_it: "I Ricavi del Gaming Mobile in Italia Aumentano del 45% nel Q3 2024",
+      slug: "italy-mobile-gaming-revenue-surges-45-percent-q3-2024",
+      summary_en: "Mobile casino gaming continues to dominate the Italian market, with smartphones accounting for 70% of all online gambling activity.",
+      summary_it: "Il gaming mobile da casinò continua a dominare il mercato italiano, con gli smartphone che rappresentano il 70% di tutta l'attività di gioco d'azzardo online.",
+      content_en: "According to the latest report from the Italian Gaming Authority (ADM), mobile gaming revenue in Italy reached €1.2 billion in Q3 2024, representing a remarkable 45% increase compared to the same period last year. The growth is primarily driven by improved mobile app experiences and the popularity of mobile-optimized slot games. Industry leaders like Sisal, PokerStars, and Lottomatica have invested heavily in mobile-first strategies, with some operators reporting that over 80% of their customers now primarily use mobile devices. The trend towards mobile gaming has also led to innovative features such as live mobile dealer games and augmented reality casino experiences.",
+      content_it: "Secondo l'ultimo rapporto dell'Autorità Italiana del Gioco (ADM), i ricavi del gaming mobile in Italia hanno raggiunto €1,2 miliardi nel Q3 2024, rappresentando un notevole aumento del 45% rispetto allo stesso periodo dell'anno scorso. La crescita è guidata principalmente dal miglioramento delle esperienze delle app mobile e dalla popolarità dei giochi di slot ottimizzati per dispositivi mobili. I leader del settore come Sisal, PokerStars e Lottomatica hanno investito pesantemente in strategie mobile-first, con alcuni operatori che riportano che oltre l'80% dei loro clienti ora utilizza principalmente dispositivi mobili. La tendenza verso il gaming mobile ha anche portato a funzionalità innovative come i giochi live dealer mobile e le esperienze di casinò in realtà aumentata.",
+      coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Market Analysis",
       featured: 0
     };
     this.createNews(news2);
 
     // Add sports news samples
     const sportsNews1: InsertNews = {
-      title_en: "Juventus Signs €100M Deal with New Serie A Betting Partner",
-      title_it: "La Juventus Firma un Accordo da €100M con il Nuovo Partner di Scommesse della Serie A",
-      slug: "juventus-signs-100m-deal-serie-a-betting-partner",
-      summary_en: "Juventus announces a groundbreaking partnership with a major betting operator, marking the largest sponsorship deal in Serie A history.",
-      summary_it: "La Juventus annuncia una partnership rivoluzionaria con un importante operatore di scommesse, segnando il più grande accordo di sponsorizzazione nella storia della Serie A.",
-      content_en: "Juventus Football Club has announced a historic €100 million partnership deal with a leading sports betting operator, making it the largest sponsorship agreement in Serie A history. The three-year deal will see the betting company become the club's official betting partner and shirt sponsor. The announcement comes as Italian football continues to embrace partnerships with regulated gambling operators. Club president Andrea Agnelli stated that the partnership will help fund new player acquisitions and stadium improvements. The deal reflects the growing intersection between professional sports and the regulated betting industry in Italy.",
-      content_it: "La Juventus Football Club ha annunciato uno storico accordo di partnership da €100 milioni con un importante operatore di scommesse sportive, rendendolo il più grande accordo di sponsorizzazione nella storia della Serie A. L'accordo triennale vedrà la società di scommesse diventare il partner ufficiale di scommesse del club e sponsor della maglia. L'annuncio arriva mentre il calcio italiano continua ad abbracciare partnership con operatori di gioco d'azzardo regolamentati. Il presidente del club Andrea Agnelli ha dichiarato che la partnership aiuterà a finanziare nuovi acquisti di giocatori e miglioramenti dello stadio. L'accordo riflette la crescente intersezione tra sport professionistici e l'industria delle scommesse regolamentate in Italia.",
-      coverImage: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "Football",
+      title_en: "Formula 1: Monza Grand Prix Betting Reaches All-Time High in Italy",
+      title_it: "Formula 1: Le Scommesse del Gran Premio di Monza Raggiungono il Massimo Storico in Italia",
+      slug: "formula1-monza-grand-prix-betting-all-time-high-italy",
+      summary_en: "The Italian Grand Prix at Monza generated record betting volumes, with Ferrari's home race attracting unprecedented interest from Italian bettors.",
+      summary_it: "Il Gran Premio d'Italia a Monza ha generato volumi di scommesse record, con la gara di casa della Ferrari che ha attirato un interesse senza precedenti dai scommettitori italiani.",
+      content_en: "The 2024 Italian Grand Prix at Monza has set a new record for Formula 1 betting activity in Italy, with over €25 million wagered across regulated operators during the race weekend. The surge was driven by Ferrari's strong qualifying performance and Charles Leclerc's pole position, which saw his odds to win shorten from 8/1 to 3/1. Italian operators reported that 60% of all F1 bets placed during the weekend were on Ferrari drivers, with many new customers creating accounts specifically to bet on the home race. The passionate Italian support for Ferrari, combined with the historical significance of Monza, created perfect conditions for record-breaking betting activity in the motorsport category.",
+      content_it: "Il Gran Premio d'Italia 2024 a Monza ha stabilito un nuovo record per l'attività di scommesse di Formula 1 in Italia, con oltre €25 milioni scommessi attraverso operatori regolamentati durante il weekend di gara. L'aumento è stato guidato dalla forte prestazione in qualifica della Ferrari e dalla pole position di Charles Leclerc, che ha visto le sue quote per la vittoria accorciarsi da 8/1 a 3/1. Gli operatori italiani hanno riportato che il 60% di tutte le scommesse F1 piazzate durante il weekend erano sui piloti Ferrari, con molti nuovi clienti che hanno creato account specificamente per scommettere sulla gara di casa. Il supporto appassionato italiano per la Ferrari, combinato con il significato storico di Monza, ha creato condizioni perfette per un'attività di scommesse da record nella categoria motorsport.",
+      coverImage: "https://images.unsplash.com/photo-1558618047-3c03d5d7b10a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Formula 1",
       featured: 1
     };
     this.createNews(sportsNews1);
 
     const sportsNews2: InsertNews = {
-      title_en: "UEFA Champions League: Italian Teams Lead Betting Odds for Quarter-Finals",
-      title_it: "UEFA Champions League: Le Squadre Italiane Guidano le Quote per i Quarti di Finale",
-      slug: "uefa-champions-league-italian-teams-betting-odds",
-      summary_en: "AC Milan, Inter Milan, and Napoli are among the favorites according to major European sportsbooks for the upcoming Champions League quarter-finals.",
-      summary_it: "AC Milan, Inter Milan e Napoli sono tra i favoriti secondo i principali sportsbook europei per i prossimi quarti di finale di Champions League.",
-      content_en: "Italian football is experiencing a renaissance in European competition, with three Serie A teams making it to the UEFA Champions League quarter-finals. According to major European sportsbooks, AC Milan leads the betting odds at 3/1, followed by Inter Milan at 4/1, and Napoli at 5/1. The strong showing of Italian clubs has led to increased betting activity, with regulated operators reporting a 40% increase in Champions League wagers from Italian customers. Sports betting analysts attribute this success to improved tactical approaches and significant investments in player development. The quarter-final draws will take place next Friday, with matches scheduled for early April.",
-      content_it: "Il calcio italiano sta vivendo una rinascita nella competizione europea, con tre squadre di Serie A che hanno raggiunto i quarti di finale della UEFA Champions League. Secondo i principali sportsbook europei, l'AC Milan guida le quote scommesse a 3/1, seguito dall'Inter Milan a 4/1 e dal Napoli a 5/1. La forte prestazione dei club italiani ha portato a un aumento dell'attività di scommesse, con operatori regolamentati che riportano un aumento del 40% delle scommesse sulla Champions League da parte dei clienti italiani. Gli analisti delle scommesse sportive attribuiscono questo successo a approcci tattici migliorati e investimenti significativi nello sviluppo dei giocatori. I sorteggi dei quarti di finale si terranno venerdì prossimo, con partite programmate per l'inizio di aprile.",
-      coverImage: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "Champions League",
+      title_en: "Basketball: Italian League Partners with Major Betting Operator",
+      title_it: "Basket: La Lega Italiana Si Associa con un Importante Operatore di Scommesse",
+      slug: "basketball-italian-league-partners-major-betting-operator",
+      summary_en: "The Italian Basketball League announces a comprehensive partnership deal focusing on responsible gambling and fan engagement.",
+      summary_it: "La Lega Italiana di Basket annuncia un accordo di partnership completo incentrato sul gioco responsabile e sul coinvolgimento dei tifosi.",
+      content_en: "The Italian Basketball League (Serie A) has announced a landmark partnership with a leading regulated betting operator, marking the first major sponsorship deal in Italian basketball history. The three-year agreement will see the betting company become the league's official partner, with a focus on responsible gambling initiatives and enhanced fan engagement through interactive betting experiences. The partnership includes educational programs about responsible gambling, live betting features during games, and exclusive content for basketball fans. League president Umberto Gandini emphasized that the deal will help grow basketball's popularity in Italy while maintaining the highest standards of player and fan protection.",
+      content_it: "La Lega Italiana di Basket (Serie A) ha annunciato una partnership storica con un importante operatore di scommesse regolamentato, segnando il primo grande accordo di sponsorizzazione nella storia del basket italiano. L'accordo triennale vedrà la società di scommesse diventare il partner ufficiale della lega, con un focus su iniziative di gioco responsabile e maggiore coinvolgimento dei tifosi attraverso esperienze di scommesse interattive. La partnership include programmi educativi sul gioco responsabile, funzionalità di scommesse live durante le partite e contenuti esclusivi per i tifosi del basket. Il presidente della lega Umberto Gandini ha sottolineato che l'accordo aiuterà a far crescere la popolarità del basket in Italia mantenendo i più alti standard di protezione dei giocatori e dei tifosi.",
+      coverImage: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Basketball",
       featured: 0
     };
     this.createNews(sportsNews2);
 
     const sportsNews3: InsertNews = {
-      title_en: "Tennis: Italian Open Rome Sets Record Betting Handle for ATP Masters",
-      title_it: "Tennis: Gli Internazionali d'Italia di Roma Stabiliscono un Record di Scommesse per gli ATP Masters",
-      slug: "italian-open-rome-record-betting-handle-atp-masters",
-      summary_en: "The Italian Open in Rome generated the highest betting volume for any ATP Masters 1000 tournament this season, driven by strong local interest.",
-      summary_it: "Gli Internazionali d'Italia a Roma hanno generato il volume di scommesse più alto per qualsiasi torneo ATP Masters 1000 di questa stagione, guidato dal forte interesse locale.",
-      content_en: "The Italian Open tennis tournament in Rome has set a new record for betting handle among ATP Masters 1000 events this season, with over €15 million wagered across regulated Italian operators during the tournament week. The surge in betting activity was driven by strong performances from Italian players, including Jannik Sinner's run to the semifinals and Lorenzo Musetti's impressive showing. Tennis betting has grown significantly in Italy, with the sport now accounting for 15% of all sports betting volume in the country. The tournament's popularity among bettors was further boosted by favorable weather conditions that ensured all matches were completed on schedule.",
-      content_it: "Il torneo di tennis degli Internazionali d'Italia a Roma ha stabilito un nuovo record per il volume di scommesse tra gli eventi ATP Masters 1000 di questa stagione, con oltre €15 milioni scommessi attraverso operatori italiani regolamentati durante la settimana del torneo. L'aumento dell'attività di scommesse è stato guidato dalle forti prestazioni dei giocatori italiani, inclusa la corsa di Jannik Sinner alle semifinali e l'impressionante prestazione di Lorenzo Musetti. Le scommesse sul tennis sono cresciute significativamente in Italia, con questo sport che ora rappresenta il 15% di tutto il volume di scommesse sportive nel paese. La popolarità del torneo tra gli scommettitori è stata ulteriormente rafforzata dalle condizioni meteorologiche favorevoli che hanno assicurato il completamento di tutte le partite nei tempi previsti.",
-      coverImage: "https://images.unsplash.com/photo-1554068875-090f0c7aaba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      category: "Tennis",
+      title_en: "Winter Olympics 2026: Milan-Cortina Betting Markets Open Early",
+      title_it: "Olimpiadi Invernali 2026: I Mercati di Scommesse Milano-Cortina Aprono in Anticipo",
+      slug: "winter-olympics-2026-milan-cortina-betting-markets-open-early",
+      summary_en: "Italian operators launch early betting markets for the 2026 Winter Olympics, with home advantage boosting Italian athletes' odds.",
+      summary_it: "Gli operatori italiani lanciano mercati di scommesse anticipati per le Olimpiadi Invernali 2026, con il vantaggio di casa che migliora le quote degli atleti italiani.",
+      content_en: "With just over a year until the 2026 Winter Olympics in Milan and Cortina, Italian betting operators have launched early markets for the games, generating significant interest from sports bettors. Italian athletes are receiving favorable odds due to home advantage, with figure skater Matteo Rizzo at 5/1 for gold and the ski jumping team at 7/2 for a podium finish. The early launch of Olympic betting markets reflects the growing excitement in Italy for hosting the games, with operators reporting that Winter Olympics futures are already accounting for 8% of all long-term sports betting activity. Special markets including 'Most Medals by Italy' and 'Olympic Venue Atmosphere' have been particularly popular with Italian bettors.",
+      content_it: "Con poco più di un anno alle Olimpiadi Invernali 2026 a Milano e Cortina, gli operatori di scommesse italiani hanno lanciato mercati anticipati per i giochi, generando un interesse significativo dai scommettitori sportivi. Gli atleti italiani stanno ricevendo quote favorevoli grazie al vantaggio di casa, con il pattinatore artistico Matteo Rizzo a 5/1 per l'oro e la squadra di salto con gli sci a 7/2 per un posto sul podio. Il lancio anticipato dei mercati di scommesse olimpiche riflette la crescente eccitazione in Italia per l'ospitalità dei giochi, con operatori che riportano che i future delle Olimpiadi Invernali rappresentano già l'8% di tutta l'attività di scommesse sportive a lungo termine. I mercati speciali tra cui 'Più Medaglie dall'Italia' e 'Atmosfera delle Sedi Olimpiche' sono stati particolarmente popolari tra i scommettitori italiani.",
+      coverImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
+      category: "Winter Olympics",
       featured: 0
     };
     this.createNews(sportsNews3);
