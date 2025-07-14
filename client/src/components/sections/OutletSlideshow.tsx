@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import AnimatedWrapper from '@/components/ui/animated-wrapper';
 import OutletSlideshowModal from '@/components/ui/outlet-slideshow-modal';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -57,7 +56,7 @@ export function OutletSlideshow() {
     if (!isPaused && !isHovered) {
       interval = setInterval(() => {
         setCurrentPage((prev) => (prev + 1) % Math.ceil(outlets.length / outletsPerPage));
-      }, 5000); // Rotate every 5 seconds by default
+      }, 8000); // Rotate every 8 seconds for less jarring experience
     }
     
     return () => {
@@ -81,7 +80,7 @@ export function OutletSlideshow() {
       if (!isPaused && !isHovered) {
         setTimeout(() => {
           if (progressRef.current) {
-            progressRef.current.style.animation = 'progress 5s linear 1';
+            progressRef.current.style.animation = 'progress 8s linear 1';
           }
         }, 10);
       }
@@ -232,17 +231,19 @@ export function OutletSlideshow() {
           )}
         
           {/* Outlets grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {displayOutlets.map((outlet) => (
-              <AnimatedWrapper
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 min-h-[160px] sm:min-h-[192px]">
+            {displayOutlets.map((outlet, index) => (
+              <div
                 key={outlet.id}
-                animation="fade" 
-                duration={0.5} 
-                delay={0.1}
-                className="w-full"
+                className="w-full transform transition-all duration-300 ease-in-out"
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                  opacity: 1,
+                  transform: 'translateY(0)'
+                }}
               >
                 <div 
-                  className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48"
+                  className="relative overflow-hidden rounded-md cursor-pointer h-40 sm:h-48 bg-gray-800"
                   onMouseEnter={() => {
                     setHoveredId(outlet.id);
                     setIsHovered(true);
@@ -256,8 +257,8 @@ export function OutletSlideshow() {
                   <img 
                     src={getOutletImage(outlet)}
                     alt={getLocalizedField(outlet, 'title')} 
-                    className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out ${
-                      hoveredId === outlet.id ? 'scale-110 brightness-110' : 'scale-100 brightness-100'
+                    className={`w-full h-full object-cover object-center transition-transform duration-500 ease-in-out ${
+                      hoveredId === outlet.id ? 'scale-110' : 'scale-100'
                     }`}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -277,19 +278,21 @@ export function OutletSlideshow() {
                     <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full opacity-80">
                       {language === 'it' ? 'Clicca per vedere tutto' : 'Click to view all'}
                     </div>
-                    <h3 className={`text-white font-bold transition-all duration-300 ${
-                      hoveredId === outlet.id ? 'text-lg mb-2' : 'text-base mb-0'
-                    }`}>
-                      {getLocalizedField(outlet, 'title')}
-                    </h3>
-                    {hoveredId === outlet.id && (
-                      <p className="text-white/90 text-sm line-clamp-2 opacity-100 transform transition-all duration-300">
-                        {getLocalizedField(outlet, 'description')}
-                      </p>
-                    )}
+                    <div className="min-h-[48px] flex flex-col justify-end">
+                      <h3 className="text-white font-bold text-base mb-1">
+                        {getLocalizedField(outlet, 'title')}
+                      </h3>
+                      <div className={`overflow-hidden transition-all duration-300 ${
+                        hoveredId === outlet.id ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'
+                      }`}>
+                        <p className="text-white/90 text-sm line-clamp-2">
+                          {getLocalizedField(outlet, 'description')}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </AnimatedWrapper>
+              </div>
             ))}
           </div>
           
@@ -345,7 +348,7 @@ export function OutletSlideshow() {
                 ref={progressRef}
                 className={`h-full transition-all ${isPaused || isHovered ? 'bg-white/20' : 'bg-white/50'}`}
                 style={{ 
-                  animation: (!isPaused && !isHovered) ? 'progress 5s linear 1' : 'none', 
+                  animation: (!isPaused && !isHovered) ? 'progress 8s linear 1' : 'none', 
                   width: isPaused || isHovered ? '30%' : undefined
                 }}
               />
