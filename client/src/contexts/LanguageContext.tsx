@@ -247,6 +247,22 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.adminPanel': 'Admin Panel',
     'nav.changePassword': 'Change Password',
     'nav.logout': 'Logout',
+    
+    // Search
+    'search.title': 'Search',
+    'search.placeholder': 'Search casinos, bonuses, sports news...',
+    'search.button': 'Search',
+    'search.loading': 'Searching...',
+    'search.error': 'Error during search',
+    'search.resultsFound': 'results found for',
+    'search.noResults': 'No results found for',
+    'search.all': 'All',
+    'search.games': 'Games',
+    'search.reviews': 'Reviews',
+    'search.news': 'News',
+    'search.guides': 'Guides',
+    
+
 
     // About Us Page
     'aboutUs.title': 'About Us',
@@ -591,6 +607,20 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.adminPanel': 'Pannello Admin',
     'nav.changePassword': 'Cambia Password',
     'nav.logout': 'Disconnetti',
+    
+    // Search
+    'search.title': 'Ricerca',
+    'search.placeholder': 'Cerca casino, bonus, notizie sportive...',
+    'search.button': 'Cerca',
+    'search.loading': 'Ricerca in corso...',
+    'search.error': 'Errore durante la ricerca',
+    'search.resultsFound': 'risultati trovati per',
+    'search.noResults': 'Nessun risultato trovato per',
+    'search.all': 'Tutti',
+    'search.games': 'Giochi',
+    'search.reviews': 'Recensioni',
+    'search.news': 'Notizie',
+    'search.guides': 'Guide',
 
     // About Us Page
     'aboutUs.title': 'Chi Siamo',
