@@ -265,7 +265,7 @@ export class MemStorage implements IStorage {
       graphicsRating: 8.8,
       storyRating: 8.9,
       valueRating: 9.0,
-      featured: 1
+      featured: 0
     };
     this.createGame(game3);
 
@@ -322,7 +322,7 @@ export class MemStorage implements IStorage {
       graphicsRating: 8.7,
       storyRating: 8.8,
       valueRating: 9.1,
-      featured: 0
+      featured: 1
     };
     this.createGame(game6);
 
