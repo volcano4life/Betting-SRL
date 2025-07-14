@@ -32,9 +32,6 @@ export function OutletSlideshow() {
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   
-  // Mobile scroll state
-  const [isMobile, setIsMobile] = useState(false);
-  
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
   });
@@ -48,27 +45,18 @@ export function OutletSlideshow() {
     setIsModalOpen(false);
     setSelectedOutlet(null);
   };
-  
-  // Check if mobile view
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Auto-rotation effect (only for desktop)
   useEffect(() => {
-    if (!outlets || outlets.length <= outletsPerPage || isMobile) return;
+    if (!outlets || outlets.length <= outletsPerPage) return;
     
     let interval: NodeJS.Timeout;
     
-    // Don't rotate if paused or section is hovered
-    if (!isPaused && !isHovered) {
+    // Only auto-rotate on desktop (screen width >= 640px)
+    const isDesktop = window.innerWidth >= 640;
+    
+    // Don't rotate if paused, section is hovered, or on mobile
+    if (!isPaused && !isHovered && isDesktop) {
       interval = setInterval(() => {
         setCurrentPage((prev) => (prev + 1) % Math.ceil(outlets.length / outletsPerPage));
       }, 8000); // Rotate every 8 seconds for less jarring experience
@@ -77,7 +65,7 @@ export function OutletSlideshow() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [outlets, isPaused, isHovered, outletsPerPage, isMobile]); // Removing currentPage dependency to prevent reset
+  }, [outlets, isPaused, isHovered, outletsPerPage]); // Removing currentPage dependency to prevent reset
   
   // Reference to track animation
   const progressRef = useRef<HTMLDivElement>(null);
@@ -210,10 +198,10 @@ export function OutletSlideshow() {
           onMouseLeave={() => setIsHovered(false)}
         >
           {/* Auto-rotation control (desktop only) */}
-          {outlets && outlets.length > outletsPerPage && !isMobile && (
+          {outlets && outlets.length > outletsPerPage && (
             <button
               onClick={() => setIsPaused(!isPaused)}
-              className="absolute right-2 top-2 z-20 bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-full shadow-md flex items-center justify-center"
+              className="absolute right-2 top-2 z-20 bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-full shadow-md hidden sm:flex items-center justify-center"
               aria-label={isPaused ? "Resume auto-scroll" : "Pause auto-scroll"}
             >
               {isPaused ? (
@@ -225,11 +213,11 @@ export function OutletSlideshow() {
           )}
         
           {/* Navigation buttons for desktop */}
-          {outlets && outlets.length > outletsPerPage && !isMobile && (
+          {outlets && outlets.length > outletsPerPage && (
             <>
               <button 
                 onClick={goToPrevPage}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 flex items-center justify-center"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -ml-4 hidden sm:flex items-center justify-center"
                 aria-label="Previous outlets"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -237,7 +225,7 @@ export function OutletSlideshow() {
               
               <button 
                 onClick={goToNextPage}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -mr-4 flex items-center justify-center"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full shadow-md -mr-4 hidden sm:flex items-center justify-center"
                 aria-label="Next outlets"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -380,8 +368,8 @@ export function OutletSlideshow() {
           </div>
           
           {/* Desktop pagination indicators */}
-          {outlets && outlets.length > outletsPerPage && !isMobile && (
-            <div className="flex justify-center mt-4">
+          {outlets && outlets.length > outletsPerPage && (
+            <div className="hidden sm:flex justify-center mt-4">
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button
                   key={index}
@@ -396,8 +384,8 @@ export function OutletSlideshow() {
           )}
           
           {/* Auto-rotation indicator (desktop only) */}
-          {outlets && outlets.length > outletsPerPage && !isMobile && (
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden">
+          {outlets && outlets.length > outletsPerPage && (
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden hidden sm:block">
               <div 
                 ref={progressRef}
                 className={`h-full transition-all ${isPaused || isHovered ? 'bg-white/20' : 'bg-white/50'}`}
