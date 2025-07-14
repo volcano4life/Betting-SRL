@@ -286,7 +286,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.validUntil': 'Valid until',
     'featured.limitedTimeOffer': 'Limited Time Offer',
     'featured.showPromoCode': 'Show Promo Code',
-    'featured.visitCasino': 'Visit Casino',
+    'featured.visitCasino': 'Visit Site',
     'featured.welcomeBonus': 'Welcome Bonus: Please see terms and conditions',
     
     'promos.title': 'Exclusive Promo Codes',
@@ -630,7 +630,7 @@ const translations: Record<Language, Record<string, string>> = {
     'featured.validUntil': 'Valido fino al',
     'featured.limitedTimeOffer': 'Offerta a Tempo Limitato',
     'featured.showPromoCode': 'Mostra Codice Promo',
-    'featured.visitCasino': 'Visita il Casinò',
+    'featured.visitCasino': 'Visita il Sito',
     'featured.welcomeBonus': 'Welcome Bonus: Vedi Termini e Condizioni',
     
     'promos.title': 'Codici Promo Esclusivi',
