@@ -102,11 +102,13 @@ The application uses a multi-table schema with multilingual support:
 - **Development Server**: Runs on port 5000 via `npm run dev`
 - **Hot Reload**: Vite HMR with runtime error overlays
 
-### Production Build
+### Production Deployment
+- **Target Platform**: Debian 12 VM with Node.js 20
 - **Build Process**: Vite builds client assets, esbuild bundles server
-- **Deployment Target**: Autoscale deployment on Replit
+- **Process Management**: PM2 with clustering for high availability
+- **Reverse Proxy**: Nginx for SSL termination and static file serving
 - **Static Assets**: Served from `/dist/public` directory
-- **Process Management**: Node.js production server on port 5000
+- **Database**: PostgreSQL (local or Neon serverless recommended)
 
 ### Environment Configuration
 Required environment variables:
@@ -114,6 +116,14 @@ Required environment variables:
 - `SENDGRID_API_KEY`: Email service authentication (optional)
 - `GNEWS_API_KEY`: News API integration (optional)
 - `SESSION_SECRET`: Session encryption key
+
+### Deployment Documentation
+Complete deployment instructions available in `DEPLOYMENT_GUIDE.md` including:
+- System prerequisites and setup
+- SSL certificate configuration
+- Security hardening
+- Performance optimization
+- Monitoring and backup strategies
 
 ## Changelog
 - June 26, 2025. Initial setup
