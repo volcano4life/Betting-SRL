@@ -734,22 +734,100 @@ export class MemStorage implements IStorage {
     
     this.isLoadingNews = true;
     try {
-      console.log('Loading diverse static news content...');
-      // Use only our curated diverse static news content
-      this.cachedNews = Array.from(this.news.values());
+      console.log('Refreshing news cache from GNews API...');
+      const { fetchGNews, convertGNewsToNews } = await import('./services/gnews');
+      const articles = await fetchGNews('sports', 'it');
+      
+      // Filter for diverse content - avoid repetitive articles about same people
+      const diverseArticles = this.filterDiverseContent(articles);
+      
+      // Convert to news format and combine with static content
+      const gNewsArticles = diverseArticles.map((article, index) => convertGNewsToNews(article, index));
+      const staticNews = Array.from(this.news.values());
+      
+      // Combine GNews articles with static news, prioritizing GNews for freshness
+      this.cachedNews = [...gNewsArticles, ...staticNews];
       this.newsCacheTimestamp = Date.now();
-      console.log(`News cache loaded successfully with ${this.cachedNews.length} diverse articles`);
+      console.log(`News cache refreshed successfully with ${gNewsArticles.length} diverse GNews articles + ${staticNews.length} static articles`);
     } catch (error) {
-      console.error('Error loading news:', error);
+      console.error('Error fetching news from GNews API:', error);
+      // Fallback to static data only if API fails
       this.cachedNews = Array.from(this.news.values());
       this.newsCacheTimestamp = Date.now();
+      console.log('Using fallback static news data due to API error');
     } finally {
       this.isLoadingNews = false;
     }
   }
 
+  private filterDiverseContent(articles: any[]): any[] {
+    const usedNames = new Set<string>();
+    const usedKeywords = new Set<string>();
+    const diverseArticles: any[] = [];
+    
+    // Common Italian sports names to detect repetition
+    const commonSportsNames = [
+      'sinner', 'jannik', 'berrettini', 'musetti', 'sonego',
+      'yates', 'simon', 'pogacar', 'roglic', 'vingegaard',
+      'leclerc', 'sainz', 'verstappen', 'hamilton', 'russell',
+      'chiesa', 'barella', 'donnarumma', 'verratti', 'insigne',
+      'healy', 'modric', 'tour de france', 'tour', 'giro'
+    ];
+    
+    // Common keywords to detect similar topics
+    const topicKeywords = [
+      'tour de france', 'giro d\'italia', 'champions league', 'serie a',
+      'formula 1', 'motogp', 'tennis', 'basket', 'volley', 'nuoto'
+    ];
+    
+    for (const article of articles) {
+      const title = article.title.toLowerCase();
+      const description = (article.description || '').toLowerCase();
+      const fullText = `${title} ${description}`;
+      
+      // Check if this article mentions names already used
+      let hasRepeatedName = false;
+      for (const name of commonSportsNames) {
+        if (fullText.includes(name)) {
+          if (usedNames.has(name)) {
+            hasRepeatedName = true;
+            break;
+          }
+          usedNames.add(name);
+        }
+      }
+      
+      // Check for repeated topic keywords
+      let hasRepeatedTopic = false;
+      for (const keyword of topicKeywords) {
+        if (fullText.includes(keyword)) {
+          if (usedKeywords.has(keyword)) {
+            hasRepeatedTopic = true;
+            break;
+          }
+          usedKeywords.add(keyword);
+        }
+      }
+      
+      // Only add if no repeated names or topics
+      if (!hasRepeatedName && !hasRepeatedTopic) {
+        diverseArticles.push(article);
+      }
+      
+      // Stop when we have enough diverse articles
+      if (diverseArticles.length >= 8) break;
+    }
+    
+    return diverseArticles;
+  }
+
   async refreshNewsCache(): Promise<void> {
-    console.log('Refreshing news cache with diverse static content...');
+    const now = Date.now();
+    if (this.newsCacheTimestamp && (now - this.newsCacheTimestamp) < this.CACHE_DURATION) {
+      console.log('News cache refresh skipped - cache still valid');
+      return;
+    }
+    console.log('Refreshing news cache with diverse GNews content...');
     this.cachedNews = null;
     this.newsCacheTimestamp = 0;
     await this.loadCachedNews();
