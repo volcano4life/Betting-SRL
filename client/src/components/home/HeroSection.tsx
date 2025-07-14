@@ -52,7 +52,8 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className={`relative rounded-lg overflow-hidden group h-44 ${index === 0 || index === 1 ? 'bg-white flex items-center justify-center' : ''}`}
+                className={`relative rounded-lg overflow-hidden group h-44 ${index === 0 || index === 1 ? 'bg-white' : ''}`}
+                style={index === 0 || index === 1 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {}}
               >
                 <img 
                   src={banner.image} 
@@ -83,7 +84,8 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className={`relative rounded-lg overflow-hidden block h-40 ${index === 0 || index === 1 ? 'bg-white flex items-center justify-center' : ''}`}
+                className={`relative rounded-lg overflow-hidden block h-40 ${index === 0 || index === 1 ? 'bg-white' : ''}`}
+                style={index === 0 || index === 1 ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {}}
               >
                 <img 
                   src={banner.image} 
