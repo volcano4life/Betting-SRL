@@ -267,7 +267,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Homepage Sections
     'hero.title': 'Find your favorite gaming concessionaire',
-    'hero.subtitle': 'Exclusive Bonus & Expert Reviews',
+    'hero.subtitle': 'Exclusive Bonus',
     'hero.cta': 'Claim Bonus',
     'hero.featuredReview': 'Featured Review',
     'hero.noFeaturedContent': 'No featured content available',
@@ -611,7 +611,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Homepage Sections
     'hero.title': 'Trova il tuo concessionario di gioco preferito',
-    'hero.subtitle': 'Bonus Esclusivi & Recensioni di Esperti',
+    'hero.subtitle': 'Bonus Esclusivi',
     'hero.cta': 'Ottieni Bonus',
     'hero.featuredReview': 'Recensione in Evidenza',
     'hero.noFeaturedContent': 'Nessun contenuto in evidenza disponibile',
