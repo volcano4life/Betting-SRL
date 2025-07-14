@@ -5,8 +5,8 @@ export default function HeroSection() {
   
   // Static banner data - will be replaced with tracking links later
   const mainBanner = {
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400&q=80",
-    title: "Main Banner",
+    image: "/attached_assets/logo_Sisal_1750962171880.png",
+    title: "Sisal Casino",
     link: "#"
   };
   
@@ -37,12 +37,12 @@ export default function HeroSection() {
           {/* Main Banner */}
           <a 
             href={mainBanner.link} 
-            className="col-span-2 relative rounded-lg overflow-hidden group h-96"
+            className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white flex items-center justify-center"
           >
             <img 
               src={mainBanner.image} 
               alt={mainBanner.title} 
-              className="w-full h-full object-cover transition duration-300 transform group-hover:scale-105"
+              className="max-w-full max-h-full object-contain transition duration-300 transform group-hover:scale-105"
             />
           </a>
 
@@ -68,12 +68,12 @@ export default function HeroSection() {
         <div className="md:hidden">
           <a
             href={mainBanner.link}
-            className="relative rounded-lg overflow-hidden mb-6 h-80 block"
+            className="relative rounded-lg overflow-hidden mb-6 h-80 block bg-white flex items-center justify-center"
           >
             <img 
               src={mainBanner.image} 
               alt={mainBanner.title} 
-              className="w-full h-full object-cover"
+              className="max-w-full max-h-full object-contain"
             />
           </a>
           
