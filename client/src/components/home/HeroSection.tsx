@@ -12,8 +12,8 @@ export default function HeroSection() {
   
   const secondaryBanners = [
     {
-      image: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80",
-      title: "Secondary Banner 1",
+      image: "/attached_assets/image_2021_06_03T16_49_57_431Z_1750966673841.png",
+      title: "Snai Casino",
       link: "#"
     },
     {
@@ -52,12 +52,12 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className="relative rounded-lg overflow-hidden group h-44"
+                className={`relative rounded-lg overflow-hidden group h-44 ${index === 0 ? 'bg-white flex items-center justify-center' : ''}`}
               >
                 <img 
                   src={banner.image} 
                   alt={banner.title} 
-                  className="w-full h-full object-cover transition duration-300 transform group-hover:scale-105"
+                  className={`transition duration-300 transform group-hover:scale-105 ${index === 0 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
                 />
               </a>
             ))}
@@ -83,12 +83,12 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className="relative rounded-lg overflow-hidden block h-40"
+                className={`relative rounded-lg overflow-hidden block h-40 ${index === 0 ? 'bg-white flex items-center justify-center' : ''}`}
               >
                 <img 
                   src={banner.image} 
                   alt={banner.title} 
-                  className="w-full h-full object-cover"
+                  className={`${index === 0 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
                 />
               </a>
             ))}
