@@ -38,12 +38,27 @@ export default function HeroSection() {
           <div className="col-span-2 relative rounded-lg overflow-hidden group h-96 bg-white">
             <a 
               href={mainBanner.link} 
-              className="absolute inset-0 flex items-center justify-center p-8"
+              className="absolute inset-0 block"
+              style={{ 
+                display: 'table-cell',
+                textAlign: 'center',
+                verticalAlign: 'middle',
+                width: '100%',
+                height: '100%',
+                padding: '20px'
+              }}
             >
               <img 
                 src={mainBanner.image} 
                 alt={mainBanner.title} 
-                className="max-w-full max-h-full object-contain transition duration-300 transform group-hover:scale-105"
+                className="transition duration-300 transform group-hover:scale-105"
+                style={{ 
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  height: 'auto',
+                  width: 'auto',
+                  display: 'inline-block'
+                }}
               />
             </a>
           </div>
@@ -72,12 +87,26 @@ export default function HeroSection() {
           <div className="relative rounded-lg overflow-hidden mb-6 h-80 bg-white">
             <a
               href={mainBanner.link}
-              className="absolute inset-0 flex items-center justify-center p-6"
+              className="absolute inset-0 block"
+              style={{ 
+                display: 'table-cell',
+                textAlign: 'center',
+                verticalAlign: 'middle',
+                width: '100%',
+                height: '100%',
+                padding: '20px'
+              }}
             >
               <img 
                 src={mainBanner.image} 
                 alt={mainBanner.title} 
-                className="max-w-full max-h-full object-contain"
+                style={{ 
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  height: 'auto',
+                  width: 'auto',
+                  display: 'inline-block'
+                }}
               />
             </a>
           </div>
