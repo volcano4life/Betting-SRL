@@ -16,9 +16,9 @@ interface GNewsResponse {
   articles: GNewsArticle[];
 }
 
-// Cache to store fetched news for 15 minutes
+// Cache to store fetched news for 20 minutes
 const newsCache = new Map<string, { data: GNewsArticle[]; timestamp: number }>();
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+const CACHE_DURATION = 20 * 60 * 1000; // 20 minutes
 
 export async function fetchGNews(category: string = 'sports', country: string = 'it'): Promise<GNewsArticle[]> {
   if (!process.env.GNEWS_API_KEY) {
@@ -28,13 +28,16 @@ export async function fetchGNews(category: string = 'sports', country: string = 
   const cacheKey = `${category}_${country}`;
   const cached = newsCache.get(cacheKey);
   
-  // Return cached data if still valid
+  // Return cached data if still valid (within 20 minutes)
   if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+    const remainingTime = Math.round((CACHE_DURATION - (Date.now() - cached.timestamp)) / 1000 / 60);
+    console.log(`GNews API cache hit (expires in ${remainingTime} minutes)`);
     return cached.data;
   }
 
   try {
-    const url = `https://gnews.io/api/v4/top-headlines?country=${country}&category=${category}&apikey=${process.env.GNEWS_API_KEY}&max=20&lang=it`;
+    console.log(`Making fresh GNews API call for ${category} (${country})`);
+    const url = `https://gnews.io/api/v4/top-headlines?country=${country}&category=${category}&apikey=${process.env.GNEWS_API_KEY}&max=30&lang=it`;
     
     const response = await fetch(url);
     
@@ -50,6 +53,7 @@ export async function fetchGNews(category: string = 'sports', country: string = 
       timestamp: Date.now()
     });
 
+    console.log(`GNews API call successful, cached ${data.articles.length} articles for 20 minutes`);
     return data.articles;
   } catch (error) {
     console.error('Error fetching GNews:', error);
