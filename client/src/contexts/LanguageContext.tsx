@@ -267,7 +267,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Homepage Sections
     'hero.title': 'Find your favorite gaming concessionaire',
-    'hero.subtitle': 'Exclusive Bonuses & Expert Reviews',
+    'hero.subtitle': 'Exclusive Bonus & Expert Reviews',
     'hero.cta': 'Claim Bonus',
     'hero.featuredReview': 'Featured Review',
     'hero.noFeaturedContent': 'No featured content available',
