@@ -30,7 +30,7 @@ export function OutletSlideshow() {
   const [currentPage, setCurrentPage] = useState(0);
   const outletsPerPage = 3; // Number of outlets to show per page
   const [isHovered, setIsHovered] = useState(false);
-  const [lastInteraction, setLastInteraction] = useState(Date.now());
+  const [lastInteraction, setLastInteraction] = useState(0);
   
   const { data: outlets, isLoading } = useQuery<Outlet[]>({
     queryKey: ['/api/outlets'],
@@ -51,21 +51,19 @@ export function OutletSlideshow() {
     if (!outlets || outlets.length <= outletsPerPage) return;
     
     const totalPages = Math.ceil(outlets.length / outletsPerPage);
-    let interval: NodeJS.Timeout;
-    
-    // Only auto-rotate on desktop and when not hovered
     const isDesktop = window.innerWidth >= 640;
-    const timeSinceLastInteraction = Date.now() - lastInteraction;
     
-    if (isDesktop && !isHovered && timeSinceLastInteraction > 3000) {
-      interval = setInterval(() => {
-        setCurrentPage((prev) => (prev + 1) % totalPages);
-      }, 5000); // Rotate every 5 seconds
+    // Don't auto-rotate if hovered or recently interacted
+    const timeSinceInteraction = Date.now() - lastInteraction;
+    if (isHovered || timeSinceInteraction < 2000 || !isDesktop) {
+      return;
     }
     
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    const interval = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 4000); // Rotate every 4 seconds
+    
+    return () => clearInterval(interval);
   }, [outlets, isHovered, lastInteraction, outletsPerPage]);
 
   if (isLoading) {
