@@ -17,8 +17,8 @@ export default function HeroSection() {
       link: "#"
     },
     {
-      image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80",
-      title: "Secondary Banner 2", 
+      image: "/attached_assets/PokerStars-Logo_1750962736007.png",
+      title: "PokerStars Casino", 
       link: "#"
     }
   ];
@@ -52,12 +52,12 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className={`relative rounded-lg overflow-hidden group h-44 ${index === 0 ? 'bg-white flex items-center justify-center' : ''}`}
+                className={`relative rounded-lg overflow-hidden group h-44 ${index === 0 || index === 1 ? 'bg-white flex items-center justify-center' : ''}`}
               >
                 <img 
                   src={banner.image} 
                   alt={banner.title} 
-                  className={`transition duration-300 transform group-hover:scale-105 ${index === 0 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
+                  className={`transition duration-300 transform group-hover:scale-105 ${index === 0 || index === 1 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
                 />
               </a>
             ))}
@@ -83,12 +83,12 @@ export default function HeroSection() {
               <a
                 key={index}
                 href={banner.link}
-                className={`relative rounded-lg overflow-hidden block h-40 ${index === 0 ? 'bg-white flex items-center justify-center' : ''}`}
+                className={`relative rounded-lg overflow-hidden block h-40 ${index === 0 || index === 1 ? 'bg-white flex items-center justify-center' : ''}`}
               >
                 <img 
                   src={banner.image} 
                   alt={banner.title} 
-                  className={`${index === 0 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
+                  className={`${index === 0 || index === 1 ? 'max-w-full max-h-full object-contain' : 'w-full h-full object-cover'}`}
                 />
               </a>
             ))}
