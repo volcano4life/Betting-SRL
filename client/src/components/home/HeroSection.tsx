@@ -54,7 +54,7 @@ export default function HeroSection() {
                 className="transition duration-300 transform group-hover:scale-105"
                 style={{ 
                   maxWidth: '100%',
-                  maxHeight: '100%',
+                  height: '100%',
                   objectFit: 'contain',
                   display: 'block',
                   transform: 'translateX(10%)'
@@ -102,7 +102,7 @@ export default function HeroSection() {
                 alt={mainBanner.title} 
                 style={{ 
                   maxWidth: '100%',
-                  maxHeight: '100%',
+                  height: '100%',
                   objectFit: 'contain',
                   display: 'block',
                   transform: 'translateX(10%)'

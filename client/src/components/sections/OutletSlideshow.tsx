@@ -285,7 +285,7 @@ export function OutletSlideshow() {
                           <motion.div 
                             className="overflow-hidden"
                             animate={{
-                              maxHeight: hoveredId === outlet.id ? 64 : 0,
+                              height: hoveredId === outlet.id ? 64 : 0,
                               opacity: hoveredId === outlet.id ? 1 : 0
                             }}
                             transition={{ duration: 0.3 }}
