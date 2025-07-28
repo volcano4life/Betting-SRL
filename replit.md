@@ -137,6 +137,13 @@ Multiple deployment options with comprehensive guides:
 - Scaling and backup strategies
 - One-command deployment process
 
+**Portainer Deployment (`PORTAINER_DEPLOYMENT.md`):**
+- GUI-based Docker container management
+- Visual stack deployment with web interface
+- Integrated monitoring and logging
+- Environment variable management
+- Easy scaling and updates
+
 **Traditional VM Deployment (`DEPLOYMENT_GUIDE.md`):**
 - Debian 12 system setup and prerequisites
 - PM2 process management configuration
