@@ -1,0 +1,88 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+DEPLOYMENT_GUIDE.md
+DOCKER_DEPLOYMENT.md
+GITHUB_SETUP.md
+*.md
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.pnpm-debug.log*
+
+# Environment
+.env*
+!.env.example
+
+# Build outputs
+dist
+build
+
+# Development
+.replit
+replit.nix
+vite.config.ts.*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage
+*.lcov
+
+# Cache
+.cache
+.parcel-cache
+*.tsbuildinfo
+.stylelintcache
+
+# Temporary
+tmp
+temp
+*.tmp
+*.temp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# SSL certificates (will be mounted)
+ssl/
+
+# Uploads (will be mounted as volume)
+uploads/
+!uploads/.gitkeep

@@ -102,7 +102,17 @@ The application uses a multi-table schema with multilingual support:
 - **Development Server**: Runs on port 5000 via `npm run dev`
 - **Hot Reload**: Vite HMR with runtime error overlays
 
-### Production Deployment
+### Production Deployment Options
+
+#### Option 1: Docker Deployment (Recommended)
+- **Containerization**: Docker Compose with multi-service setup
+- **Services**: Application container, PostgreSQL 16, Nginx reverse proxy
+- **Orchestration**: docker-compose.yml with health checks and auto-restart
+- **SSL**: Let's Encrypt integration with automatic renewal
+- **Scaling**: Horizontal scaling support with load balancing
+- **Monitoring**: Built-in health checks and logging
+
+#### Option 2: Traditional VM Deployment
 - **Target Platform**: Debian 12 VM with Node.js 20
 - **Build Process**: Vite builds client assets, esbuild bundles server
 - **Process Management**: PM2 with clustering for high availability
@@ -118,15 +128,25 @@ Required environment variables:
 - `SESSION_SECRET`: Session encryption key
 
 ### Deployment Documentation
-Complete deployment instructions available in `DEPLOYMENT_GUIDE.md` including:
-- System prerequisites and setup
+Multiple deployment options with comprehensive guides:
+
+**Docker Deployment (`DOCKER_DEPLOYMENT.md`):**
+- Docker Compose setup with PostgreSQL and Nginx
+- SSL certificate automation with Let's Encrypt
+- Health checks and monitoring
+- Scaling and backup strategies
+- One-command deployment process
+
+**Traditional VM Deployment (`DEPLOYMENT_GUIDE.md`):**
+- Debian 12 system setup and prerequisites
+- PM2 process management configuration
+- Nginx reverse proxy setup
 - SSL certificate configuration
-- Security hardening
-- Performance optimization
-- Monitoring and backup strategies
+- Security hardening and performance optimization
 
 ## Changelog
-- June 26, 2025. Initial setup
+- June 26, 2025: Initial setup with React/Express architecture
+- July 28, 2025: Added Docker deployment support with complete containerization
 
 ## User Preferences
 
