@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: betting-srl-db
@@ -9,11 +8,9 @@ services:
     environment:
       POSTGRES_DB: betting_srl
       POSTGRES_USER: betting_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - betting-network
     healthcheck:
@@ -22,18 +19,17 @@ services:
       timeout: 5s
       retries: 5
 
-  # Application Server (Build from GitHub)
   app:
     build:
       context: https://github.com/yourusername/betting-srl.git
       dockerfile: Dockerfile
-    image: betting-srl-app:local
+    image: betting-srl:local
     container_name: betting-srl-app
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://betting_user:${POSTGRES_PASSWORD}@postgres:5432/betting_srl
-      SESSION_SECRET: ${SESSION_SECRET}
+      DATABASE_URL: postgresql://betting_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/betting_srl
+      SESSION_SECRET: ${SESSION_SECRET:-your-super-secret-session-key-change-this-in-production}
       GNEWS_API_KEY: ${GNEWS_API_KEY}
       SENDGRID_API_KEY: ${SENDGRID_API_KEY}
       PORT: 5000
@@ -53,48 +49,11 @@ services:
       timeout: 10s
       retries: 3
 
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: betting-srl-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      # Mount SSL certificates (prepare these first)
-      - type: bind
-        source: /var/lib/docker/volumes/betting-srl-ssl/_data
-        target: /etc/nginx/ssl
-        read_only: true
-      - nginx_cache:/var/cache/nginx
-    networks:
-      - betting-network
-    depends_on:
-      - app
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    configs:
-      - source: nginx_conf
-        target: /etc/nginx/nginx.conf
-
 volumes:
   postgres_data:
-    driver: local
   nginx_cache:
-    driver: local
   uploads:
-    driver: local
   assets:
-    driver: local
 
 networks:
   betting-network:
-    driver: bridge
-
-configs:
-  nginx_conf:
-    external: true

@@ -349,7 +349,7 @@ http {
 
 If you prefer to build from your GitHub repository directly:
 
-### 5.1 Simplified Compose for Git Build
+### 5.1 Fixed Compose for Direct GitHub Build
 ```yaml
 version: '3.8'
 
@@ -376,6 +376,7 @@ services:
     build:
       context: https://github.com/yourusername/betting-srl.git
       dockerfile: Dockerfile
+    image: betting-srl-app:local
     container_name: betting-srl-app
     restart: unless-stopped
     environment:
@@ -395,6 +396,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
     image: nginx:alpine
@@ -461,8 +467,18 @@ curl https://yourdomain.com/api/health
 
 ## 🚨 Troubleshooting Common Portainer Issues
 
-### Issue 1: Build Context from GitHub
-**Problem**: Cannot access private repository
+### Issue 1: GitHub Container Registry Error
+**Problem**: `denied` error when trying to pull non-existent image
+**Solution**: The compose tries to pull `ghcr.io/yourusername/betting-srl:latest` which doesn't exist. Use the build context instead:
+```yaml
+build:
+  context: https://github.com/yourusername/betting-srl.git
+  dockerfile: Dockerfile
+image: betting-srl-app:local  # Use local tag instead of registry
+```
+
+### Issue 2: Private Repository Access
+**Problem**: Cannot access private repository during build
 **Solution**: Use GitHub token in build context:
 ```yaml
 build:
