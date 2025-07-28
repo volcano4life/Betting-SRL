@@ -1,3 +1,7 @@
+# Simplified Portainer Docker Compose for Betting SRL
+# Replace 'yourusername' with your actual GitHub username
+# This version builds from the main branch and exposes the app directly on port 5000
+
 version: '3.8'
 
 services:
@@ -9,7 +13,7 @@ services:
     environment:
       POSTGRES_DB: betting_srl
       POSTGRES_USER: betting_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_password_123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -18,24 +22,24 @@ services:
       - betting-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U betting_user -d betting_srl"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  # Application Server (Build from GitHub)
+  # Application Server
   app:
     build:
       context: https://github.com/yourusername/betting-srl.git#main
       dockerfile: Dockerfile
-    image: betting-srl-app:local
+    image: betting-srl:latest
     container_name: betting-srl-app
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://betting_user:${POSTGRES_PASSWORD}@postgres:5432/betting_srl
-      SESSION_SECRET: ${SESSION_SECRET}
-      GNEWS_API_KEY: ${GNEWS_API_KEY}
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      DATABASE_URL: postgresql://betting_user:${POSTGRES_PASSWORD:-secure_password_123}@postgres:5432/betting_srl
+      SESSION_SECRET: ${SESSION_SECRET:-change-this-super-secret-session-key-in-production}
+      GNEWS_API_KEY: ${GNEWS_API_KEY:-}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
       PORT: 5000
     ports:
       - "5000:5000"
@@ -53,38 +57,8 @@ services:
       timeout: 10s
       retries: 3
 
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: betting-srl-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      # Mount SSL certificates (prepare these first)
-      - type: bind
-        source: /var/lib/docker/volumes/betting-srl-ssl/_data
-        target: /etc/nginx/ssl
-        read_only: true
-      - nginx_cache:/var/cache/nginx
-    networks:
-      - betting-network
-    depends_on:
-      - app
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    configs:
-      - source: nginx_conf
-        target: /etc/nginx/nginx.conf
-
 volumes:
   postgres_data:
-    driver: local
-  nginx_cache:
     driver: local
   uploads:
     driver: local
@@ -95,6 +69,13 @@ networks:
   betting-network:
     driver: bridge
 
-configs:
-  nginx_conf:
-    external: true
+# Usage Instructions:
+# 1. Replace 'yourusername' with your GitHub username
+# 2. Set environment variables in Portainer:
+#    - POSTGRES_PASSWORD (required)
+#    - SESSION_SECRET (required)
+#    - GNEWS_API_KEY (optional)
+#    - SENDGRID_API_KEY (optional)
+# 3. Deploy the stack
+# 4. Access your app at http://your-server:5000
+# 5. Initialize database: docker exec betting-srl-app npm run db:push

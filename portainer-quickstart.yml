@@ -21,7 +21,7 @@ services:
 
   app:
     build:
-      context: https://github.com/yourusername/betting-srl.git
+      context: https://github.com/yourusername/betting-srl.git#main
       dockerfile: Dockerfile
     image: betting-srl:local
     container_name: betting-srl-app
