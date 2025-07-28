@@ -374,7 +374,7 @@ services:
 
   app:
     build:
-      context: https://github.com/yourusername/betting-srl.git
+      context: https://github.com/yourusername/betting-srl.git#main
       dockerfile: Dockerfile
     image: betting-srl-app:local
     container_name: betting-srl-app
@@ -467,22 +467,32 @@ curl https://yourdomain.com/api/health
 
 ## 🚨 Troubleshooting Common Portainer Issues
 
-### Issue 1: GitHub Container Registry Error
+### Issue 1: GitHub Branch Reference Error
+**Problem**: `repository does not contain ref master` error
+**Solution**: GitHub repositories now use "main" as default branch. Specify the branch:
+```yaml
+build:
+  context: https://github.com/yourusername/betting-srl.git#main
+  dockerfile: Dockerfile
+image: betting-srl-app:local
+```
+
+### Issue 2: GitHub Container Registry Error
 **Problem**: `denied` error when trying to pull non-existent image
 **Solution**: The compose tries to pull `ghcr.io/yourusername/betting-srl:latest` which doesn't exist. Use the build context instead:
 ```yaml
 build:
-  context: https://github.com/yourusername/betting-srl.git
+  context: https://github.com/yourusername/betting-srl.git#main
   dockerfile: Dockerfile
 image: betting-srl-app:local  # Use local tag instead of registry
 ```
 
-### Issue 2: Private Repository Access
+### Issue 3: Private Repository Access
 **Problem**: Cannot access private repository during build
 **Solution**: Use GitHub token in build context:
 ```yaml
 build:
-  context: https://username:token@github.com/yourusername/betting-srl.git
+  context: https://username:token@github.com/yourusername/betting-srl.git#main
 ```
 
 ### Issue 2: Volume Mounting
