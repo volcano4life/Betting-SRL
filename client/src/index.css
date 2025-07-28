@@ -124,6 +124,41 @@
   color: #e0e0e0;
 }
 
+/* Fix Radix UI accordion animations to prevent maxHeight warnings */
+[data-radix-accordion-content] {
+  overflow: hidden;
+  transition: height 300ms ease-out, opacity 300ms ease-out;
+}
+
+[data-radix-accordion-content][data-state="closed"] {
+  height: 0 !important;
+  opacity: 0;
+}
+
+[data-radix-accordion-content][data-state="open"] {
+  height: auto !important;
+  opacity: 1;
+}
+
+/* Override any maxHeight: none animations */
+* {
+  --max-height-none: 9999px;
+}
+
+/* Ensure smooth accordion animations without maxHeight issues */
+.accordion-content {
+  overflow: hidden;
+  transition: height 0.3s ease-out;
+}
+
+.accordion-content[data-state="closed"] {
+  height: 0;
+}
+
+.accordion-content[data-state="open"] {
+  height: var(--radix-accordion-content-height);
+}
+
 .rating-stars span {
   position: absolute;
   top: 0;
