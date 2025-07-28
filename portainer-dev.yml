@@ -1,11 +1,8 @@
-# Simplified Portainer Docker Compose for Betting SRL
-# Replace 'yourusername' with your actual GitHub username
-# This version builds from the main branch and exposes the app directly on port 5000
-
+# Development-friendly Portainer Docker Compose for Betting SRL
+# This version uses development mode to avoid build issues
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: betting-srl-db
@@ -26,16 +23,15 @@ services:
       timeout: 10s
       retries: 3
 
-  # Application Server
   app:
     build:
       context: https://github.com/yourusername/betting-srl.git#main
-      dockerfile: Dockerfile.simple
-    image: betting-srl:latest
+      dockerfile: Dockerfile.dev
+    image: betting-srl:dev
     container_name: betting-srl-app
     restart: unless-stopped
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       DATABASE_URL: postgresql://betting_user:${POSTGRES_PASSWORD:-secure_password_123}@postgres:5432/betting_srl
       SESSION_SECRET: ${SESSION_SECRET:-change-this-super-secret-session-key-in-production}
       GNEWS_API_KEY: ${GNEWS_API_KEY:-}
@@ -59,23 +55,8 @@ services:
 
 volumes:
   postgres_data:
-    driver: local
   uploads:
-    driver: local
   assets:
-    driver: local
 
 networks:
   betting-network:
-    driver: bridge
-
-# Usage Instructions:
-# 1. Replace 'yourusername' with your GitHub username
-# 2. Set environment variables in Portainer:
-#    - POSTGRES_PASSWORD (required)
-#    - SESSION_SECRET (required)
-#    - GNEWS_API_KEY (optional)
-#    - SENDGRID_API_KEY (optional)
-# 3. Deploy the stack
-# 4. Access your app at http://your-server:5000
-# 5. Initialize database: docker exec betting-srl-app npm run db:push
